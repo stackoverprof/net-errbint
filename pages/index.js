@@ -1,10 +1,14 @@
 import React from 'react'
 import Styled from '@emotion/styled'
+import Rainbox from '../components/game/Rainbox'
+import useResize from 'use-resizing'
   
 const Index = () => {
+  const screen = useResize()
+
   return (
     <Wrapper>
-      <h1>Bismillahirrahmanirrahim</h1>
+      <Rainbox />
     </Wrapper>
   )
 }
