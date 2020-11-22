@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 import useResize from 'use-resizing'
 
-const Canvas = () => {
+const Canvas = ({setgameStatus}) => {
     const canvasRef = useRef(null)
     const screenUseHeight = useResize().height
     const screenUseWidth = useResize().width
@@ -10,13 +10,14 @@ const Canvas = () => {
 /////////GAMESCRIPT START
 
 useEffect(() => {
-/////////CANVAS INITIALIZATION
+    
+/////////CANVAS INITIALIZATION 
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
-        
+
         let screenHeight = window.innerHeight
         let screenWidth = window.innerWidth
-        
+
         canvas.width = screenWidth
         canvas.height = screenHeight-60
         
@@ -35,14 +36,27 @@ useEffect(() => {
 /////////CONTROLLER - KEYBOARD EVENT HANDLER
         let isLeftPressed = false
         let isRightPressed = false
+        let isAttempted = false
+
+        const firstAttempt = () => {
+            if(!isAttempted) setgameStatus('running')
+            isAttempted = true
+            colorbox = "#888888"
+            colortrail0 = "rgba(200,200,200,1)"
+            colortrail1 = "rgba(200,200,200,0)"
+        }
         
         const controlling = (e) => {
             if (e.which == 65 || e.which == 37){
                 isLeftPressed = true
                 dude.Velocity = -5
+                firstAttempt()
             } else if (e.which == 68 || e.which == 39){
                 isRightPressed = true
                 dude.Velocity = 5
+                firstAttempt()
+            } else if (e.which == 13 && isGameOver) {
+                NewGame()
             }
         }
         document.addEventListener('keydown', controlling)
@@ -72,6 +86,23 @@ useEffect(() => {
                 X: posX, 
                 Y: screenHeight-this.Height-60
             }
+
+            this.checkCollisions = () => {
+                function collision(a,b){
+                  if (
+                    a.Position.X <= b.Position.X + b.Width &&
+                    a.Position.X + a.Width >= b.Position.X &&
+                    a.Position.Y + a.Height >= b.Position.Y &&
+                    a.Position.Y <= b.Position.Y + b.Height ){
+                      return true
+                  }
+                }
+                for (let i in shapes){
+                  if(collision(this, shapes[i])){
+                    GameOver()
+                  }
+                }
+              }
             
             this.Draw = () => {
                 ctx.shadowColor = this.Shadow
@@ -83,23 +114,27 @@ useEffect(() => {
             }
             
             this.Update = () => {
+                this.checkCollisions()
+                            
                 if (!(this.Position.X + this.Velocity < 0 || this.Position.X + this.Velocity > screenWidth - 50)){    
                     this.Position.X += this.Velocity
                 }else if(this.Position.X > screenWidth - 50){
                     this.Position.X = screenWidth - 52
                 }
+
                 this.Draw()
             }
         }
+        
 
 ////////THE RAIN OBJECT
         let shapes = {}
         let shapeIndex = 0 
         let fallSpeed = 4
         let accel = 5
-        let colorbox = "rgb(210,210,210)"
         let colortrail0 = "rgba(220,220,220,1)"
         let colortrail1 = "rgba(220,220,220,0)"
+        let colorbox = "rgb(210,210,210)"
 
         function Rain(posX) {
             this.Width = 30
@@ -131,11 +166,6 @@ useEffect(() => {
             shapes[shapeIndex] = this
             shapeIndex++
         
-            // this.checkCollisions = function() {
-            //   if(this.Position.Y >= screenHeight){
-            //     delete shapes[this.Index]
-            //   }
-            // }
             this.Draw = function(num) {
                 ctx.beginPath()
                 switch(num) {
@@ -164,15 +194,39 @@ useEffect(() => {
                 ctx.fill()
             }
             this.update = function(){
-                // this.checkCollisions()
-                
                 this.Position.Y += this.Velocity
                 this.Draw(0)
                 this.Draw(1)
             }
         }
+
+
+/////////GAME OVER HANDLER        
+        const GameOver = () => {
+            isGameOver = true
+            setgameStatus('over')
+        }
+        
+        
+/////////NEW GAME HANDLER
+        const newGameBtn = document.getElementById('newgame-btn')
+        
+        const NewGame = () => {
+            isGameOver = false
+            setgameStatus('running')
+            dude = new Dude(startingPosition, 30, 30)
+            shapes = {}
+        }
+        newGameBtn.addEventListener('click', NewGame)
+
+
 /////////RUNNING GAME
-        const dude = new Dude(screenWidth/2)
+        const startingPosition = screenWidth/2
+        
+        let dude = new Dude(startingPosition)
+        let isGameOver = false
+
+        setgameStatus('initial')
 
         const Updater = setInterval(() => {
             ctx.clearRect(0, 0, screenWidth, screenHeight)
@@ -183,7 +237,20 @@ useEffect(() => {
         }, 10)
         
         const GenerateRain = setInterval(() => {
-            new Rain(Math.random()*screenWidth)
+            if (!isGameOver){
+                let randomPos = Math.random()*screenWidth
+
+                if (!isAttempted){
+                    if (randomPos > dude.Position.X-40 && randomPos < dude.Position.X+60){
+                        new Rain(0)
+                    }else{
+                        new Rain(randomPos)
+                    }
+
+                }else{
+                    new Rain(randomPos)
+                }
+            }
         }, 100)
         
         
@@ -195,6 +262,8 @@ useEffect(() => {
             document.removeEventListener('keydown', controlling)
             window.removeEventListener('resize', reportWindowSize)
         }
+
+        
 /////////END USE-EFFECT        
 }, [])
 /////////END GAMESCRIPT
@@ -232,12 +301,6 @@ const Wrapper = Styled.div(({screenUseHeight, screenUseWidth}) =>`
         background-position: center;
         background-repeat: no-repeat;
         
-            canvas{
-                // height: 1px;
-                // height: ${screenUseHeight-60}px;
-                // display: none;
-            }
-
             .nav-filler{
                 height: 60px;
                 width: 100%;
