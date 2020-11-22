@@ -34,16 +34,21 @@ useEffect(() => {
         
 
 /////////CONTROLLER - KEYBOARD EVENT HANDLER
-        let isLeftPressed = false
         let isRightPressed = false
+        let isLeftPressed = false
         let isAttempted = false
+        let food = {}
 
         const firstAttempt = () => {
-            if(!isAttempted) setgameStatus('running')
-            isAttempted = true
-            colorbox = "#888888"
-            colortrail0 = "rgba(200,200,200,1)"
-            colortrail1 = "rgba(200,200,200,0)"
+            if(!isAttempted){
+                setgameStatus('running')
+                isAttempted = true
+                colorbox = "#888888"
+                colortrail0 = "rgba(200,200,200,1)"
+                colortrail1 = "rgba(200,200,200,0)"        
+                food = new Food()
+                dude = new Dude(dude.Position.X, 30, 30)
+            }
         }
         
         const controlling = (e) => {
@@ -82,27 +87,34 @@ useEffect(() => {
             this.Width = 50
             this.Blur = 25
 
+            this.LifeSpan = new Date().getTime()
+            this.EatCount = 0
+            
             this.Position = {
                 X: posX, 
                 Y: screenHeight-this.Height-60
             }
 
             this.checkCollisions = () => {
-                function collision(a,b){
-                  if (
-                    a.Position.X <= b.Position.X + b.Width &&
-                    a.Position.X + a.Width >= b.Position.X &&
-                    a.Position.Y + a.Height >= b.Position.Y &&
-                    a.Position.Y <= b.Position.Y + b.Height ){
-                      return true
-                  }
-                }
                 for (let i in shapes){
-                  if(collision(this, shapes[i])){
-                    GameOver()
-                  }
+                    if (
+                        this.Position.X <= shapes[i].Position.X + shapes[i].Width &&
+                        this.Position.X + this.Width >= shapes[i].Position.X &&
+                        this.Position.Y + this.Height >= shapes[i].Position.Y &&
+                        this.Position.Y <= shapes[i].Position.Y + shapes[i].Height 
+                        ){
+                            GameOver()
+                        }
                 }
-              }
+            }
+
+            this.checkEaten = function(){        
+                if(dude.Position.X <= food.PosX + food.Width && dude.Position.X + dude.Width >= food.PosX){
+                    this.EatCount++
+                    food = new Food()
+                }
+            }
+            
             
             this.Draw = () => {
                 ctx.shadowColor = this.Shadow
@@ -114,14 +126,14 @@ useEffect(() => {
             }
             
             this.Update = () => {
-                this.checkCollisions()
-                            
                 if (!(this.Position.X + this.Velocity < 0 || this.Position.X + this.Velocity > screenWidth - 50)){    
                     this.Position.X += this.Velocity
                 }else if(this.Position.X > screenWidth - 50){
                     this.Position.X = screenWidth - 52
                 }
-
+                
+                this.checkCollisions()
+                this.checkEaten()
                 this.Draw()
             }
         }
@@ -201,10 +213,45 @@ useEffect(() => {
         }
 
 
+/////////THE FOOD OBJECT
+        function Food(){
+            this.Width = 20;
+            this.Height = 20;
+            this.Color = "#FF5B14";
+            this.shadow = 'orange';
+            this.blur = 25
+            this.distance = 50
+            
+            let randomPos
+            do randomPos = Math.random()*(screenWidth-this.Width)
+            while (randomPos >= dude.Position.X - (this.Width + this.distance) && randomPos <= dude.Position.X + dude.Width + this.distance)
+            
+            this.PosX = randomPos
+        
+            this.Draw = function(){
+                ctx.shadowColor = this.shadow;
+                ctx.shadowBlur = this.blur;
+                ctx.beginPath();
+                ctx.rect(this.PosX, screenHeight-98, this.Width, this.Width);
+                ctx.fillStyle = this.Color;
+                ctx.fill();
+            }
+        
+            this.Update = function(){
+                this.Draw();
+            }
+            
+        }
+
 /////////GAME OVER HANDLER        
         const GameOver = () => {
-            isGameOver = true
-            setgameStatus('over')
+            if(!isGameOver){
+                dude.LifeSpan = new Date().getTime() - dude.LifeSpan
+                isGameOver = true
+                food = {}
+                setgameStatus('over')
+                console.log(dude.EatCount + " " + dude.LifeSpan)
+            }
         }
         
         
@@ -214,7 +261,8 @@ useEffect(() => {
         const NewGame = () => {
             isGameOver = false
             setgameStatus('running')
-            dude = new Dude(startingPosition, 30, 30)
+            dude = new Dude(dude.Position.X, 30, 30)
+            food = new Food()
             shapes = {}
         }
         newGameBtn.addEventListener('click', NewGame)
@@ -222,8 +270,9 @@ useEffect(() => {
 
 /////////RUNNING GAME
         const startingPosition = screenWidth/2
-        
+
         let dude = new Dude(startingPosition)
+        
         let isGameOver = false
 
         setgameStatus('initial')
@@ -234,6 +283,7 @@ useEffect(() => {
                 shapes[i].update()
             }
             dude.Update()
+            if(!isGameOver && isAttempted) food.Update()
         }, 10)
         
         const GenerateRain = setInterval(() => {
