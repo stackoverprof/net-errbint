@@ -249,6 +249,8 @@ useEffect(() => {
                 dude.LifeSpan = new Date().getTime() - dude.LifeSpan
                 isGameOver = true
                 food = {}
+                dude.Color = 'black'
+                dude.Shadow = 'black'
                 setgameStatus('over')
                 console.log(dude.EatCount + " " + dude.LifeSpan)
             }
@@ -270,11 +272,8 @@ useEffect(() => {
 
 /////////RUNNING GAME
         const startingPosition = screenWidth/2
-
         let dude = new Dude(startingPosition)
-        
         let isGameOver = false
-
         setgameStatus('initial')
 
         const Updater = setInterval(() => {
