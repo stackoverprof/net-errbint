@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 
-const Canvas = ({setgameStatus, setscore}) => {
-    const canvasRef = useRef(null)
+const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) => {
+    const canvasRef = useRef()
     
     useEffect(() => {
     /////////GAMESCRIPT START
@@ -30,16 +30,14 @@ const Canvas = ({setgameStatus, setscore}) => {
             window.addEventListener('resize', reportWindowSize)
             
 
-    /////////CONTROLLER - KEYBOARD EVENT HANDLER
-            let isRightPressed = false
-            let isLeftPressed = false
+    /////////FIRST ATTEMPT TO ENTER THE GAME
             let isAttempted = false
 
             const firstAttempt = () => { 
                 if (!isAttempted){
-                
-                setgameStatus('running')
+                    
                 isAttempted = true
+                setgameStatus('running')
                 
                 RainConfig.colorbox = "#888888"
                 RainConfig.colortrail0 = "rgba(200,200,200,1)"
@@ -49,9 +47,14 @@ const Canvas = ({setgameStatus, setscore}) => {
                 dude.TimeStart = new Date().getTime()
                 dude.TimeEnd = 'initial'
                 dude.TimeSpan = new Date().getTime()
+                
                 // document.getElementById('game-container').requestFullscreen()
             }}
-            
+
+    /////////CONTROLLER - KEYBOARD EVENT HANDLER
+            let isRightPressed = false
+            let isLeftPressed = false
+
             const controlling = (e) => {
                 if (e.which == 65 || e.which == 37){
                     //GO LEFT 
@@ -118,6 +121,7 @@ const Canvas = ({setgameStatus, setscore}) => {
                 this.checkEaten = function(){        
                     if(dude.Position.X <= food.PosX + food.Width && dude.Position.X + dude.Width >= food.PosX){
                     this.EatCount++
+                    GlimpseHandler(this.EatCount)
                     food = new Food()
                 }}
                             
@@ -205,7 +209,7 @@ const Canvas = ({setgameStatus, setscore}) => {
                 this.distance = 50
                 
                 let randomPos
-                do randomPos = Math.random()*(screenWidth-this.Width)
+                do randomPos = Math.random()*(screenWidth-this.Width*3) + this.Width
                 while (randomPos >= dude.Position.X - (this.Width + this.distance) && randomPos <= dude.Position.X + dude.Width + this.distance)
                 
                 this.PosX = randomPos
@@ -224,6 +228,7 @@ const Canvas = ({setgameStatus, setscore}) => {
                 }            
             }
 
+
     /////////GAME OVER HANDLER        
             const GameOver = () => { 
                 if (!isGameOver && isAttempted){
@@ -240,7 +245,7 @@ const Canvas = ({setgameStatus, setscore}) => {
             
             
     /////////NEW GAME HANDLER
-            const newGameBtn = document.getElementById('newgame-btn')
+            const newGameBtn = newGameBtnRef.current
             
             const NewGame = () => {
                 setgameStatus('running')
@@ -271,29 +276,72 @@ const Canvas = ({setgameStatus, setscore}) => {
             }
 
             const Updater = setInterval(() => {
-                ctx.clearRect(0, 0, screenWidth, screenHeight)
-
                 setscore({
                     food: dude.EatCount, 
                     time: ((isAttempted ? calcTiming() : 0)/1000).toFixed(2)
-                    // time: ((isAttempted ? calcTiming() : 0)/10).toFixed(0)
-                    // time: calcTiming()
                 })
 
+                //Reseting canvas
+                ctx.clearRect(0, 0, screenWidth, screenHeight)
+
+                //Then, redrawing objects
                 if(!isGameOver && isAttempted) food.Update()
                 for(let i in shapes) shapes[i].Update()
                 dude.Update()
+                
             }, 10)
             
             const GenerateRain = setInterval(() => {
                 if (!isGameOver){
                 let randomPos
-                do randomPos = (Math.random()*(screenWidth + RainConfig.size*2)) - RainConfig.size
+                do randomPos = Math.random()*(screenWidth + RainConfig.size*2) - RainConfig.size
                 while (!isAttempted && randomPos > dude.Position.X - RainConfig.size*2 && randomPos < dude.Position.X + RainConfig.size*2)
-                new Rain(randomPos)                        
+                new Rain(randomPos)
             }}, 100)
             
             
+    /////////GLIMPSE HANDLER
+            const animate = (element) => {
+                element.style.opacity = 1
+
+                setTimeout(() => {
+                    element.style.opacity = 0
+                }, 350)
+            }
+
+            const animateSpecial = (et, nr, bri) => {
+                et.style.opacity = 1
+                nr.style.opacity = 1
+                bri.style.opacity = 1
+
+                setTimeout(() => {
+                    et.style.opacity = 0
+                    nr.style.opacity = 0
+                    bri.style.opacity = 0
+                }, 350)
+            }
+
+            const glimpse = {
+                bri: briRef.current,
+                nr: nrRef.current,
+                et: etRef.current
+            }
+
+            const GlimpseHandler = (score) => {
+                const {et, nr, bri} = glimpse
+
+                if(score % 10 == 0){
+                    animateSpecial(et, nr, bri)
+                    setTimeout(() => animateSpecial(et, nr, bri), 700)
+                    setTimeout(() => animateSpecial(et, nr, bri), 1400)
+                } else if (score % 5 == 0) {
+                    animate(et)
+                    setTimeout(() => animate(nr), 200)
+                    setTimeout(() => animate(bri), 500)
+                }
+            } 
+
+
     /////////USE EFFECT CLEAN-UP
             return () => {
                 window.removeEventListener('resize', reportWindowSize)
