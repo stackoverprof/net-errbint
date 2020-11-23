@@ -10,21 +10,22 @@ const Canvas = ({setgameStatus}) => {
     /////////CANVAS INITIALIZATION 
             const canvas = canvasRef.current
             const ctx = canvas.getContext('2d')
-
+            const navbarOffset = 60
+            
             let screenHeight = window.innerHeight
             let screenWidth = window.innerWidth
 
             canvas.width = screenWidth
-            canvas.height = screenHeight-60
+            canvas.height = screenHeight - navbarOffset
             
     /////////SCREEN RESIZE HANDLER
             const reportWindowSize = () => {
                 screenWidth = window.innerWidth
                 screenHeight = window.innerHeight
                 canvas.width = screenWidth
-                canvas.height = screenHeight-60
+                canvas.height = screenHeight - navbarOffset
 
-                dude.Position.Y = screenHeight-dude.Height-60
+                dude.Position.Y = screenHeight - dude.Height - navbarOffset
             }
             window.addEventListener('resize', reportWindowSize)
             
@@ -41,7 +42,8 @@ const Canvas = ({setgameStatus}) => {
                     
                     RainConfig.colorbox = "#888888"
                     RainConfig.colortrail0 = "rgba(200,200,200,1)"
-                    RainConfig.colortrail1 = "rgba(200,200,200,0)"        
+                    RainConfig.colortrail1 = "rgba(200,200,200,0)"
+
                     food = new Food()
                     dude.LifeSpan = new Date().getTime()
                 }
@@ -49,14 +51,17 @@ const Canvas = ({setgameStatus}) => {
             
             const controlling = (e) => {
                 if (e.which == 65 || e.which == 37){
+                    //GO LEFT 
                     isLeftPressed = true
                     dude.Velocity = -5
                     firstAttempt()
                 } else if (e.which == 68 || e.which == 39){
+                    //GO RIGHT
                     isRightPressed = true
                     dude.Velocity = 5
                     firstAttempt()
                 } else if (e.which == 13 && isGameOver) {
+                    //PRESSING ENTER
                     NewGame()
                 }
             }
@@ -76,19 +81,20 @@ const Canvas = ({setgameStatus}) => {
 
     /////////THE DUDE (PLAYER) OBJECT 
             function Dude(posX){
-                this.Color = "#FF5B14"
-                this.Shadow = 'orange'
-                this.Velocity = 0
                 this.Height = 50
                 this.Width = 50
+                this.Shadow = 'orange'
+                this.Color = "#FF5B14"
                 this.Blur = 25
+                this.Velocity = 0
 
+                //Scoring things
                 this.LifeSpan = new Date().getTime()
                 this.EatCount = 0
                 
                 this.Position = {
                     X: posX, 
-                    Y: screenHeight-this.Height-60
+                    Y: screenHeight - this.Height - navbarOffset
                 }
 
                 this.checkCollisions = () => {
@@ -116,15 +122,15 @@ const Canvas = ({setgameStatus}) => {
                     ctx.shadowBlur = this.Blur
                     ctx.fillStyle = this.Color
                     ctx.beginPath()
-                    ctx.rect(this.Position.X, this.Position.Y, 50, 50)
+                    ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height)
                     ctx.fill()
                 }
                 
                 this.Update = () => {
                     if (!(this.Position.X + this.Velocity < 0 || this.Position.X + this.Velocity > screenWidth - 50)){    
                         this.Position.X += this.Velocity
-                    }else if(this.Position.X > screenWidth - 50){
-                        this.Position.X = screenWidth - 52
+                    }else if (this.Position.X > screenWidth - this.Width){
+                        this.Position.X = screenWidth - (this.Width+2)
                     }
                     
                     this.checkCollisions()
@@ -140,12 +146,13 @@ const Canvas = ({setgameStatus}) => {
                 colortrail1 : "rgba(220,220,220,0)",
                 colorbox : "rgb(210,210,210)",
                 fallSpeed : 4,
-                accel : 5
+                accel : 5,
+                size : 30
             }
 
             function Rain(posX) {
-                this.Height = 30
-                this.Width = 30
+                this.Height = RainConfig.size
+                this.Width = RainConfig.size
                 this.Velocity = Math.random() * RainConfig.fallSpeed + RainConfig.accel
                 this.Index = shapeIndex
                 this.Color = "#000000"
@@ -156,31 +163,31 @@ const Canvas = ({setgameStatus}) => {
                 
                 shapes[shapeIndex++] = this
             
-                this.Draw = function(part) {
+                this.DrawHead = function() {
                     ctx.beginPath()
-
-                    if (part == 'head'){
-                        ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height)
-                        ctx.fillStyle = RainConfig.colorbox
-                        ctx.shadowColor = 'gray'
-                        ctx.shadowBlur = 3
-                    }else{
-                        ctx.rect(this.Position.X, this.Position.Y-120, this.Width, this.Height*4)
-                        this.TrailGradient = ctx.createLinearGradient(screenHeight/2, this.Position.Y, screenHeight/2, this.Position.Y-120 )
-                        this.TrailGradient.addColorStop(0, RainConfig.colortrail0)
-                        this.TrailGradient.addColorStop(1, RainConfig.colortrail1)
-                        ctx.fillStyle = this.TrailGradient
-                        ctx.shadowColor = 'rgba(0,0,0,0)'
-                        ctx.shadowBlur = 0
-                    }
+                    ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height)
+                    ctx.fillStyle = RainConfig.colorbox
+                    ctx.shadowColor = 'gray'
+                    ctx.shadowBlur = 3
                     ctx.fill()
-                    
+                }
+
+                this.DrawTrail = function() {
+                    ctx.beginPath()
+                    ctx.rect(this.Position.X, this.Position.Y-120, this.Width, this.Height*4)
+                    this.TrailGradient = ctx.createLinearGradient(screenHeight/2, this.Position.Y, screenHeight/2, this.Position.Y-120 )
+                    this.TrailGradient.addColorStop(0, RainConfig.colortrail0)
+                    this.TrailGradient.addColorStop(1, RainConfig.colortrail1)
+                    ctx.fillStyle = this.TrailGradient
+                    ctx.shadowColor = 'rgba(0,0,0,0)'
+                    ctx.shadowBlur = 0
+                    ctx.fill()
                 }
 
                 this.Update = function(){
                     this.Position.Y += this.Velocity
-                    this.Draw('head')
-                    this.Draw('trail')
+                    this.DrawHead()
+                    this.DrawTrail()
                 }
             }
 
@@ -202,7 +209,7 @@ const Canvas = ({setgameStatus}) => {
             
                 this.Draw = function(){
                     ctx.beginPath()
-                    ctx.rect(this.PosX, screenHeight-98, this.Width, this.Width)
+                    ctx.rect(this.PosX, screenHeight- navbarOffset - this.Height*2, this.Width, this.Width)
                     ctx.shadowColor = this.shadow
                     ctx.shadowBlur = this.Blur
                     ctx.fillStyle = this.Color
@@ -217,25 +224,24 @@ const Canvas = ({setgameStatus}) => {
     /////////GAME OVER HANDLER        
             const GameOver = () => {
                 if(!isGameOver){
-                    dude.LifeSpan = new Date().getTime() - dude.LifeSpan
-                    setgameStatus('over')
-                    dude.Shadow = 'black'
-                    dude.Color = 'black'
-                    isGameOver = true
-                    food = {}
 
-                    console.log(dude.EatCount + " " + dude.LifeSpan)
-                }
-            }
+                dude.LifeSpan = new Date().getTime() - dude.LifeSpan
+                setgameStatus('over')
+                dude.Shadow = 'black'
+                dude.Color = 'black'
+                isGameOver = true
+                food = {}
+                console.log(dude.EatCount + " " + dude.LifeSpan)
+            }}
             
             
     /////////NEW GAME HANDLER
             const newGameBtn = document.getElementById('newgame-btn')
             
             const NewGame = () => {
-                isGameOver = false
                 setgameStatus('running')
-                dude = new Dude(dude.Position.X, 30, 30)
+                isGameOver = false
+                dude = new Dude(dude.Position.X)
                 food = new Food()
                 shapes = {}
             }
@@ -261,16 +267,11 @@ const Canvas = ({setgameStatus}) => {
             
             const GenerateRain = setInterval(() => {
                 if (!isGameOver){
-                    let randomPos = Math.random()*screenWidth
-
-                    if (!isAttempted && randomPos > dude.Position.X-40 && randomPos < dude.Position.X+60){
-                        new Rain(0)
-                    }else{
-                        new Rain(randomPos)
-                    }
-                        
-                }
-            }, 100)
+                let randomPos
+                do randomPos = (Math.random()*(screenWidth + RainConfig.size*2)) - RainConfig.size
+                while (!isAttempted && randomPos > dude.Position.X - RainConfig.size*2 && randomPos < dude.Position.X + RainConfig.size*2)
+                new Rain(randomPos)                        
+            }}, 100)
             
             
     /////////USE EFFECT CLEAN-UP
