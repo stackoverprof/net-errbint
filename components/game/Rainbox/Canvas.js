@@ -6,7 +6,7 @@ const Canvas = ({setgameStatus}) => {
     
     useEffect(() => {
     /////////GAMESCRIPT START
-        
+    
     /////////CANVAS INITIALIZATION 
             const canvas = canvasRef.current
             const ctx = canvas.getContext('2d')
@@ -15,6 +15,9 @@ const Canvas = ({setgameStatus}) => {
             let screenHeight = window.innerHeight
             let screenWidth = window.innerWidth
 
+            // setTimeout(() => {
+            // }, 1000);
+                
             canvas.width = screenWidth
             canvas.height = screenHeight - navbarOffset
             
@@ -45,7 +48,8 @@ const Canvas = ({setgameStatus}) => {
                     RainConfig.colortrail1 = "rgba(200,200,200,0)"
 
                     food = new Food()
-                    dude.LifeSpan = new Date().getTime()
+                    dude.TimeSpan = new Date().getTime()
+                    // document.getElementById('game-container').requestFullscreen()
                 }
             }
             
@@ -89,7 +93,7 @@ const Canvas = ({setgameStatus}) => {
                 this.Velocity = 0
 
                 //Scoring things
-                this.LifeSpan = new Date().getTime()
+                this.TimeSpan = new Date().getTime()
                 this.EatCount = 0
                 
                 this.Position = {
@@ -155,7 +159,6 @@ const Canvas = ({setgameStatus}) => {
                 this.Width = RainConfig.size
                 this.Velocity = Math.random() * RainConfig.fallSpeed + RainConfig.accel
                 this.Index = shapeIndex
-                this.Color = "#000000"
                 this.Position = {
                     X: posX,
                     Y: -this.Height
@@ -223,15 +226,17 @@ const Canvas = ({setgameStatus}) => {
 
     /////////GAME OVER HANDLER        
             const GameOver = () => {
-                if(!isGameOver){
+                if(!isGameOver && isAttempted){
 
-                dude.LifeSpan = new Date().getTime() - dude.LifeSpan
+                dude.TimeSpan = new Date().getTime() - dude.TimeSpan
                 setgameStatus('over')
                 dude.Shadow = 'black'
                 dude.Color = 'black'
                 isGameOver = true
                 food = {}
-                console.log(dude.EatCount + " " + dude.LifeSpan)
+
+                //SEE YOUR SCORE
+                console.log(dude.EatCount + " " + dude.TimeSpan)
             }}
             
             
@@ -260,8 +265,8 @@ const Canvas = ({setgameStatus}) => {
             const Updater = setInterval(() => {
                 ctx.clearRect(0, 0, screenWidth, screenHeight)
 
-                if(!isGameOver && isAttempted) food.Update()
                 for(let i in shapes) shapes[i].Update()
+                if(!isGameOver && isAttempted) food.Update()
                 dude.Update()
             }, 10)
             
@@ -288,8 +293,13 @@ const Canvas = ({setgameStatus}) => {
 
     return (
         <Wrapper> 
-            <div className="game-container">
-                <canvas ref={canvasRef} />
+            <div className="game-container" id="game-container">
+                <div className="canvas">
+                    <canvas ref={canvasRef} />
+                    <div className="fixedfull h1-cont">
+                        <div className="h1-dimm"></div>
+                    </div>
+                </div>
                 <div className="nav-filler"></div>
             </div>
         </Wrapper>
@@ -304,20 +314,31 @@ const Wrapper = Styled.div(() =>`
     align-items: center;
 
     .game-container{
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        flex-direction: column;
         position: fixed;
         width: 100%;
         height: 100%;
         top: 0;
         left: 0;
-        
-        background: url('/img/bg3d.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-direction: column;
+            
+            div.canvas{
+                background: url('/img/bg3d.png');
+                background-size: cover;
+                background-position: top;
+                background-repeat: no-repeat;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                flex-direction: column;
+
+                canvas{
+                    z-index: 101;
+                }
+            }
         
             .nav-filler{
                 height: 60px;
