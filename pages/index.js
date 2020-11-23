@@ -1,23 +1,41 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Styled from '@emotion/styled'
 import Rainbox from '../components/game/Rainbox'
+import Spinner from '../components/spinner/Spinkit1'
     
 const Index = () => {
+    const [removeDisplay, setremoveDisplay] = useState(false)
     const [gameStatus, setgameStatus] = useState('initial')
+    const [isLoaded, setisLoaded] = useState(false)
+    const [score, setscore] = useState({food: 0, time: 0})
 
+    const removeSpinner = () => {
+        setisLoaded(true)
+        setTimeout(() => {
+            setremoveDisplay(true)
+        }, 1000)
+    }
+
+    useEffect(() => {
+        window.addEventListener('load', removeSpinner)
+        
+        return () => {
+            window.removeEventListener('load', removeSpinner)
+        }
+    }, [])
+    
     return (
+    <>
+        <Spinner isLoaded={isLoaded} removeDisplay={removeDisplay}/>
         <Wrapper gameStatus={gameStatus}>
-            <div className="fixedfull h1-cont">
-                <h1>errbint</h1>
-                <div className="h1"></div>
-            </div>
-            <Rainbox gameStatus={gameStatus} setgameStatus={setgameStatus}/>
+            <Rainbox gameStatus={gameStatus} setgameStatus={setgameStatus} score={score} setscore={setscore}/>
         </Wrapper>
+    </>
     )
 }
     
 const Wrapper = Styled.div(({gameStatus}) =>`
-      
+
     .fixedfull{
         position: fixed;
         width: 100%;
@@ -30,7 +48,6 @@ const Wrapper = Styled.div(({gameStatus}) =>`
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 100;
         padding-bottom: 292px;
 
         h1{
@@ -45,7 +62,6 @@ const Wrapper = Styled.div(({gameStatus}) =>`
             background-repeat: no-repeat;
             width: 675px;
             height: 197px;
-            z-index: 102;
             opacity: ${gameStatus == 'running' ? 0 : 1};
             transition: 1s;
         }

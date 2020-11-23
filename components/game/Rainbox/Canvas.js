@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 
-const Canvas = ({setgameStatus}) => {
+const Canvas = ({setgameStatus, setscore}) => {
     const canvasRef = useRef(null)
     
     useEffect(() => {
@@ -14,10 +14,7 @@ const Canvas = ({setgameStatus}) => {
             
             let screenHeight = window.innerHeight
             let screenWidth = window.innerWidth
-
-            // setTimeout(() => {
-            // }, 1000);
-                
+            
             canvas.width = screenWidth
             canvas.height = screenHeight - navbarOffset
             
@@ -38,20 +35,22 @@ const Canvas = ({setgameStatus}) => {
             let isLeftPressed = false
             let isAttempted = false
 
-            const firstAttempt = () => {
-                if(!isAttempted){
-                    setgameStatus('running')
-                    isAttempted = true
-                    
-                    RainConfig.colorbox = "#888888"
-                    RainConfig.colortrail0 = "rgba(200,200,200,1)"
-                    RainConfig.colortrail1 = "rgba(200,200,200,0)"
+            const firstAttempt = () => { 
+                if (!isAttempted){
+                
+                setgameStatus('running')
+                isAttempted = true
+                
+                RainConfig.colorbox = "#888888"
+                RainConfig.colortrail0 = "rgba(200,200,200,1)"
+                RainConfig.colortrail1 = "rgba(200,200,200,0)"
 
-                    food = new Food()
-                    dude.TimeSpan = new Date().getTime()
-                    // document.getElementById('game-container').requestFullscreen()
-                }
-            }
+                food = new Food()
+                dude.TimeStart = new Date().getTime()
+                dude.TimeEnd = 'initial'
+                dude.TimeSpan = new Date().getTime()
+                // document.getElementById('game-container').requestFullscreen()
+            }}
             
             const controlling = (e) => {
                 if (e.which == 65 || e.which == 37){
@@ -93,6 +92,8 @@ const Canvas = ({setgameStatus}) => {
                 this.Velocity = 0
 
                 //Scoring things
+                this.TimeStart = new Date().getTime()
+                this.TimeEnd = 'initial'
                 this.TimeSpan = new Date().getTime()
                 this.EatCount = 0
                 
@@ -116,10 +117,9 @@ const Canvas = ({setgameStatus}) => {
 
                 this.checkEaten = function(){        
                     if(dude.Position.X <= food.PosX + food.Width && dude.Position.X + dude.Width >= food.PosX){
-                        this.EatCount++
-                        food = new Food()
-                    }
-                }
+                    this.EatCount++
+                    food = new Food()
+                }}
                             
                 this.Draw = () => {
                     ctx.shadowColor = this.Shadow
@@ -225,18 +225,17 @@ const Canvas = ({setgameStatus}) => {
             }
 
     /////////GAME OVER HANDLER        
-            const GameOver = () => {
-                if(!isGameOver && isAttempted){
+            const GameOver = () => { 
+                if (!isGameOver && isAttempted){
 
                 dude.TimeSpan = new Date().getTime() - dude.TimeSpan
-                setgameStatus('over')
+                dude.TimeEnd = new Date().getTime()
                 dude.Shadow = 'black'
                 dude.Color = 'black'
+
+                setgameStatus('over')
                 isGameOver = true
                 food = {}
-
-                //SEE YOUR SCORE
-                console.log(dude.EatCount + " " + dude.TimeSpan)
             }}
             
             
@@ -246,6 +245,7 @@ const Canvas = ({setgameStatus}) => {
             const NewGame = () => {
                 setgameStatus('running')
                 isGameOver = false
+
                 dude = new Dude(dude.Position.X)
                 food = new Food()
                 shapes = {}
@@ -255,18 +255,33 @@ const Canvas = ({setgameStatus}) => {
 
     /////////RUNNING GAME
             setgameStatus('initial')
-            const startingPosition = screenWidth/2
+            const startingPosition = screenWidth < 612 ? screenWidth/2-25 : screenWidth/2-306
             let dude = new Dude(startingPosition)
             let isGameOver = false
             let shapeIndex = 0 
             let shapes = {}
             let food = {}
 
+            const calcTiming = () => {
+                if (dude.TimeEnd != 'initial'){
+                    return dude.TimeSpan
+                }else{
+                    return new Date().getTime() - dude.TimeStart 
+                }
+            }
+
             const Updater = setInterval(() => {
                 ctx.clearRect(0, 0, screenWidth, screenHeight)
 
-                for(let i in shapes) shapes[i].Update()
+                setscore({
+                    food: dude.EatCount, 
+                    time: ((isAttempted ? calcTiming() : 0)/1000).toFixed(2)
+                    // time: ((isAttempted ? calcTiming() : 0)/10).toFixed(0)
+                    // time: calcTiming()
+                })
+
                 if(!isGameOver && isAttempted) food.Update()
+                for(let i in shapes) shapes[i].Update()
                 dude.Update()
             }, 10)
             
@@ -293,59 +308,17 @@ const Canvas = ({setgameStatus}) => {
 
     return (
         <Wrapper> 
-            <div className="game-container" id="game-container">
-                <div className="canvas">
-                    <canvas ref={canvasRef} />
-                    <div className="fixedfull h1-cont">
-                        <div className="h1-dimm"></div>
-                    </div>
-                </div>
-                <div className="nav-filler"></div>
-            </div>
+            <canvas ref={canvasRef} />
         </Wrapper>
     )
 }
 
 
 const Wrapper = Styled.div(() =>`
-    height: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
-
-    .game-container{
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        flex-direction: column;
-            
-            div.canvas{
-                background: url('/img/bg3d.png');
-                background-size: cover;
-                background-position: top;
-                background-repeat: no-repeat;
-                display: flex;
-                justify-content: flex-end;
-                align-items: center;
-                flex-direction: column;
-
-                canvas{
-                    z-index: 101;
-                }
-            }
-        
-            .nav-filler{
-                height: 60px;
-                width: 100%;
-                background: black;
-            }
-        }
+    flex-direction: column;
 `)
 
 export default Canvas
