@@ -128,7 +128,7 @@ const Wrapper = Styled.div(({gameStatus, score}) =>`
             
 
         div.canvas{
-            background: url('/img/bg3d.png');
+            background: url('/img/bg3d.webp');
             background-size: cover;
             background-position: top;
             background-repeat: no-repeat;
