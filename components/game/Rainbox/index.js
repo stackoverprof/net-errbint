@@ -85,7 +85,7 @@ const Wrapper = Styled.div(({gameStatus, score}) =>`
             }
 
             .hideable{
-                transition: opacity 0s;
+                ${gameStatus != 'subintro' ? "transition: opacity 0s;" : ''}
             }
 
             .h1{
