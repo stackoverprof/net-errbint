@@ -1,22 +1,24 @@
 import React, { useRef } from 'react'
 import Styled from '@emotion/styled'
-import Canvas from './Canvas'    
+import Canvas from './Canvas'
+import useResize from 'use-resizing'
 
 const Rainbox = ({gameStatus, setgameStatus, score, setscore}) => {
     const newGameBtnRef = useRef()
     const briRef = useRef()
     const etRef = useRef()
     const nrRef = useRef()
+    const screen = useResize().width
 
     return (
-        <Wrapper gameStatus={gameStatus} score={score}>
+        <Wrapper gameStatus={gameStatus} score={score} screen={screen}>
             {/* <p>{score.food} {score.time} {gameStatus}</p> */}
             <div className="container-canvas" id="game-container">
                 <div className="canvas">
                     <div className="fixedfull h1-cont zi-dimm">
                         <div className="h1-subcont">    
-                            <div className="h1-dimm"></div>
-                            <p>A FULLSTACK DEVELOPER</p>
+                            <div className="h1-dimm supertitle"></div>
+                            <p>{screen > 500 ? 'A FULLSTACK DEVELOPER' : 'FULLSTACK'} <br/> {screen < 500 ? 'DEVELOPER' : ''}</p>
                         </div>
                     </div>
                     <div ref={nrRef} className="glimpse nr"></div>
@@ -30,8 +32,8 @@ const Rainbox = ({gameStatus, setgameStatus, score, setscore}) => {
                             nrRef={nrRef}/>
                     <div className="fixedfull h1-cont zi-orange">
                         <div className="h1-subcont">    
-                            <div className="h1"></div>
-                            <p className={`hideable ${gameStatus == 'running' ? 'hide' : ''}`}>A FULLSTACK DEVELOPER</p>
+                            <div className="h1 supertitle"></div>
+                            <p className={`hideable ${gameStatus == 'running' ? 'hide' : ''}`}>{screen > 500 ? 'A FULLSTACK DEVELOPER' : 'FULLSTACK'} <br/> {screen < 500 ? 'DEVELOPER' : ''}</p>
                         </div>
                     </div>
                 </div>
@@ -44,7 +46,7 @@ const Rainbox = ({gameStatus, setgameStatus, score, setscore}) => {
     )
 }
     
-const Wrapper = Styled.div(({gameStatus, score}) =>`
+const Wrapper = Styled.div(({gameStatus, score, screen}) =>`
 
     .fixedfull{
         position: fixed;
@@ -58,7 +60,7 @@ const Wrapper = Styled.div(({gameStatus, score}) =>`
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-bottom: 292px;
+        padding-bottom: 256px;
 
         h1{
             opacity: 0;
@@ -70,14 +72,19 @@ const Wrapper = Styled.div(({gameStatus, score}) =>`
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            width: 100%;
 
             p{                
                 font-family: 'Bahnschrift', sans-serif;
-                font-size: 32px;
+                font-size: ${screen >  500 ? '32px' : '28px'};
                 color: ${gameStatus == 'running' ? '#BBBBBB' : 'gray'};
                 transition: opacity 1s 2s, color 0.5s;
                 opacity: ${gameStatus == 'intro' ? 0 : 1};
                 z-index: -2;
+                text-align: center;
+
+                position: relative;
+                top: ${screen > 500 ? '-16px' : '-32px'};
             }
             
             p.hide{
@@ -88,15 +95,19 @@ const Wrapper = Styled.div(({gameStatus, score}) =>`
                 ${gameStatus != 'subintro' ? "transition: opacity 0s;" : ''}
             }
 
-            .h1{
-                background-image: url('/img/title/h1.svg');
-                background-size: cover;
+            .supertitle{
+                background-size: contain;
                 background-position: center;
                 background-repeat: no-repeat;
-                width: 675px;
-                height: 170px;
+                max-width: 675px;
+                width: 90%;
+                min-width: 340px;
+                height: 200px;
+            }
+
+            .h1{
+                background-image: url('/img/title/h1.svg');
                 transition: ${gameStatus == 'subintro' ? '2.5s' : '1s'};
-                
                 opacity: ${ gameStatus == 'intro' ? 0 :
                             gameStatus == 'subintro' ? 1 :
                             gameStatus == 'initial' ? 1 :
@@ -105,11 +116,6 @@ const Wrapper = Styled.div(({gameStatus, score}) =>`
             }
             .h1-dimm{
                 background-image: url('/img/title/h1-dimm.svg');
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat; 
-                width: 675px;
-                height: 170px;
             }
         }
     }

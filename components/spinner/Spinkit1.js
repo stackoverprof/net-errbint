@@ -43,7 +43,6 @@ const Wrapper = Styled.div(({isLoaded}) =>`
     .spinner {
         opacity: ${isLoaded ? 0 : 1};
         margin: 100px auto;
-        width: 60px;
         height: 50px;
         text-align: center;
         font-size: 10px;
@@ -54,8 +53,8 @@ const Wrapper = Styled.div(({isLoaded}) =>`
         height: 100%;
         width: 6px;
         display: inline-block;
-        margin-right: 1px;
-        margin-left: 1px;
+        margin-right: 2px;
+        margin-left: 2px;
         
         -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
         animation: sk-stretchdelay 1.2s infinite ease-in-out;

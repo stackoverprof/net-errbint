@@ -16,20 +16,25 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
         
         canvas.width = screenWidth
         canvas.height = screenHeight - navbarOffset
+
+        
+        /////////SCREEN RESIZE HANDLER
+        const reportWindowSize = () => {
+            screenWidth = window.innerWidth
+            screenHeight = window.innerHeight
+            canvas.width = screenWidth
+            canvas.height = screenHeight - navbarOffset
+        }
+        window.addEventListener('resize', reportWindowSize)
         
         /////////GAMESCRIPT START :: execution delayed within 3 seconds
         const GameScript = () => {
 
             /////////SCREEN RESIZE HANDLER
-            const reportWindowSize = () => {
-                screenWidth = window.innerWidth
-                screenHeight = window.innerHeight
-                canvas.width = screenWidth
-                canvas.height = screenHeight - navbarOffset
-
+            const dudeOnResize = () => {
                 dude.Position.Y = screenHeight - dude.Height - navbarOffset
             }
-            window.addEventListener('resize', reportWindowSize)
+            window.addEventListener('resize', dudeOnResize)
                 
 
             /////////FIRST ATTEMPT TO ENTER THE GAME
@@ -261,7 +266,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
 
 
             /////////RUNNING GAME
-            const startingPosition = screenWidth < 612 ? screenWidth/2-25 : screenWidth/2-306
+            const startingPosition = screenWidth < 744 ? screenWidth*10/100 : screenWidth/2-306
             let dude = new Dude(startingPosition)
             let isGameOver = false
             let shapeIndex = 0 
@@ -303,7 +308,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             
             /////////USE EFFECT CLEAN-UP
             return () => {
-                window.removeEventListener('resize', reportWindowSize)
+                window.removeEventListener('resize', dudeOnResize)
                 document.removeEventListener('keyup', uncontrolling)
                 document.removeEventListener('keydown', controlling)
                 clearInterval(GenerateRain)
@@ -379,6 +384,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             window.addEventListener('load', Execute)
 
             return () => {
+                window.removeEventListener('resize', reportWindowSize)
                 window.removeEventListener('load', Execute)
             }
 
