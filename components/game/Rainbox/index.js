@@ -95,12 +95,13 @@ const Wrapper = Styled.div(({gameStatus, score}) =>`
                 background-repeat: no-repeat;
                 width: 675px;
                 height: 170px;
-                opacity: ${ gameStatus == 'intro' ? 0 :
-                gameStatus == 'subintro' ? 1 :
-                gameStatus == 'initial' ? 1 :
-                gameStatus == 'over' ? 0 :
-                gameStatus == 'running' ? 0 : 1};
                 transition: ${gameStatus == 'subintro' ? '2.5s' : '1s'};
+                
+                opacity: ${ gameStatus == 'intro' ? 0 :
+                            gameStatus == 'subintro' ? 1 :
+                            gameStatus == 'initial' ? 1 :
+                            gameStatus == 'over' ? 1 :
+                            gameStatus == 'running' ? 0 : 1};
             }
             .h1-dimm{
                 background-image: url('/img/title/h1-dimm.svg');
