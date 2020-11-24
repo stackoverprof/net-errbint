@@ -368,11 +368,11 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             } 
 
             const Execute = () => {
-                setTimeout(() => GlimpseHandler('intro'), 1000)
-                setTimeout(() => setgameStatus('subintro'), 1000)
-                setTimeout(() => GlimpseHandler('regular'), 5400)
-                setTimeout(() => setgameStatus('initial'), 6000)
-                setTimeout(() => GameScript(), 6000)
+                setTimeout(() => GlimpseHandler('intro'), 2000)
+                setTimeout(() => setgameStatus('subintro'), 2000)
+                setTimeout(() => GlimpseHandler('regular'), 5900)
+                setTimeout(() => setgameStatus('initial'), 6500)
+                setTimeout(() => GameScript(), 6500)
             }
             
             //TIMELINE EXECUTION

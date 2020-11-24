@@ -10,11 +10,14 @@ const Rainbox = ({gameStatus, setgameStatus, score, setscore}) => {
 
     return (
         <Wrapper gameStatus={gameStatus} score={score}>
-            <p>{score.food} {score.time} {gameStatus}</p>
+            {/* <p>{score.food} {score.time} {gameStatus}</p> */}
             <div className="container-canvas" id="game-container">
                 <div className="canvas">
                     <div className="fixedfull h1-cont zi-dimm">
-                        <div className="h1-dimm"></div>
+                        <div className="h1-subcont">    
+                            <div className="h1-dimm"></div>
+                            <p>A FULLSTACK DEVELOPER</p>
+                        </div>
                     </div>
                     <div ref={nrRef} className="glimpse nr"></div>
                     <div ref={etRef} className="glimpse et"></div>
@@ -26,7 +29,10 @@ const Rainbox = ({gameStatus, setgameStatus, score, setscore}) => {
                             etRef={etRef}
                             nrRef={nrRef}/>
                     <div className="fixedfull h1-cont zi-orange">
-                        <div className="h1"></div>
+                        <div className="h1-subcont">    
+                            <div className="h1"></div>
+                            <p className={`hideable ${gameStatus == 'running' ? 'hide' : ''}`}>A FULLSTACK DEVELOPER</p>
+                        </div>
                     </div>
                 </div>
                 <div className="nav-filler"></div>
@@ -58,39 +64,53 @@ const Wrapper = Styled.div(({gameStatus, score}) =>`
             opacity: 0;
         }
 
-        .h1{
-            position: absolute;
-            background-image: url('/img/title/h1.svg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            width: 675px;
-            height: 197px;
-            opacity: ${ gameStatus == 'intro' ? 0 :
-                        gameStatus == 'subintro' ? 1 :
-                        gameStatus == 'initial' ? 1 :
-                        gameStatus == 'over' ? 0 :
-                        gameStatus == 'running' ? 0 : 1};
-            transition: ${gameStatus == 'subintro' ? '2.5s' : '1s'};
-        }
-        .h1-dimm{
-            position: absolute;
-            background-image: url('/img/title/h1-dimm.svg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat; 
-            width: 675px;
-            height: 197px;
-        }
-    }
+        .h1-subcont{
+            position: absolute; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
 
-    p{
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: 100;
+            p{                
+                font-family: 'Bahnschrift', sans-serif;
+                font-size: 32px;
+                color: ${gameStatus == 'running' ? '#BBBBBB' : 'gray'};
+                transition: opacity 1s 2s, color 0.5s;
+                opacity: ${gameStatus == 'intro' ? 0 : 1};
+                z-index: -2;
+            }
+            
+            p.hide{
+                opacity: 0; 
+            }
+
+            .hideable{
+                transition: opacity 0s;
+            }
+
+            .h1{
+                background-image: url('/img/title/h1.svg');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                width: 675px;
+                height: 170px;
+                opacity: ${ gameStatus == 'intro' ? 0 :
+                gameStatus == 'subintro' ? 1 :
+                gameStatus == 'initial' ? 1 :
+                gameStatus == 'over' ? 0 :
+                gameStatus == 'running' ? 0 : 1};
+                transition: ${gameStatus == 'subintro' ? '2.5s' : '1s'};
+            }
+            .h1-dimm{
+                background-image: url('/img/title/h1-dimm.svg');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat; 
+                width: 675px;
+                height: 170px;
+            }
+        }
     }
 
     .container-canvas{
