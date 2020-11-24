@@ -5,20 +5,22 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
     const canvasRef = useRef()
     
     useEffect(() => {
-    /////////GAMESCRIPT START
-    
-    /////////CANVAS INITIALIZATION 
-            const canvas = canvasRef.current
-            const ctx = canvas.getContext('2d')
-            const navbarOffset = 60
-            
-            let screenHeight = window.innerHeight
-            let screenWidth = window.innerWidth
-            
-            canvas.width = screenWidth
-            canvas.height = screenHeight - navbarOffset
-            
-    /////////SCREEN RESIZE HANDLER
+        
+        /////////CANVAS INITIALIZATION 
+        const canvas = canvasRef.current
+        const ctx = canvas.getContext('2d')
+        const navbarOffset = 60
+        
+        let screenHeight = window.innerHeight
+        let screenWidth = window.innerWidth
+        
+        canvas.width = screenWidth
+        canvas.height = screenHeight - navbarOffset
+        
+        /////////GAMESCRIPT START :: execution delayed within 3 seconds
+        const GameScript = () => {
+
+            /////////SCREEN RESIZE HANDLER
             const reportWindowSize = () => {
                 screenWidth = window.innerWidth
                 screenHeight = window.innerHeight
@@ -28,9 +30,9 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 dude.Position.Y = screenHeight - dude.Height - navbarOffset
             }
             window.addEventListener('resize', reportWindowSize)
-            
+                
 
-    /////////FIRST ATTEMPT TO ENTER THE GAME
+            /////////FIRST ATTEMPT TO ENTER THE GAME
             let isAttempted = false
 
             const firstAttempt = () => { 
@@ -51,7 +53,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 // document.getElementById('game-container').requestFullscreen()
             }}
 
-    /////////CONTROLLER - KEYBOARD EVENT HANDLER
+            /////////CONTROLLER - KEYBOARD EVENT HANDLER
             let isRightPressed = false
             let isLeftPressed = false
 
@@ -85,7 +87,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             document.addEventListener('keyup', uncontrolling)
 
 
-    /////////THE DUDE (PLAYER) OBJECT 
+            /////////THE DUDE (PLAYER) OBJECT 
             function Dude(posX){
                 this.Height = 50
                 this.Width = 50
@@ -148,7 +150,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             }
             
 
-    ////////THE RAIN OBJECT
+            ////////THE RAIN OBJECT
             const RainConfig = {
                 colortrail0 : "rgba(220,220,220,1)",
                 colortrail1 : "rgba(220,220,220,0)",
@@ -199,7 +201,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             }
 
 
-    /////////THE FOOD OBJECT
+            /////////THE FOOD OBJECT
             function Food(){
                 this.Width = 20
                 this.Height = 20
@@ -229,7 +231,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             }
 
 
-    /////////GAME OVER HANDLER        
+            /////////GAME OVER HANDLER        
             const GameOver = () => { 
                 if (!isGameOver && isAttempted){
 
@@ -242,9 +244,9 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 isGameOver = true
                 food = {}
             }}
-            
-            
-    /////////NEW GAME HANDLER
+                
+                
+            /////////NEW GAME HANDLER
             const newGameBtn = newGameBtnRef.current
             
             const NewGame = () => {
@@ -258,8 +260,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             newGameBtn.addEventListener('click', NewGame)
 
 
-    /////////RUNNING GAME
-            setgameStatus('initial')
+            /////////RUNNING GAME
             const startingPosition = screenWidth < 612 ? screenWidth/2-25 : screenWidth/2-306
             let dude = new Dude(startingPosition)
             let isGameOver = false
@@ -300,13 +301,34 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             }}, 100)
             
             
-    /////////GLIMPSE HANDLER
+            /////////USE EFFECT CLEAN-UP
+            return () => {
+                window.removeEventListener('resize', reportWindowSize)
+                document.removeEventListener('keyup', uncontrolling)
+                document.removeEventListener('keydown', controlling)
+                clearInterval(GenerateRain)
+                clearInterval(Updater)
+            }
+        }
+        /////////END GAMESCRIPT  
+        
+        
+        /////////GLIMPSE HANDLER
             const animate = (element) => {
                 element.style.opacity = 1
 
                 setTimeout(() => {
                     element.style.opacity = 0
-                }, 350)
+                }, 200)
+            }
+
+            const animateIntro = (element) => {
+                element.style.transition = '1s'
+                element.style.opacity = 0
+
+                setTimeout(() => {
+                    element.style.transition = '0.2s'
+                }, 1000);
             }
 
             const animateSpecial = (et, nr, bri) => {
@@ -330,29 +352,38 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             const GlimpseHandler = (score) => {
                 const {et, nr, bri} = glimpse
 
-                if(score % 10 == 0){
+                if(score % 10 == 0 || score == 'special'){
                     animateSpecial(et, nr, bri)
                     setTimeout(() => animateSpecial(et, nr, bri), 700)
                     setTimeout(() => animateSpecial(et, nr, bri), 1400)
-                } else if (score % 5 == 0) {
+                } else if (score % 5 == 0 || score == 'regular') {
                     animate(et)
-                    setTimeout(() => animate(nr), 200)
-                    setTimeout(() => animate(bri), 500)
+                    setTimeout(() => animate(nr), 150)
+                    setTimeout(() => animate(bri), 400)
+                } else if ( score == 'intro') {
+                    animateIntro(et)
+                    setTimeout(() => animateIntro(bri), 500)
+                    setTimeout(() => animateIntro(nr), 1000)
                 }
             } 
 
+            const Execute = () => {
+                setTimeout(() => GlimpseHandler('intro'), 1000)
+                setTimeout(() => setgameStatus('subintro'), 1000)
+                setTimeout(() => GlimpseHandler('regular'), 5400)
+                setTimeout(() => setgameStatus('initial'), 6000)
+                setTimeout(() => GameScript(), 6000)
+            }
+            
+            //TIMELINE EXECUTION
+            window.addEventListener('load', Execute)
 
-    /////////USE EFFECT CLEAN-UP
             return () => {
-                window.removeEventListener('resize', reportWindowSize)
-                document.removeEventListener('keyup', uncontrolling)
-                document.removeEventListener('keydown', controlling)
-                clearInterval(GenerateRain)
-                clearInterval(Updater)
+                window.removeEventListener('load', Execute)
             }
 
-    /////////END GAMESCRIPT
     }, []) /////////END USE-EFFECT  
+
 
     return (
         <Wrapper> 

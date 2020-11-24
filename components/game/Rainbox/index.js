@@ -10,7 +10,7 @@ const Rainbox = ({gameStatus, setgameStatus, score, setscore}) => {
 
     return (
         <Wrapper gameStatus={gameStatus} score={score}>
-            {/* <p>{score.food} {score.time}</p> */}
+            <p>{score.food} {score.time} {gameStatus}</p>
             <div className="container-canvas" id="game-container">
                 <div className="canvas">
                     <div className="fixedfull h1-cont zi-dimm">
@@ -66,8 +66,12 @@ const Wrapper = Styled.div(({gameStatus, score}) =>`
             background-repeat: no-repeat;
             width: 675px;
             height: 197px;
-            opacity: ${gameStatus == 'running' ? 0 : 1};
-            transition: 1s;
+            opacity: ${ gameStatus == 'intro' ? 0 :
+                        gameStatus == 'subintro' ? 1 :
+                        gameStatus == 'initial' ? 1 :
+                        gameStatus == 'over' ? 0 :
+                        gameStatus == 'running' ? 0 : 1};
+            transition: ${gameStatus == 'subintro' ? '2.5s' : '1s'};
         }
         .h1-dimm{
             position: absolute;
@@ -131,8 +135,8 @@ const Wrapper = Styled.div(({gameStatus, score}) =>`
                 background-position: top;
                 background-repeat: no-repeat;
                 z-index: -2;
-                opacity: 0;
-                transition: 0.20s;
+                opacity: 1;
+                transition: 0.2s;
             }
     
             .bri{

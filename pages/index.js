@@ -5,7 +5,7 @@ import Spinner from '../components/spinner/Spinkit1'
     
 const Index = () => {
     const [removeDisplay, setremoveDisplay] = useState(false)
-    const [gameStatus, setgameStatus] = useState('initial')
+    const [gameStatus, setgameStatus] = useState('intro')
     const [isLoaded, setisLoaded] = useState(false)
     const [score, setscore] = useState({food: 0, time: 0})
 
