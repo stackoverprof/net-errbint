@@ -50,7 +50,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 dude.TimeEnd = 'initial'
                 dude.TimeSpan = new Date().getTime()
                 
-                if (screenWidth < 540) document.getElementById('game-container').requestFullscreen()
+                // if (screenWidth < 540) document.getElementById('game-container').requestFullscreen()
             }}
 
             /////////CONTROLLER - KEYBOARD EVENT HANDLER
