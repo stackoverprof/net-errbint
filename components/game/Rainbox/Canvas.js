@@ -90,23 +90,26 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             const right = rightTouchRef.current
             const left = leftTouchRef.current
 
-            const controlRight = () => {console.log('cR');
-                    isRightPressed = true
+            let isRightTouched = false
+            let isLeftTouched = false
+
+            const controlRight = () => {
+                    isRightTouched = true
                     dude.Velocity = 5
                     firstAttempt()
             }
-            const controlLeft = () => {console.log('cL');
-                    isLeftPressed = true
+            const controlLeft = () => {
+                    isLeftTouched = true
                     dude.Velocity = -5
                     firstAttempt()
             }
-            const uncontrolRight = () => {console.log('ucR');
-                    isRightPressed = false
-                    dude.Velocity = isLeftPressed ? -5 : 0
+            const uncontrolRight = () => {
+                    isRightTouched = false
+                    dude.Velocity = isLeftTouched ? -5 : 0
             }
-            const uncontrolLeft = () => {console.log('ucL');
-                    isLeftPressed = false
-                    dude.Velocity = isRightPressed ? 5 : 0
+            const uncontrolLeft = () => {
+                    isLeftTouched = false
+                    dude.Velocity = isRightTouched ? 5 : 0
             }
 
             right.addEventListener("touchstart", controlRight, false)
@@ -114,6 +117,11 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             right.addEventListener("touchend", uncontrolRight, false)
             left.addEventListener("touchend", uncontrolLeft, false)
 
+            // right.ontouchstart = controlRight
+            // left.ontouchstart = controlLeft
+            // right.ontouchend = uncontrolRight
+            // left.ontouchend = uncontrolLeft
+            
             /////////THE DUDE (PLAYER) OBJECT 
             function Dude(posX){
                 this.Height = 50
@@ -446,6 +454,7 @@ const Wrapper = Styled.div(() =>`
     justify-content: start;
     align-items: center;
     flex-direction: column;
+    z-index: -1;
 
     .control{
         position: fixed;
