@@ -211,6 +211,11 @@ const Wrapper = Styled.div(({gameStatus, score, screen}) =>`
         align-items: center;
         
         pointer-events: none;
+
+        button{
+            
+            pointer-events: all;
+        }
     }
 `)
     
