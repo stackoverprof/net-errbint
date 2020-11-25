@@ -7,14 +7,15 @@ const Index = () => {
     const [removeDisplay, setremoveDisplay] = useState(false)
     const [isLoaded, setisLoaded] = useState(false)
 
-    const removeSpinner = () => {
-        setisLoaded(true)
-        setTimeout(() => {
-            setremoveDisplay(true)
-        }, 1000)
-    }
-
+    
     useEffect(() => {
+        const removeSpinner = () => {
+            setisLoaded(true)
+            setTimeout(() => {
+                setremoveDisplay(true)
+            }, 1000)
+        }
+        
         window.addEventListener('load', removeSpinner)
         
         return () => {
