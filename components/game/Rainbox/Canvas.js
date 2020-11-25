@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 
-const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) => {
+const Canvas = ({setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, briRef, nrRef, etRef}) => {
     const rightTouchRef = useRef()
     const leftTouchRef = useRef()
     const canvasRef = useRef()
@@ -29,7 +29,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
         }
         window.addEventListener('resize', reportWindowSize)
         
-        /////////GAMESCRIPT START :: execution delayed within 6.5 seconds
+        /////////GAMESCRIPT START :: execution delayed within 5.5 seconds (for intro)
         const GameScript = () => {
 
             /////////FIRST ATTEMPT TO ENTER THE GAME
@@ -71,6 +71,12 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 } else if (e.which == 13 && isGameOver) {
                     //PRESSING ENTER
                     NewGame()
+                } 
+
+                //special things
+                else if (e.which == 16){
+                    if (e.location == 1) GlimpseHandler('regular')
+                    if (e.location == 2) GlimpseHandler('special')
                 }
             }
             document.addEventListener('keydown', controlling)
@@ -150,12 +156,18 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                     }
                 }
 
-                this.checkEaten = function(){        
+                this.checkEaten = () => {        
                     if(player.Position.X <= food.PosX + food.Width && player.Position.X + player.Width >= food.PosX){
                     this.EatCount++
                     GlimpseHandler(this.EatCount)
                     food = new Food()
                 }}
+
+                
+                this.dialogAttacment = () => {
+                    avoid.style.left = `${this.Position.X + 34}px`
+                    ohno.style.left = `${this.Position.X + 34}px`
+                }
                             
                 this.Draw = () => {
                     ctx.shadowColor = this.Shadow
@@ -173,6 +185,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                         this.Position.X = screenWidth - (this.Width+2)
                     }
                     
+                    this.dialogAttacment()
                     this.checkCollisions()
                     this.checkEaten()
                     this.Draw()
@@ -276,6 +289,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 isGameOver = true
                 food = {}
 
+                DialogHandler('over')
                 console.log(player.EatCount + " " + player.TimeSpan)
             }}
                 
@@ -285,6 +299,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             
             const NewGame = () => {
                 setgameStatus('running')
+                GlimpseHandler('regular')
                 isGameOver = false
 
                 player = new Player(player.Position.X)
@@ -300,6 +315,8 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             let shapeIndex = 0 
             let shapes = {}
             let food = {}
+            
+            DialogHandler('init', startingPosition)
 
             const calcTiming = () => {
                 if (player.TimeEnd != 'initial'){
@@ -334,9 +351,11 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 }  
 
                 //i need the setInterval value to be dynamic, but it can't, 
+                let dynamicInterval = screenWidth > 540 ? 100*(1366/screenWidth) : 100*(1366/screenWidth)/2
                 //so i use a recursive setTimout instead, it's interval value is dynamically changing based on screenWidth
-                setTimeout( GenerateRain, screenWidth > 540 ? 100*(1366/screenWidth) : 100*(1366/screenWidth)/2)
+                setTimeout( GenerateRain, dynamicInterval)
             }
+
             GenerateRain() 
 
             /////////EVENT LISTENER HANDLER
@@ -356,7 +375,6 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 document.removeEventListener('keydown', controlling)
                 document.removeEventListener('keyup', uncontrolling)
                 window.removeEventListener('resize', playerOnResize)
-                // clearInterval(GenerateRain)
                 clearInterval(Updater)
             }
         }
@@ -412,6 +430,33 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 setTimeout(() => animateIntro(nr), 1000)
             }
         } 
+
+        /////////DIALOG HANDLER
+        const avoid = dialogAvoidRef.current
+        const ohno = dialogOhnoRef.current
+
+        const DialogHandler = (action, startingPosition) => {
+            switch (action) {
+                case 'init':
+                    avoid.style.display = 'flex'
+                    avoid.style.left = `${startingPosition + 34}px`
+                    break;
+                case 'over':
+                    avoid.style.display = 'none'
+
+                    ohno.style.visibility = 'visible'
+                    ohno.style.opacity = 1
+                    ohno.style.transition = '0s'
+                    
+                    setTimeout(() => {
+                        ohno.style.visibility = 'hidden'
+                        ohno.style.opacity = 0
+                        ohno.style.transition = 'opacity 2s, visibility 0s 2s'
+                        
+                    }, 1000)
+                    break
+            }
+        }
 
         /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
         const Execute = () => {

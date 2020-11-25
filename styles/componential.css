@@ -18,6 +18,7 @@ button:hover{
 
 
 .fixedfull{
+    pointer-events: none;
     position: fixed;
     width: 100%;
     height: 100%;

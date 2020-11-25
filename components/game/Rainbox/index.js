@@ -7,6 +7,8 @@ const Rainbox = () => {
     const [score, setscore] = useState({food: 0, time: 0})
     const [gameStatus, setgameStatus] = useState('intro')
     const newGameBtnRef = useRef()
+    const dialogAvoidRef = useRef()
+    const dialogOhnoRef = useRef()
     const briRef = useRef()
     const etRef = useRef()
     const nrRef = useRef()
@@ -20,13 +22,13 @@ const Rainbox = () => {
                         <div className="h1-subcont">    
                             <div className="h1-dimm supertitle"></div>
                             <div className="subtitle">
-                                <p className={`${screen < 500 ? 'maxw' : ''}`}>
+                                <p>
                                     {
                                         gameStatus == 'over' ? <span>&emsp;</span> :
-                                        gameStatus != 'running' ? <span>&emsp;{screen < 500 ? <br/> : '' }&emsp;</span> : 
+                                        gameStatus != 'running' ? <span>&emsp;&emsp;</span> : 
                                         screen < 500 ? 'FULLSTACK DEVELOPER' : 'A FULLSTACK DEVELOPER'
                                     }
-                                </p>                                
+                                </p>                     
                             </div>
                         </div>
                     </div>
@@ -35,6 +37,8 @@ const Rainbox = () => {
                     <div ref={briRef} className="glimpse bri"></div>
                     <Canvas setgameStatus={setgameStatus} 
                             newGameBtnRef={newGameBtnRef}
+                            dialogAvoidRef={dialogAvoidRef}
+                            dialogOhnoRef={dialogOhnoRef}
                             setscore={setscore} 
                             briRef={briRef}
                             etRef={etRef}
@@ -43,7 +47,7 @@ const Rainbox = () => {
                         <div className="h1-subcont">    
                             <div className="h1 supertitle"></div>
                             <div className={`subtitle hideable ${gameStatus == 'running' ? 'hide' : ''}`}>
-                                <p className={`${screen < 500 ? 'maxw' : ''}`}>
+                                <p>
                                     {
                                         gameStatus == 'over' ? 'GAME OVER' : 
                                         screen < 500 ? 'FULLSTACK DEVELOPER' : 'A FULLSTACK DEVELOPER'
@@ -56,10 +60,23 @@ const Rainbox = () => {
                 </div>
                 <div className="nav-filler"></div>
             </div>
-            <div>
-            {/* {gameStatus == 'running' || gameStatus == 'initial' && */}
+
+            
             <p className="live-score"><span>{score.food}</span>&nbsp;&nbsp;{score.time == 0.00 ? 0 : score.time}</p>
-            {/* } */}
+            <div className="final-score fixedfull">
+                {
+                gameStatus == 'over' ?
+                    <p><span>Food : {score.food}</span>&nbsp;&nbsp; Time: {score.time}</p>
+                :
+                gameStatus == 'initial' ?
+                    <p className={`instruction ${screen < 600 && 'instruction-mobile'}`}>Touch the screen <span className="light-gray">/</span> use arrow key to move</p>
+                :
+                    <p></p>
+                }
+            </div>
+            <div className="dialog-cont fixedfull">
+                <div className="dialog-avoid" ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
+                <div className="dialog-ohno" ref={dialogOhnoRef}>OH NO!</div>
             </div>
         </Wrapper>
     )
@@ -73,18 +90,109 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     left: 0;
     z-index: -2;
 
+    .dialog-cont{
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+
+
+        .dialog-avoid{
+            position: fixed;
+            bottom: 118px;
+            left: 0;
+
+            background-image: url('/img/dialog/avoid.svg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 261px;
+            height: 110px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 16px;
+            
+            opacity: ${gameStatus == 'initial' ? 1 : 0};
+            transition: opacity 3s;
+
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .dialog-ohno{
+            position: fixed;
+            bottom: 118px;
+            left: 0;
+
+            background-image: url('/img/dialog/ohno.svg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 158px;
+            height: 110px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 16px;
+            // opacity: 0;
+            visibility: hidden;
+            // transition: opacity 3s 1s;
+
+            font-size: 22px;
+            font-weight: bold;
+        }
+    }
+
     .maxw{
         max-width: 200px;
     }
 
-    .live-score{
-        opacity: ${gameStatus == 'initial' ? 0.75 : gameStatus == 'running' ? 1 : 0 };
+    .instruction{
+        color: gray;
+        font-weight: 500;
+        font-size: 18px;
+        
+        span.light-gray{
+            color: #CCCCCC;
+        }
+    }
+    
+    .instruction-mobile{
+        width: 60%; 
+        text-align: right !important; 
+        margin-right: 10%;
+        font-size: 16px;
+    }
+
+    .final-score{
+        display: flex;
+        justify-content: ${screen < 600 && gameStatus != 'over' ? 'flex-end' : 'center'};
+        align-items: flex-end;
+
+        padding-bottom: 78px;
+
         font-family: 'Bahnschrift';
+        font-weight: 500;
+        font-size: 16pt;
+
+        p{
+            text-align: center;
+        }
+
+        span{
+            color: #FF5B14;
+        }
+    }
+
+    .live-score{
+        position: fixed;
+        opacity: ${gameStatus == 'initial' ? 0.75 : gameStatus == 'running' ? 1 : 0 };
         transition: 0.25s;
+        top: 16px;
+        left: 20px;
+        
+        font-family: 'Bahnschrift';
         font-size: 24px;
-
-        margin: 16px 20px;
-
+        
         span{
             color: #FF5B14;
         }
@@ -121,14 +229,16 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
             align-items: center;
             z-index: -4;
             position: relative;
-            top: ${screen > 500 ? '-12px' : '-32px'};
+            top: ${screen > 500 ? '-12px' : '-48px'};
             transition: 1s 2s;
             opacity: ${gameStatus == 'intro' ? 0 : 1};
+
+            min-height: 38px;
 
             p{
                 padding-top: 4px;
                 font-family: 'Bahnschrift', sans-serif;
-                font-size: ${screen >  500 ? '32px' : '28px'};
+                font-size: ${screen >  500 ? '32px' : '24px'};
                 text-align: center;
                 transition: 0.5s;
                 color: ${ gameStatus == 'running' ? '#BBBBBB' : 
@@ -231,7 +341,8 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     button.newgame{
         display: ${gameStatus == 'over' ? 'unset' : 'none'};
         pointer-events: all;
-        ${screen > 500 ? 'margin-left: 12px;' : ''}
+        margin-left: 12px;
+        ${screen < 500 && 'font-size: 16px;'}
     }
 `)
     
