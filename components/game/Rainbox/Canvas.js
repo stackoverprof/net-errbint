@@ -50,7 +50,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 dude.TimeEnd = 'initial'
                 dude.TimeSpan = new Date().getTime()
                 
-                // document.getElementById('game-container').requestFullscreen()
+                if (screenWidth < 540) document.getElementById('game-container').requestFullscreen()
             }}
 
             /////////CONTROLLER - KEYBOARD EVENT HANDLER
@@ -472,12 +472,6 @@ const Wrapper = Styled.div(() =>`
             height: 100%;
             opacity: 0.2;
             width: 50%;
-        }
-        .touch-right{
-            background: red;
-        }
-        .touch-left{
-            background: blue;
         }
     }
 `)
