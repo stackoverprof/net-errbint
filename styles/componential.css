@@ -1,10 +1,10 @@
 button{
     font-family: 'Bahnschrift';
-    background: #FF5B14;
+    background: #FE8D13;
     border: none;
     padding: 10px 12px 8px 12px;
     border-radius: 4px;
-
+    
     font-family: 'Bahnschrift';
     font-size: 18px;
     color: white;
@@ -13,5 +13,14 @@ button:focus{
     outline: none;
 }
 button:hover{
-    box-shadow: inset 0 0 0 2px rgba(0,0,0,0.25);
+    background: #e47b0b;
+}
+
+
+.fixedfull{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
 }

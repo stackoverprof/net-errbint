@@ -5,8 +5,6 @@ import Spinner from '../components/spinner/Spinkit1'
     
 const Index = () => {
     const [removeDisplay, setremoveDisplay] = useState(false)
-    const [score, setscore] = useState({food: 0, time: 0})
-    const [gameStatus, setgameStatus] = useState('intro')
     const [isLoaded, setisLoaded] = useState(false)
 
     const removeSpinner = () => {
@@ -27,8 +25,8 @@ const Index = () => {
     return (
     <>
         <Spinner isLoaded={isLoaded} removeDisplay={removeDisplay}/>
-        <Wrapper gameStatus={gameStatus}>
-            <Rainbox gameStatus={gameStatus} setgameStatus={setgameStatus} score={score} setscore={setscore}/>
+        <Wrapper>
+            <Rainbox />
             {/* <button>BUTTON</button> */}
         </Wrapper>
     </>

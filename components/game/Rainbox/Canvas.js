@@ -116,11 +116,6 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             left.addEventListener("touchstart", controlLeft, false)
             right.addEventListener("touchend", uncontrolRight, false)
             left.addEventListener("touchend", uncontrolLeft, false)
-
-            // right.ontouchstart = controlRight
-            // left.ontouchstart = controlLeft
-            // right.ontouchend = uncontrolRight
-            // left.ontouchend = uncontrolLeft
             
             /////////THE DUDE (PLAYER) OBJECT 
             function Dude(posX){
@@ -420,11 +415,12 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
 
         /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
         const Execute = () => {
-            setTimeout(() => GlimpseHandler('intro'), 2000)
-            setTimeout(() => setgameStatus('subintro'), 2000)
-            setTimeout(() => GlimpseHandler('regular'), 5900)
-            setTimeout(() => setgameStatus('initial'), 6500)
-            setTimeout(() => GameScript(), 6500)
+            let delay = 1000
+            setTimeout(() => GlimpseHandler('intro'), delay)
+            setTimeout(() => setgameStatus('subintro'), delay)
+            setTimeout(() => GlimpseHandler('regular'), delay + 3900)
+            setTimeout(() => setgameStatus('initial'), delay + 4500)
+            setTimeout(() => GameScript(), delay + 4500)
         }
         window.addEventListener('load', Execute)
         
