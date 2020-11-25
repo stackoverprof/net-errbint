@@ -340,7 +340,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
 
                 //i need the setInterval value to be dynamic, but it can't, 
                 //so i use a recursive setTimout instead, it's interval value is dynamically changing based on screenWidth
-                setTimeout( GenerateRain, 100*(1366/screenWidth))
+                setTimeout( GenerateRain, screenWidth > 540 ? 100*(1366/screenWidth) : 100*(1366/screenWidth)/2)
             }
             GenerateRain() 
 
