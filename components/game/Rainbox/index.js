@@ -20,8 +20,13 @@ const Rainbox = () => {
                         <div className="h1-subcont">    
                             <div className="h1-dimm supertitle"></div>
                             <div className="subtitle">
-                                {gameStatus == 'over' ? <p>GAME OVER</p> : screen > 500 ? <p>A FULLSTACK DEVELOPER</p> :  <p>FULLSTACK<br/>DEVELOPER</p>}
-                                <button className="newgame hide" ref={newGameBtnRef}>PLAY AGAIN</button>
+                                <p className={`${screen < 500 ? 'maxw' : ''}`}>
+                                    {
+                                        gameStatus == 'over' ? <span>&emsp;</span> :
+                                        gameStatus != 'running' ? <span>&emsp;{screen < 500 ? <br/> : '' }&emsp;</span> : 
+                                        screen < 500 ? 'FULLSTACK DEVELOPER' : 'A FULLSTACK DEVELOPER'
+                                    }
+                                </p>                                
                             </div>
                         </div>
                     </div>
@@ -38,7 +43,12 @@ const Rainbox = () => {
                         <div className="h1-subcont">    
                             <div className="h1 supertitle"></div>
                             <div className={`subtitle hideable ${gameStatus == 'running' ? 'hide' : ''}`}>
-                                {gameStatus == 'over' ? <p>GAME OVER</p> : screen > 500 ? <p>A FULLSTACK DEVELOPER</p> :  <p>FULLSTACK<br/>DEVELOPER</p>}
+                                <p className={`${screen < 500 ? 'maxw' : ''}`}>
+                                    {
+                                        gameStatus == 'over' ? 'GAME OVER' : 
+                                        screen < 500 ? 'FULLSTACK DEVELOPER' : 'A FULLSTACK DEVELOPER'
+                                    }
+                                </p>
                                 <button className="newgame" ref={newGameBtnRef}>PLAY AGAIN</button>
                             </div>
                         </div>
@@ -46,7 +56,11 @@ const Rainbox = () => {
                 </div>
                 <div className="nav-filler"></div>
             </div>
-            <p>{score.food} {score.time} {gameStatus}</p>
+            <div>
+            {/* {gameStatus == 'running' || gameStatus == 'initial' && */}
+            <p className="live-score"><span>{score.food}</span>&nbsp;&nbsp;{score.time == 0.00 ? 0 : score.time}</p>
+            {/* } */}
+            </div>
         </Wrapper>
     )
 }
@@ -58,6 +72,23 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     top: 0;
     left: 0;
     z-index: -2;
+
+    .maxw{
+        max-width: 200px;
+    }
+
+    .live-score{
+        opacity: ${gameStatus == 'initial' ? 0.75 : gameStatus == 'running' ? 1 : 0 };
+        font-family: 'Bahnschrift';
+        transition: 0.25s;
+        font-size: 24px;
+
+        margin: 16px 20px;
+
+        span{
+            color: #FF5B14;
+        }
+    }
 
     .h1-cont{
         display: flex;
@@ -90,7 +121,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
             align-items: center;
             z-index: -4;
             position: relative;
-            top: ${screen > 500 ? '-20px' : '-32px'};
+            top: ${screen > 500 ? '-12px' : '-32px'};
             transition: 1s 2s;
             opacity: ${gameStatus == 'intro' ? 0 : 1};
 
@@ -199,8 +230,6 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
 
     button.newgame{
         display: ${gameStatus == 'over' ? 'unset' : 'none'};
-        opacity: ${gameStatus == 'over' ? 1 : 0};
-        transition: opacity s;
         pointer-events: all;
         ${screen > 500 ? 'margin-left: 12px;' : ''}
     }

@@ -46,9 +46,9 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 RainConfig.colortrail1 = "rgba(200,200,200,0)"
 
                 food = new Food()
-                dude.TimeStart = new Date().getTime()
-                dude.TimeEnd = 'initial'
-                dude.TimeSpan = new Date().getTime()
+                player.TimeStart = new Date().getTime()
+                player.TimeEnd = 'initial'
+                player.TimeSpan = new Date().getTime()
                 
                 // if (screenWidth < 540) document.getElementById('game-container').requestFullscreen()
             }}
@@ -61,12 +61,12 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 if (e.which == 65 || e.which == 37){
                     //GO LEFT 
                     isLeftPressed = true
-                    dude.Velocity = -5
+                    player.Velocity = -5
                     firstAttempt()
                 } else if (e.which == 68 || e.which == 39){
                     //GO RIGHT
                     isRightPressed = true
-                    dude.Velocity = 5
+                    player.Velocity = 5
                     firstAttempt()
                 } else if (e.which == 13 && isGameOver) {
                     //PRESSING ENTER
@@ -78,10 +78,10 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             const uncontrolling = (e) => {
                 if (e.which == 65 || e.which == 37){
                     isLeftPressed = false
-                    dude.Velocity = isRightPressed ? 5 : 0                
+                    player.Velocity = isRightPressed ? 5 : 0                
                 }else if (e.which == 68 || e.which == 39){
                     isRightPressed = false
-                    dude.Velocity = isLeftPressed ? -5 : 0
+                    player.Velocity = isLeftPressed ? -5 : 0
                 }
             }
             document.addEventListener('keyup', uncontrolling)
@@ -95,21 +95,21 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
 
             const controlRight = () => {
                     isRightTouched = true
-                    dude.Velocity = 5
+                    player.Velocity = 5
                     firstAttempt()
             }
             const controlLeft = () => {
                     isLeftTouched = true
-                    dude.Velocity = -5
+                    player.Velocity = -5
                     firstAttempt()
             }
             const uncontrolRight = () => {
                     isRightTouched = false
-                    dude.Velocity = isLeftTouched ? -5 : 0
+                    player.Velocity = isLeftTouched ? -5 : 0
             }
             const uncontrolLeft = () => {
                     isLeftTouched = false
-                    dude.Velocity = isRightTouched ? 5 : 0
+                    player.Velocity = isRightTouched ? 5 : 0
             }
 
             right.addEventListener("touchstart", controlRight, false)
@@ -117,8 +117,8 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             right.addEventListener("touchend", uncontrolRight, false)
             left.addEventListener("touchend", uncontrolLeft, false)
             
-            /////////THE DUDE (PLAYER) OBJECT 
-            function Dude(posX){
+            /////////THE PLAYER (ORANGE BOX) OBJECT 
+            function Player(posX){
                 this.Height = 50
                 this.Width = 50
                 this.Shadow = 'orange'
@@ -151,7 +151,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 }
 
                 this.checkEaten = function(){        
-                    if(dude.Position.X <= food.PosX + food.Width && dude.Position.X + dude.Width >= food.PosX){
+                    if(player.Position.X <= food.PosX + food.Width && player.Position.X + player.Width >= food.PosX){
                     this.EatCount++
                     GlimpseHandler(this.EatCount)
                     food = new Food()
@@ -242,7 +242,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 
                 let randomPos
                 do randomPos = Math.random()*(screenWidth-this.Width*3) + this.Width
-                while (randomPos >= dude.Position.X - (this.Width + this.distance) && randomPos <= dude.Position.X + dude.Width + this.distance)
+                while (randomPos >= player.Position.X - (this.Width + this.distance) && randomPos <= player.Position.X + player.Width + this.distance)
                 
                 this.PosX = randomPos
             
@@ -267,16 +267,16 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             const GameOver = () => { 
                 if (!isGameOver && isAttempted){
 
-                dude.TimeSpan = new Date().getTime() - dude.TimeSpan
-                dude.TimeEnd = new Date().getTime()
-                dude.Shadow = 'black'
-                dude.Color = 'black'
+                player.TimeSpan = new Date().getTime() - player.TimeSpan
+                player.TimeEnd = new Date().getTime()
+                player.Shadow = 'black'
+                player.Color = 'black'
 
                 setgameStatus('over')
                 isGameOver = true
                 food = {}
 
-                console.log(dude.EatCount + " " + dude.TimeSpan)
+                console.log(player.EatCount + " " + player.TimeSpan)
             }}
                 
                 
@@ -287,7 +287,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 setgameStatus('running')
                 isGameOver = false
 
-                dude = new Dude(dude.Position.X)
+                player = new Player(player.Position.X)
                 food = new Food()
             }
             newGameBtn.addEventListener('click', NewGame)
@@ -295,23 +295,23 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
 
             /////////RUNNING GAME
             const startingPosition = screenWidth < 744 ? screenWidth*10/100 : screenWidth/2-306
-            let dude = new Dude(startingPosition)
+            let player = new Player(startingPosition)
             let isGameOver = false
             let shapeIndex = 0 
             let shapes = {}
             let food = {}
 
             const calcTiming = () => {
-                if (dude.TimeEnd != 'initial'){
-                    return dude.TimeSpan
+                if (player.TimeEnd != 'initial'){
+                    return player.TimeSpan
                 }else{
-                    return new Date().getTime() - dude.TimeStart 
+                    return new Date().getTime() - player.TimeStart 
                 }
             }
 
             const Updater = setInterval(() => {
                 setscore({
-                    food: dude.EatCount, 
+                    food: player.EatCount, 
                     time: ((isAttempted ? calcTiming() : 0)/1000).toFixed(2)
                 })
 
@@ -321,7 +321,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 //Then, redrawing objects
                 if(!isGameOver && isAttempted) food.Update()
                 for(let i in shapes) shapes[i].Update()
-                dude.Update()
+                player.Update()
                 
             }, 10)
             
@@ -329,7 +329,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 if (!isGameOver && !tabInactive){
                     let randomPos
                     do randomPos = Math.random()*(screenWidth + RainConfig.size*2) - RainConfig.size
-                    while (!isAttempted && randomPos > dude.Position.X - RainConfig.size*2 && randomPos < dude.Position.X + RainConfig.size*2)
+                    while (!isAttempted && randomPos > player.Position.X - RainConfig.size*2 && randomPos < player.Position.X + RainConfig.size*2)
                     new Rain(randomPos)
                 }  
 
@@ -340,10 +340,10 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             GenerateRain() 
 
             /////////EVENT LISTENER HANDLER
-            const dudeOnResize = () => {
-                dude.Position.Y = screenHeight - dude.Height - navbarOffset
+            const playerOnResize = () => {
+                player.Position.Y = screenHeight - player.Height - navbarOffset
             }
-            window.addEventListener('resize', dudeOnResize)
+            window.addEventListener('resize', playerOnResize)
             
             let tabInactive = false
             
@@ -355,7 +355,7 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             return () => {
                 document.removeEventListener('keydown', controlling)
                 document.removeEventListener('keyup', uncontrolling)
-                window.removeEventListener('resize', dudeOnResize)
+                window.removeEventListener('resize', playerOnResize)
                 // clearInterval(GenerateRain)
                 clearInterval(Updater)
             }
