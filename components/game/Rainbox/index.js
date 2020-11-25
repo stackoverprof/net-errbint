@@ -161,7 +161,8 @@ const Wrapper = Styled.div(({gameStatus, score, screen}) =>`
             }
             
             .zi-orange{
-                z-index: -2;
+                z-index: 0;
+                pointer-events: none;
             }
             .glimpse{
                 position: absolute;
@@ -208,6 +209,8 @@ const Wrapper = Styled.div(({gameStatus, score, screen}) =>`
         display: ${gameStatus == 'over' ? 'flex' : 'none'};
         justify-content: center;
         align-items: center;
+        
+        pointer-events: none;
     }
 `)
     

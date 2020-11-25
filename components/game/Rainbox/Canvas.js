@@ -473,6 +473,7 @@ const Wrapper = Styled.div(() =>`
             opacity: 0.2;
             width: 50%;
         }
+        
     }
 `)
 
