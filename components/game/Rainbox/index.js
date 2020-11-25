@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react'
+import AnimatedNumber from "animated-number-react"
+import useResize from 'use-resizing'
 import Styled from '@emotion/styled'
 import Canvas from './Canvas'
-import useResize from 'use-resizing'
 
 const Rainbox = () => {
     const [score, setscore] = useState({food: 0, time: 0})
+    const [animateValue, setanimateValue] = useState(0)
     const [gameStatus, setgameStatus] = useState('intro')
     const newGameBtnRef = useRef()
     const dialogAvoidRef = useRef()
@@ -13,6 +15,12 @@ const Rainbox = () => {
     const etRef = useRef()
     const nrRef = useRef()
     const screen = useResize().width
+
+    const handleAnimateValue = (value) => {
+        setanimateValue(value)
+    }
+
+    const formatValue = (value) => `${(Number(value)/1000).toFixed(2)}`;
 
     return (
         <Wrapper gameStatus={gameStatus} screen={screen}>
@@ -37,6 +45,7 @@ const Rainbox = () => {
                     <div ref={briRef} className="glimpse bri"></div>
                     <Canvas setgameStatus={setgameStatus} 
                             newGameBtnRef={newGameBtnRef}
+                            handleAnimateValue={handleAnimateValue}
                             dialogAvoidRef={dialogAvoidRef}
                             dialogOhnoRef={dialogOhnoRef}
                             setscore={setscore} 
@@ -66,7 +75,11 @@ const Rainbox = () => {
             <div className="final-score fixedfull">
                 {
                 gameStatus == 'over' ?
-                    <p><span>Food : {score.food}</span>&nbsp;&nbsp; Time: {score.time}</p>
+                    <p><span className="orange">Food : {score.food}</span>&nbsp;&nbsp; Time: <AnimatedNumber
+                        value={animateValue}
+                        formatValue={formatValue}
+                        duration={1000}
+                    /></p>
                 :
                 gameStatus == 'initial' ?
                     <p className={`instruction ${screen < 600 && 'instruction-mobile'}`}>Touch the screen <span className="light-gray">/</span> use arrow key to move</p>
@@ -178,7 +191,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
             text-align: center;
         }
 
-        span{
+        span.orange{
             color: #FF5B14;
         }
     }

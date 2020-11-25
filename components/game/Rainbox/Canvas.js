@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 
-const Canvas = ({setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, briRef, nrRef, etRef}) => {
+const Canvas = ({handleAnimateValue ,setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, briRef, nrRef, etRef}) => {
     const rightTouchRef = useRef()
     const leftTouchRef = useRef()
     const canvasRef = useRef()
@@ -290,10 +290,11 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogO
                 food = {}
 
                 DialogHandler('over')
+                handleAnimateValue(player.TimeSpan)
                 console.log(player.EatCount + " " + player.TimeSpan)
             }}
-                
-                
+            
+            
             /////////NEW GAME HANDLER
             const newGameBtn = newGameBtnRef.current
             
@@ -301,9 +302,11 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogO
                 setgameStatus('running')
                 GlimpseHandler('regular')
                 isGameOver = false
-
+                
                 player = new Player(player.Position.X)
                 food = new Food()
+
+                handleAnimateValue(0)
             }
             newGameBtn.addEventListener('click', NewGame)
 
