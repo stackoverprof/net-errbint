@@ -2,6 +2,8 @@ import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 
 const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) => {
+    const rightTouchRef = useRef()
+    const leftTouchRef = useRef()
     const canvasRef = useRef()
     
     useEffect(() => {
@@ -27,15 +29,8 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
         }
         window.addEventListener('resize', reportWindowSize)
         
-        /////////GAMESCRIPT START :: execution delayed within 3 seconds
+        /////////GAMESCRIPT START :: execution delayed within 6.5 seconds
         const GameScript = () => {
-
-            /////////SCREEN RESIZE HANDLER
-            const dudeOnResize = () => {
-                dude.Position.Y = screenHeight - dude.Height - navbarOffset
-            }
-            window.addEventListener('resize', dudeOnResize)
-                
 
             /////////FIRST ATTEMPT TO ENTER THE GAME
             let isAttempted = false
@@ -91,6 +86,33 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
             }
             document.addEventListener('keyup', uncontrolling)
 
+            /////////CONTROLLER - TOUCHSCREEN EVENT HANDLER
+            const right = rightTouchRef.current
+            const left = leftTouchRef.current
+
+            const controlRight = () => {console.log('cR');
+                    isRightPressed = true
+                    dude.Velocity = 5
+                    firstAttempt()
+            }
+            const controlLeft = () => {console.log('cL');
+                    isLeftPressed = true
+                    dude.Velocity = -5
+                    firstAttempt()
+            }
+            const uncontrolRight = () => {console.log('ucR');
+                    isRightPressed = false
+                    dude.Velocity = isLeftPressed ? -5 : 0
+            }
+            const uncontrolLeft = () => {console.log('ucL');
+                    isLeftPressed = false
+                    dude.Velocity = isRightPressed ? 5 : 0
+            }
+
+            right.addEventListener("touchstart", controlRight, false)
+            left.addEventListener("touchstart", controlLeft, false)
+            right.addEventListener("touchend", uncontrolRight, false)
+            left.addEventListener("touchend", uncontrolLeft, false)
 
             /////////THE DUDE (PLAYER) OBJECT 
             function Dude(posX){
@@ -160,15 +182,15 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 colortrail0 : "rgba(220,220,220,1)",
                 colortrail1 : "rgba(220,220,220,0)",
                 colorbox : "rgb(210,210,210)",
-                fallSpeed : 4,
-                accel : 5,
+                additionalSpeed : 4,
+                base : 5,
                 size : 30
             }
 
             function Rain(posX) {
                 this.Height = RainConfig.size
                 this.Width = RainConfig.size
-                this.Velocity = Math.random() * RainConfig.fallSpeed + RainConfig.accel
+                this.Velocity = Math.random() * RainConfig.additionalSpeed + RainConfig.base
                 this.Index = shapeIndex
                 this.Position = {
                     X: posX,
@@ -222,6 +244,8 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 this.PosX = randomPos
             
                 this.Draw = function(){
+                    if (this.PosX > screenWidth - this.Width*2) this.PosX = screenWidth - this.Width*2
+
                     ctx.beginPath()
                     ctx.rect(this.PosX, screenHeight- navbarOffset - this.Height*2, this.Width, this.Width)
                     ctx.shadowColor = this.shadow
@@ -248,6 +272,8 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 setgameStatus('over')
                 isGameOver = true
                 food = {}
+
+                console.log(dude.EatCount + " " + dude.TimeSpan)
             }}
                 
                 
@@ -260,7 +286,6 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
 
                 dude = new Dude(dude.Position.X)
                 food = new Food()
-                shapes = {}
             }
             newGameBtn.addEventListener('click', NewGame)
 
@@ -297,21 +322,38 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 
             }, 10)
             
-            const GenerateRain = setInterval(() => {
-                if (!isGameOver){
-                let randomPos
-                do randomPos = Math.random()*(screenWidth + RainConfig.size*2) - RainConfig.size
-                while (!isAttempted && randomPos > dude.Position.X - RainConfig.size*2 && randomPos < dude.Position.X + RainConfig.size*2)
-                new Rain(randomPos)
-            }}, 100)
+            const GenerateRain = () => {
+                if (!isGameOver && !tabInactive){
+                    let randomPos
+                    do randomPos = Math.random()*(screenWidth + RainConfig.size*2) - RainConfig.size
+                    while (!isAttempted && randomPos > dude.Position.X - RainConfig.size*2 && randomPos < dude.Position.X + RainConfig.size*2)
+                    new Rain(randomPos)
+                }  
+
+                //i need the setInterval value to be dynamic, but it can't, 
+                //so i use a recursive setTimout instead, it's interval value is dynamically changing based on screenWidth
+                setTimeout( GenerateRain, 100*(1366/screenWidth))
+            }
+            GenerateRain() 
+
+            /////////EVENT LISTENER HANDLER
+            const dudeOnResize = () => {
+                dude.Position.Y = screenHeight - dude.Height - navbarOffset
+            }
+            window.addEventListener('resize', dudeOnResize)
             
+            let tabInactive = false
             
-            /////////USE EFFECT CLEAN-UP
+            document.addEventListener("visibilitychange", function() {
+                tabInactive = document.hidden ? true : false
+            })        
+            
+            /////////EVENT LISTENER CLEAN-UP
             return () => {
-                window.removeEventListener('resize', dudeOnResize)
-                document.removeEventListener('keyup', uncontrolling)
                 document.removeEventListener('keydown', controlling)
-                clearInterval(GenerateRain)
+                document.removeEventListener('keyup', uncontrolling)
+                window.removeEventListener('resize', dudeOnResize)
+                // clearInterval(GenerateRain)
                 clearInterval(Updater)
             }
         }
@@ -319,6 +361,11 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
         
         
         /////////GLIMPSE HANDLER
+        const GlimpseHandler = (score) => {
+            const bri = briRef.current
+            const nr = nrRef.current
+            const et = etRef.current
+
             const animate = (element) => {
                 element.style.opacity = 1
 
@@ -348,45 +395,36 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
                 }, 350)
             }
 
-            const glimpse = {
-                bri: briRef.current,
-                nr: nrRef.current,
-                et: etRef.current
+            if(score % 10 == 0 || score == 'special'){
+                animateSpecial(et, nr, bri)
+                setTimeout(() => animateSpecial(et, nr, bri), 700)
+                setTimeout(() => animateSpecial(et, nr, bri), 1400)
+            } else if (score % 5 == 0 || score == 'regular') {
+                animate(et)
+                setTimeout(() => animate(nr), 150)
+                setTimeout(() => animate(bri), 400)
+            } else if ( score == 'intro') {
+                animateIntro(et)
+                setTimeout(() => animateIntro(bri), 500)
+                setTimeout(() => animateIntro(nr), 1000)
             }
+        } 
 
-            const GlimpseHandler = (score) => {
-                const {et, nr, bri} = glimpse
-
-                if(score % 10 == 0 || score == 'special'){
-                    animateSpecial(et, nr, bri)
-                    setTimeout(() => animateSpecial(et, nr, bri), 700)
-                    setTimeout(() => animateSpecial(et, nr, bri), 1400)
-                } else if (score % 5 == 0 || score == 'regular') {
-                    animate(et)
-                    setTimeout(() => animate(nr), 150)
-                    setTimeout(() => animate(bri), 400)
-                } else if ( score == 'intro') {
-                    animateIntro(et)
-                    setTimeout(() => animateIntro(bri), 500)
-                    setTimeout(() => animateIntro(nr), 1000)
-                }
-            } 
-
-            const Execute = () => {
-                setTimeout(() => GlimpseHandler('intro'), 2000)
-                setTimeout(() => setgameStatus('subintro'), 2000)
-                setTimeout(() => GlimpseHandler('regular'), 5900)
-                setTimeout(() => setgameStatus('initial'), 6500)
-                setTimeout(() => GameScript(), 6500)
-            }
-            
-            //TIMELINE EXECUTION
-            window.addEventListener('load', Execute)
-
-            return () => {
-                window.removeEventListener('resize', reportWindowSize)
-                window.removeEventListener('load', Execute)
-            }
+        /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
+        const Execute = () => {
+            setTimeout(() => GlimpseHandler('intro'), 2000)
+            setTimeout(() => setgameStatus('subintro'), 2000)
+            setTimeout(() => GlimpseHandler('regular'), 5900)
+            setTimeout(() => setgameStatus('initial'), 6500)
+            setTimeout(() => GameScript(), 6500)
+        }
+        window.addEventListener('load', Execute)
+        
+        /////////USE-EFFECT CLEAN-UP
+        return () => {
+            window.removeEventListener('resize', reportWindowSize)
+            window.removeEventListener('load', Execute)
+        }
 
     }, []) /////////END USE-EFFECT  
 
@@ -394,6 +432,10 @@ const Canvas = ({setgameStatus, setscore, newGameBtnRef, briRef, nrRef, etRef}) 
     return (
         <Wrapper> 
             <canvas ref={canvasRef} />
+            <div className="control">
+                <div className="touch-left" ref={leftTouchRef}></div>
+                <div className="touch-right" ref={rightTouchRef}></div>
+            </div>
         </Wrapper>
     )
 }
@@ -404,6 +446,31 @@ const Wrapper = Styled.div(() =>`
     justify-content: start;
     align-items: center;
     flex-direction: column;
+
+    .control{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: -1;
+
+        div{
+            height: 100%;
+            opacity: 0.2;
+            width: 50%;
+        }
+        .touch-right{
+            background: red;
+        }
+        .touch-left{
+            background: blue;
+        }
+    }
 `)
 
 export default Canvas

@@ -12,7 +12,6 @@ const Rainbox = ({gameStatus, setgameStatus, score, setscore}) => {
 
     return (
         <Wrapper gameStatus={gameStatus} score={score} screen={screen}>
-            {/* <p>{score.food} {score.time} {gameStatus}</p> */}
             <div className="container-canvas" id="game-container">
                 <div className="canvas">
                     <div className="fixedfull h1-cont zi-dimm">
@@ -42,11 +41,18 @@ const Rainbox = ({gameStatus, setgameStatus, score, setscore}) => {
             <div className="fixedfull screen-gameover">
                 <button ref={newGameBtnRef}>NEW GAME</button>
             </div>
+            <p>{score.food} {score.time} {gameStatus}</p>
         </Wrapper>
     )
 }
     
 const Wrapper = Styled.div(({gameStatus, score, screen}) =>`
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -2;
 
     .fixedfull{
         position: fixed;
@@ -80,7 +86,7 @@ const Wrapper = Styled.div(({gameStatus, score, screen}) =>`
                 color: ${gameStatus == 'running' ? '#BBBBBB' : 'gray'};
                 transition: opacity 1s 2s, color 0.5s;
                 opacity: ${gameStatus == 'intro' ? 0 : 1};
-                z-index: -2;
+                z-index: -4;
                 text-align: center;
 
                 position: relative;
@@ -131,6 +137,7 @@ const Wrapper = Styled.div(({gameStatus, score, screen}) =>`
         justify-content: flex-end;
         align-items: center;
         flex-direction: column;
+        z-index: -6;
             
 
         div.canvas{
@@ -143,16 +150,19 @@ const Wrapper = Styled.div(({gameStatus, score, screen}) =>`
             justify-content: start;
             align-items: center;
             flex-direction: column;
-            z-index: -3;   
+            z-index: -5;   
 
             canvas{
-                z-index: 0;
+                z-index: -2;
             }
             
             .zi-dimm{
-                z-index: -1;   
+                z-index: -3;   
             }
             
+            .zi-orange{
+                z-index: -2;
+            }
             .glimpse{
                 position: absolute;
                 width: 100%;
@@ -161,7 +171,7 @@ const Wrapper = Styled.div(({gameStatus, score, screen}) =>`
                 background-size: cover;
                 background-position: top;
                 background-repeat: no-repeat;
-                z-index: -2;
+                z-index: -4;
                 opacity: 1;
                 transition: 0.2s;
             }

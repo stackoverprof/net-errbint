@@ -23,8 +23,7 @@ const Spinkit1 = ({isLoaded, removeDisplay}) => {
 }
     
 const Wrapper = Styled.div(({isLoaded}) =>`
-    z-index: 150;       
-    
+
     .loading{
         opacity: ${isLoaded ? 0 : 1};
         transition: 1s;

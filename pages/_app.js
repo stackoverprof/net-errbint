@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '../styles/componential.css'
 import '../styles/typefaces.css'
 
 import Head from 'next/head'
