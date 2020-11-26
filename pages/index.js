@@ -8,9 +8,9 @@ const Index = () => {
     
     return (
         <Loader>
+            <Rainbox />
             <Wrapper>
-                <a href="/about" className="linktest">about</a>
-                <Rainbox />
+                {/* <a href="/about" className="linktest">about</a> */}
             </Wrapper>
         </Loader>
     )
