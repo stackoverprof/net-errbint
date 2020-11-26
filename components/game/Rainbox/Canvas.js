@@ -451,7 +451,7 @@ const Canvas = ({setanimateValue, setgameStatus, setscore, newGameBtnRef, dialog
                 new Rain(randomPos)
             }
 
-            let dynamicInterval = screenWidth > 540 ? 100*(1366/screenWidth) : 100*(1366/screenWidth)/2
+            let dynamicInterval = screenWidth > 540 ? 100*(1366/screenWidth) : 100*(1366/screenWidth)*3/4
             if (_isMounted) setTimeout(GenerateRain, dynamicInterval) //i need the setInterval value to be dynamic, but it can't, so i use a recursive setTimout instead, it's interval value is dynamically changing based on screenWidth
         }
         GenerateRain() 
