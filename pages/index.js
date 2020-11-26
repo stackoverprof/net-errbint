@@ -10,7 +10,7 @@ const Index = () => {
         <Loader>
             <Wrapper>
                 <Rainbox />
-                <a href="/about" className="linktest">about</a>
+                {/* <a href="/about" className="linktest">about</a> */}
             </Wrapper>
         </Loader>
     )
