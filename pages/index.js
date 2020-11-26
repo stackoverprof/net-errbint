@@ -1,5 +1,5 @@
 import React from 'react'
-import Link from 'next/link'
+// import Link from 'next/link'
 import Styled from '@emotion/styled'
 import Rainbox from '../components/game/Rainbox'
 import Loader from '../components/spinner/Spinkit1'

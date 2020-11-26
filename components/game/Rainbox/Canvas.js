@@ -351,7 +351,7 @@ const Canvas = ({setanimateValue, setgameStatus, setscore, newGameBtnRef, dialog
                 setTimeout(() => animate(nr), 150)
                 setTimeout(() => animate(bri), 400)
             } else if ( score == 'intro') {
-                setgameStatus('subintro')
+                setgameStatus('sub.intro')
                 animateIntro(et)
                 setTimeout(() => animateIntro(bri), 500)
                 setTimeout(() => animateIntro(nr), 1000)

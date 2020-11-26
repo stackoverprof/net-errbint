@@ -282,9 +282,9 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
 
         .h1{
             background-image: url('/img/title/h1.svg');
-            transition: ${gameStatus == 'subintro' ? '2.5s' : '1s'};
+            transition: ${gameStatus == 'sub.intro' ? '2.5s' : '1s'};
             opacity: ${ gameStatus == 'intro' ? 0 :
-                        gameStatus == 'subintro' ? 1 :
+                        gameStatus == 'sub.intro' ? 1 :
                         gameStatus == 'initial' ? 1 :
                         gameStatus == 'over' ? 1 :
                         gameStatus == 'running' ? 0 : 1};
@@ -339,7 +339,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
         }
     
         .hideable{
-            ${gameStatus != 'subintro' ? "transition: opacity 0s;" : ''}
+            ${gameStatus != 'sub.intro' ? "transition: opacity 0s;" : ''}
         }
     }
     .glimpse{

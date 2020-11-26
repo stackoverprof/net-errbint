@@ -473,7 +473,7 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
         const Execute = () => {
             let delay = 1000
             setTimeout(() => GlimpseHandler('intro'), delay)
-            setTimeout(() => { if (_isMounted) setgameStatus('subintro')}, delay)
+            setTimeout(() => { if (_isMounted) setgameStatus('sub.intro')}, delay)
             setTimeout(() => GlimpseHandler('regular'), delay + 3900)
             setTimeout(() => {
                 openControl = true

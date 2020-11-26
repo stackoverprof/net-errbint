@@ -465,7 +465,7 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
         const Execute = () => {
             let delay = 1000
             setTimeout(() => GlimpseHandler('intro'), delay)
-            setTimeout(() => setgameStatus('subintro'), delay)
+            setTimeout(() => setgameStatus('sub.intro'), delay)
             setTimeout(() => GlimpseHandler('regular'), delay + 3900)
             setTimeout(() => setgameStatus('initial'), delay + 4500)
             setTimeout(() => GameScript(), delay + 4500)
