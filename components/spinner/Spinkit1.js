@@ -1,7 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Styled from '@emotion/styled'
     
-const Spinkit1 = ({isLoaded, removeDisplay}) => {
+const Spinkit1 = ({children}) => {
+    const [removeDisplay, setremoveDisplay] = useState(false)
+    const [isLoaded, setisLoaded] = useState(false)
+
+    
+    useEffect(() => {
+        const removeSpinner = () => {
+            setisLoaded(true)
+            setTimeout(() => {
+                setremoveDisplay(true)
+            }, 1000)
+        }
+        
+        window.addEventListener('load', removeSpinner)
+        
+        return () => {
+            window.removeEventListener('load', removeSpinner)
+        }
+    }, [])
 
     return (
     <>
@@ -18,6 +36,7 @@ const Spinkit1 = ({isLoaded, removeDisplay}) => {
                 </div>
             </Wrapper>
         }
+        {children}
     </>
     )
 }
@@ -25,7 +44,7 @@ const Spinkit1 = ({isLoaded, removeDisplay}) => {
 const Wrapper = Styled.div(({isLoaded}) =>`
 
     .loading{
-        opacity: ${isLoaded ? 0 : 1};
+        opacity: ${isLoaded ? 0 : 0.9};
         transition: 1s;
         background-color: rgb(245,245,245);
         position: fixed;

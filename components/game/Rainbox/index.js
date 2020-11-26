@@ -71,7 +71,13 @@ const Rainbox = () => {
             </div>
 
             
-            <p className="live-score"><span>{score.food}</span>&nbsp;&nbsp;{score.time == 0.00 ? 0 : score.time}</p>
+            <p className="live-score">
+                <span>{score.food}</span>&nbsp;&nbsp;{score.time == 0.00 ? 0 : score.time}
+            </p>
+            <p className="game-status">
+                : : {gameStatus}
+            </p>
+            
             <div className="final-score fixedfull">
                 {
                 gameStatus == 'over' ?
@@ -170,7 +176,8 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     }
     
     .instruction-mobile{
-        width: 60%; 
+        width: 40%;
+        min-width: 164px; 
         text-align: right !important; 
         margin-right: 10%;
         font-size: 16px;
@@ -209,6 +216,17 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
         span{
             color: #FF5B14;
         }
+    }
+    
+    .game-status{
+        position: fixed;
+        opacity: ${gameStatus == 'initial' ? 0.25 : gameStatus == 'running' ? 0.50 : gameStatus == 'over' ? 0.50 : 0.15 };
+        transition: 0.25s;
+        top: 18px;
+        right: 20px;
+        
+        font-family: 'Bahnschrift';
+        font-size: 20px;
     }
 
     .h1-cont{
