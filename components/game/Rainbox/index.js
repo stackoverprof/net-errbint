@@ -6,11 +6,11 @@ import Canvas from './Canvas'
 
 const Rainbox = () => {
     const [score, setscore] = useState({food: 0, time: 0})
-    const [animateValue, setanimateValue] = useState(0)
     const [gameStatus, setgameStatus] = useState('intro')
-    const newGameBtnRef = useRef()
+    const [animateValue, setanimateValue] = useState(0)
     const dialogAvoidRef = useRef()
     const dialogOhnoRef = useRef()
+    const newGameBtnRef = useRef()
     const briRef = useRef()
     const etRef = useRef()
     const nrRef = useRef()
@@ -20,7 +20,7 @@ const Rainbox = () => {
         setanimateValue(value)
     }
 
-    const formatValue = (value) => `${(Number(value)/1000).toFixed(2)}`;
+    const formatValue = (value) => `${(Number(value)/1000).toFixed(2)}`
 
     return (
         <Wrapper gameStatus={gameStatus} screen={screen}>
@@ -81,11 +81,10 @@ const Rainbox = () => {
             <div className="final-score fixedfull">
                 {
                 gameStatus == 'over' ?
-                    <p><span className="orange">Food : {score.food}</span>&nbsp;&nbsp; Time: <AnimatedNumber
-                        value={animateValue}
-                        formatValue={formatValue}
-                        duration={1000}
-                    /></p>
+                <>
+                    <p className="score"><span className="orange">Food : {score.food}</span>&nbsp;&nbsp;Time :&nbsp;</p>
+                    <p className="fixed-size"><AnimatedNumber value={animateValue} formatValue={formatValue} duration={1000} easing={'linear'} /></p>
+                </> 
                 :
                 gameStatus == 'initial' ?
                     <p className={`instruction ${screen < 600 && 'instruction-mobile'}`}>Touch the screen <span className="light-gray">/</span> use arrow key to move</p>
@@ -108,7 +107,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     top: 0;
     left: 0;
     z-index: -2;
-
+    
     .dialog-cont{
         display: flex;
         justify-content: center;
@@ -202,6 +201,11 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
 
         span.orange{
             color: #FF5B14;
+        }
+
+        p.fixed-size{
+            min-width: 50px;
+            text-align: left;
         }
     }
 
