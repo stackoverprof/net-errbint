@@ -181,6 +181,8 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
         text-align: right !important; 
         margin-right: 10%;
         font-size: 16px;
+        position: relative;
+        top: 6px;
     }
 
     .final-score{
