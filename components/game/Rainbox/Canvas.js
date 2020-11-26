@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 
-const Canvas = ({handleAnimateValue ,setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, briRef, nrRef, etRef}) => {
+const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, briRef, nrRef, etRef}) => {
     const rightTouchRef = useRef()
     const leftTouchRef = useRef()
     const canvasRef = useRef()
@@ -79,8 +79,6 @@ const Canvas = ({handleAnimateValue ,setgameStatus, setscore, newGameBtnRef, dia
                     if (e.location == 2) GlimpseHandler('special')
                 }
             }
-            document.addEventListener('keydown', controlling)
-            
             const uncontrolling = (e) => {
                 if (e.which == 65 || e.which == 37){
                     isLeftPressed = false
@@ -90,6 +88,8 @@ const Canvas = ({handleAnimateValue ,setgameStatus, setscore, newGameBtnRef, dia
                     player.Velocity = isLeftPressed ? -5 : 0
                 }
             }
+            
+            document.addEventListener('keydown', controlling)
             document.addEventListener('keyup', uncontrolling)
 
             /////////CONTROLLER - TOUCHSCREEN EVENT HANDLER
@@ -470,12 +470,13 @@ const Canvas = ({handleAnimateValue ,setgameStatus, setscore, newGameBtnRef, dia
             setTimeout(() => setgameStatus('initial'), delay + 4500)
             setTimeout(() => GameScript(), delay + 4500)
         }
-        window.addEventListener('load', Execute)
+        Execute()   
+        // window.addEventListener('load', Execute)
         
         /////////USE-EFFECT CLEAN-UP
         return () => {
             window.removeEventListener('resize', reportWindowSize)
-            window.removeEventListener('load', Execute)
+            // window.removeEventListener('load', Execute)
         }
 
     }, []) /////////END USE-EFFECT  

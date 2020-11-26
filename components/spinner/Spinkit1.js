@@ -7,18 +7,11 @@ const Spinkit1 = ({children}) => {
 
     
     useEffect(() => {
-        const removeSpinner = () => {
-            setisLoaded(true)
-            setTimeout(() => {
-                setremoveDisplay(true)
-            }, 1000)
-        }
-        
-        window.addEventListener('load', removeSpinner)
-        
-        return () => {
-            window.removeEventListener('load', removeSpinner)
-        }
+        setisLoaded(true)
+        setTimeout(() => {
+            setremoveDisplay(true)
+        }, 1000)
+    
     }, [])
 
     return (
