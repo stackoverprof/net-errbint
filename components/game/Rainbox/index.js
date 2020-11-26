@@ -16,10 +16,6 @@ const Rainbox = () => {
     const nrRef = useRef()
     const screen = useResize().width
 
-    const handleAnimateValue = (value) => {
-        setanimateValue(value)
-    }
-
     const formatValue = (value) => `${(Number(value)/1000).toFixed(2)}`
 
     return (
@@ -45,7 +41,7 @@ const Rainbox = () => {
                     <div ref={briRef} className="glimpse bri"></div>
                     <Canvas setgameStatus={setgameStatus} 
                             newGameBtnRef={newGameBtnRef}
-                            handleAnimateValue={handleAnimateValue}
+                            setanimateValue={setanimateValue}
                             dialogAvoidRef={dialogAvoidRef}
                             dialogOhnoRef={dialogOhnoRef}
                             setscore={setscore} 
