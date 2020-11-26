@@ -35,7 +35,7 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
         window.addEventListener('resize', reportWindowSize)
         
         
-        /////////GAMESCRIPT START :: execution delayed within 5.5 seconds (for intro)
+        /////////GAMESCRIPT STARTS HERE
         
         /////////THE PLAYER (ORANGE BOX) OBJECT 
         function Player(posX){
@@ -205,7 +205,6 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
 
             DialogHandler('over')
             handleAnimateValue(player.TimeSpan)
-            console.log(player.EatCount + " " + player.TimeSpan)
         }}
         
         
@@ -241,16 +240,14 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
             player.TimeStart = new Date().getTime()
             player.TimeEnd = 'initial'
             player.TimeSpan = new Date().getTime()
-            
-            // if (screenWidth < 540) document.getElementById('game-container').requestFullscreen()
         }}
+            
 
         /////////CONTROLLER - KEYBOARD EVENT HANDLER
         let isRightPressed = false
         let isLeftPressed = false
 
         const controlling = (e) => {
-            
             if (e.which == 65 || e.which == 37){
                 //GO LEFT 
                 isLeftPressed = true
@@ -266,15 +263,14 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
                 NewGame()
             } 
             
-            //special things
+            //Special things
             else if (e.which == 16){
                 if (e.location == 1) GlimpseHandler('regular')
-                if (e.location == 2) GlimpseHandler('special')
+                else if (e.location == 2) GlimpseHandler('special')
             }
         }
             
         const uncontrolling = (e) => {
-            
             if (e.which == 65 || e.which == 37){
                 isLeftPressed = false
                 player.Velocity = isRightPressed ? 5 : 0                
@@ -355,6 +351,7 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
                 setTimeout(() => animate(nr), 150)
                 setTimeout(() => animate(bri), 400)
             } else if ( score == 'intro') {
+                setgameStatus('subintro')
                 animateIntro(et)
                 setTimeout(() => animateIntro(bri), 500)
                 setTimeout(() => animateIntro(nr), 1000)
@@ -390,14 +387,11 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
         
         /////////HANDLE INACTIVE TAB
         let tabInactive = false
-        
-        const handleInactive = () => {
-            tabInactive = document.hidden ? true : false
-        }    
+        const handleInactive = () => tabInactive = document.hidden ? true : false   
         document.addEventListener("visibilitychange", handleInactive)        
         
         
-        /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
+        /////////RUNNING THE GAME :: execution delayed within 5.5 seconds (for intro)
         const startingPosition = screenWidth < 744 ? screenWidth*10/100 : screenWidth/2-306
         let player = {}
         let isGameOver = false
@@ -406,12 +400,13 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
         let food = {}
         let executeGame = false
         let delay = 1000
-
+        
         const IgniteGame = () => {
+            setgameStatus('initial')
             DialogHandler('init', startingPosition)
             player = new Player(startingPosition)
             executeGame = true
-
+            
             document.addEventListener('keydown', controlling)
             document.addEventListener('keyup', uncontrolling)
             right.addEventListener("touchstart", controlRight, false)
@@ -419,39 +414,34 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
             right.addEventListener("touchend", uncontrolRight, false)
             left.addEventListener("touchend", uncontrolLeft, false)
         }
-
-        const timing1 = setTimeout(() => GlimpseHandler('intro'), delay)
-        const timing2 = setTimeout(() => setgameStatus('subintro'), delay)
-        const timing3 = setTimeout(() => GlimpseHandler('regular'), delay + 3900)
-        const timing4 = setTimeout(() => setgameStatus('initial'), delay + 4500)
-        const timing5 = setTimeout(IgniteGame, delay + 4500)
+        
+        /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
+        const timingIntro = setTimeout(() => GlimpseHandler('intro'), delay)
+        const timingInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900)
+        const timingExecute = setTimeout(IgniteGame, delay + 4500)
         
         /////////SCREEN UPDATER
         const Updater = setInterval(() => {
             if (executeGame) {
-                
-                const calcTiming = () => {
-                    if (player.TimeEnd != 'initial'){
-                        return player.TimeSpan
-                    }else{
-                        return new Date().getTime() - player.TimeStart 
-                    }
-                }
-                
-                setscore({
-                    food: player.EatCount, 
-                    time: ((isAttempted ? calcTiming() : 0)/1000).toFixed(2)
-                })
-                
-                //Reseting canvas
-                ctx.clearRect(0, 0, screenWidth, screenHeight)
-                
-                //Then, redrawing objects
-                if(!isGameOver && isAttempted) food.Update()
-                for(let i in shapes) shapes[i].Update()
-                player.Update()
+            const calcTiming = () => {
+                return player.TimeEnd != 'initial' ? 
+                player.TimeSpan : new Date().getTime() - player.TimeStart 
             }
-        }, 10)
+            
+            setscore({
+                food: player.EatCount, 
+                time: ((isAttempted ? calcTiming() : 0)/1000).toFixed(2)
+            })
+            
+            //Reseting canvas
+            ctx.clearRect(0, 0, screenWidth, screenHeight)
+            
+            //Then, redrawing objects
+            if(!isGameOver && isAttempted) food.Update()
+            for(let i in shapes) shapes[i].Update()
+            player.Update()
+
+        }}, 10)
         
         const GenerateRain = () => {
             if (!isGameOver && !tabInactive && executeGame){
@@ -479,11 +469,10 @@ const Canvas = ({handleAnimateValue, setgameStatus, setscore, newGameBtnRef, dia
             right.removeEventListener("touchend", uncontrolRight, false)
             left.removeEventListener("touchend", uncontrolLeft, false)
             
-            clearTimeout(timing1)
-            clearTimeout(timing2)
-            clearTimeout(timing3)
-            clearTimeout(timing4)
-            clearTimeout(timing5)
+            clearTimeout(timingIntro)
+            clearTimeout(timingInitial)
+            clearTimeout(timingExecute)
+            
             clearInterval(Updater)
             clearTimeout(GenerateRain)
 
