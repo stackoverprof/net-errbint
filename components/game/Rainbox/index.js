@@ -32,7 +32,7 @@ const Rainbox = () => {
             if (!userData.exists) return true
             const old = userData.data()
             return score.food > old.score.food || 
-            (score.food == old.score.food && score.time >= old.score.time)
+            (score.food == old.score.food && score.time <= old.score.time)
         }
         
         if(gameStatus == 'over' && /\S/.test(nickname)){
@@ -45,7 +45,7 @@ const Rainbox = () => {
                     nickname : nickname.trim(),
                     score : {
                         food : score.food,
-                        time : score.time
+                        time : parseInt(score.time.replace('.',''))
                     },
                     timestamp: new Date().getTime()
                 }).then(() => {
@@ -66,14 +66,14 @@ const Rainbox = () => {
 
     useEffect(() => {
         const FireAction = () => {
-            DB.collection('Leaderboard').orderBy("score.food", "desc").limit(10).onSnapshot(querySnapshot => {
+            DB.collection('Leaderboard').orderBy("score.food", "desc").orderBy("score.time", "asc").limit(10).onSnapshot(querySnapshot => {
                 var dataSnapshot = []
                 querySnapshot.forEach(doc => {
                     dataSnapshot.push({
                         nickname:doc.data().nickname,
                         score: {
                             food: doc.data().score.food,
-                            time: doc.data().score.food
+                            time: doc.data().score.time
                         }
                     })
                 })
@@ -172,8 +172,12 @@ const Rainbox = () => {
                         <p className="title-leaderboard">LEADERBOARD</p>
                         <div className="the-leaderboard">
                             {Leaderboard.map((each, i)=>(
-                                <div key={i} className={`rank${i+1}`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
-                                    <p>{each.nickname} <span className="gray">{each.score.time} &ensp;<span className="orange">{each.score.food}</span></span></p>
+                                <div key={i} className={`rank${i+1} eachLead`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
+                                    <p>{each.nickname}</p>
+                                    <div>
+                                        <p><span className="gray">{each.score.time/100} &ensp;</span></p>
+                                        <p><span className="orange food">{each.score.food}</span></p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -214,10 +218,10 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     left: 0;
     z-index: -2;
 
-    span.orange{
+    .orange{
         color: #FF5B14;
     }
-    span.gray{
+    .gray{
         color: gray;
     }
     
@@ -230,15 +234,28 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
         width: 100%;
         padding-left: 8px;
 
-        div{
+        .eachLead{
             position: relative;
             top: ${gameStatus == 'over' || gameStatus == 'recorded' ? 0 : 12}px;
             opacity: ${gameStatus == 'over' || gameStatus == 'recorded' ? 1 : 0};
             transition: opacity 1s, top 0.5s ${gameStatus == 'over' || gameStatus == 'recorded' ? 0 : 1}s;
-        }        
-        
+      
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            div{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                min-width: 60px;
+
+            }
+        }
+
         p{
-            width: 100%;
+            // width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -265,7 +282,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
             background-color: rgba(0,0,0,0);
             border: none;;
             width: 100%;
-            min-width: 120px;
+            min-width: 140px;
 
             font-family: Bahnschrift;
             font-size: 18px;
