@@ -4,13 +4,9 @@ import '../styles/typefaces.css'
 
 import NextNprogress from 'nextjs-progressbar'
 import Head from 'next/head'
-import { useEffect } from 'react'
+import Loader from '../components/spinner/Spinkit1'
 
 function MyApp({ Component, pageProps }) {
-  useEffect(() => {
-    // document.removeEventListener()
-  }, [])
-
   return ( 
   <>
     <Head>
@@ -24,6 +20,7 @@ function MyApp({ Component, pageProps }) {
       stopDelayMs={200}
       height="3"
     />
+    <Loader />
     <Component {...pageProps} />
   </>
   )

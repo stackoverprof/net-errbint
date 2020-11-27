@@ -172,7 +172,7 @@ const Rainbox = () => {
                         <p className="title-leaderboard">LEADERBOARD</p>
                         <div className="the-leaderboard">
                             {Leaderboard.map((each, i)=>(
-                                <div key={i} className={`rank${i+1}`}>
+                                <div key={i} className={`rank${i+1}`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
                                     <p>{each.nickname} <span className="gray">{each.score.time} &ensp;<span className="orange">{each.score.food}</span></span></p>
                                 </div>
                             ))}
@@ -199,13 +199,8 @@ const Rainbox = () => {
                 </div>
             </div>
 
-                {/* {Leaderboard.map(i)=>(
-                    <style key={i}>{`
-                    .rank1{
-                        transition-delay: ${gameStatus == 'over' ? '.75s' : '0s'};
-                    }
-                    `}
-                    </style>
+                {/* {Leaderboard.map((each,i)=>(
+                    <style key={i}>{`.rank${i+1}{transition-delay: ${gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'};}`}</style>
                 ))} */}
         </Wrapper>
     )
@@ -236,8 +231,10 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
         padding-left: 8px;
 
         div{
+            position: relative;
+            top: ${gameStatus == 'over' || gameStatus == 'recorded' ? 0 : 12}px;
             opacity: ${gameStatus == 'over' || gameStatus == 'recorded' ? 1 : 0};
-            transition: 1s;
+            transition: opacity 1s, top 0.5s ${gameStatus == 'over' || gameStatus == 'recorded' ? 0 : 1}s;
         }        
         
         p{
@@ -336,8 +333,8 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
         p.title-leaderboard{
             font-size: 18px;
             text-shadow: 0 0 0.5px rgb(0, 0, 0);
-            opacity: ${gameStatus == 'over' || gameStatus == 'recorded' ? 1 : 0};
-            transition: opacity 1s ${gameStatus == 'over' ? '.75s' : '0s'};
+            // opacity: ${gameStatus == 'over' || gameStatus == 'recorded' ? 1 : 0};
+            // transition: opacity 1s ${gameStatus == 'over' ? '.25s' : '0s'};
         }
     }
     

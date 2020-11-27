@@ -1,19 +1,13 @@
 import React from 'react'
-// import Link from 'next/link'
 import Styled from '@emotion/styled'
 import Rainbox from '../components/game/Rainbox'
-import Loader from '../components/spinner/Spinkit1'
     
 const Index = () => {
 
     return (
-        <Loader>
-            <Wrapper>
-                <Rainbox />
-                {/* <Link href="/about"><a className="linktest">about</a></Link> */}
-                {/* <a href="/about">about</a> */}
-            </Wrapper>
-        </Loader>
+        <Wrapper>
+            <Rainbox />
+        </Wrapper>
     )
 }
     

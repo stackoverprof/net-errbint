@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Styled from '@emotion/styled'
     
-const Spinkit1 = ({children}) => {
+const Spinkit1 = () => {
     const [removeDisplay, setremoveDisplay] = useState(false)
     const [isLoaded, setisLoaded] = useState(false)
 
@@ -29,7 +29,6 @@ const Spinkit1 = ({children}) => {
                 </div>
             </Wrapper>
         }
-        {children}
     </>
     )
 }
