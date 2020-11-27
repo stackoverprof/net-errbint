@@ -36,7 +36,7 @@ const Spinkit1 = () => {
 const Wrapper = Styled.div(({isLoaded}) =>`
 
     .loading{
-        opacity: ${isLoaded ? 0 : 0.9};
+        opacity: ${isLoaded ? 0 : 1};
         transition: 1s;
         background-color: rgb(245,245,245);
         position: fixed;
