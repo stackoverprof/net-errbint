@@ -4,6 +4,7 @@ body {
   margin: 0;
   font-family: Bahnschrift, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background: #000;
 }
 
 a {
@@ -22,4 +23,10 @@ a {
 }
 .no-color{
   color: none;
+}
+input{
+  padding: 8px;
+}
+input:focus{
+  outline: none;
 }

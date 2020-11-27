@@ -1,13 +1,18 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AnimatedNumber from "animated-number-react"
 import useResize from 'use-resizing'
 import Styled from '@emotion/styled'
 import Canvas from './Canvas'
+import { DB } from '../../../services/firebase'
 
 const Rainbox = () => {
+    const [processMessage, setprocessMessage] = useState('')
+    const [Leaderboard, setLeaderboard] = useState([])
     const [score, setscore] = useState({food: 0, time: 0})
     const [gameStatus, setgameStatus] = useState('intro')
     const [animateValue, setanimateValue] = useState(0)
+    const [UserData, setUserData] = useState({})
+    const [nickname, setnickname] = useState('')
     const dialogAvoidRef = useRef()
     const dialogOhnoRef = useRef()
     const newGameBtnRef = useRef()
@@ -17,6 +22,68 @@ const Rainbox = () => {
     const screen = useResize().width
 
     const formatValue = (value) => `${(Number(value)/1000).toFixed(2)}`
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        setprocessMessage('')
+        
+        const isScoreBigger = (userData) => {
+            if (!userData.exists) return true
+            const old = userData.data()
+            return score.food > old.score.food || 
+            (score.food == old.score.food && score.time <= old.score.time)
+        }
+        
+        if(gameStatus == 'over' && /\S/.test(nickname)){
+            setprocessMessage('SAVING...')
+
+            const userData = await DB.collection('Leaderboard').doc(nickname.trim()).get()
+            
+            if (isScoreBigger(userData)) {   
+                DB.collection('Leaderboard').doc(nickname.trim()).set({
+                    nickname : nickname.trim(),
+                    score : {
+                        food : score.food,
+                        time : parseInt(score.time.replace('.',''))
+                    },
+                    timestamp: new Date().getTime()
+                }).then(() => {
+                    setprocessMessage('ALL OK!')
+                    setscore({food: 0, time: 0})
+                    setgameStatus('recorded')
+                }).catch(() => {
+                    setprocessMessage('ERROR!')
+                })
+            }else{
+                setprocessMessage(' ')
+                setUserData(userData.data())
+            }
+        } else {
+            setprocessMessage('INVALID')
+        }
+    }
+
+    useEffect(() => {
+        const FireAction = () => {
+            DB.collection('Leaderboard').orderBy("score.food", "desc").orderBy("score.time", "asc").limit(10).onSnapshot(querySnapshot => {
+                var dataSnapshot = []
+                querySnapshot.forEach(doc => {
+                    dataSnapshot.push({
+                        nickname:doc.data().nickname,
+                        score: {
+                            food: doc.data().score.food,
+                            time: doc.data().score.time
+                        }
+                    })
+                })
+                console.log("updating leaderboard")
+                setLeaderboard(dataSnapshot)
+            })
+        }
+
+        FireAction()
+    }, [])
 
     return (
         <Wrapper gameStatus={gameStatus} screen={screen}>
@@ -42,6 +109,7 @@ const Rainbox = () => {
                     <Canvas setgameStatus={setgameStatus} 
                             newGameBtnRef={newGameBtnRef}
                             setanimateValue={setanimateValue}
+                            setprocessMessage={setprocessMessage}
                             dialogAvoidRef={dialogAvoidRef}
                             dialogOhnoRef={dialogOhnoRef}
                             setscore={setscore} 
@@ -55,6 +123,7 @@ const Rainbox = () => {
                                 <p>
                                     {
                                         gameStatus == 'over' ? 'GAME OVER' : 
+                                        gameStatus == 'recorded' ? 'SCORE SAVED' : 
                                         screen < 500 ? 'FULLSTACK DEVELOPER' : 'A FULLSTACK DEVELOPER'
                                     }
                                 </p>
@@ -85,13 +154,58 @@ const Rainbox = () => {
                 gameStatus == 'initial' ?
                     <p className={`instruction ${screen < 600 && 'instruction-mobile'}`}>Touch the screen <span className="light-gray">/</span> use arrow key to move</p>
                 :
+                gameStatus == 'recorded' ?
+                    <p className={`instruction ${screen < 600 && 'instruction-mobile'}`}>Press ENTER <span className="light-gray">/</span> click the button to play again</p>
+                :
                     <p></p>
                 }
             </div>
+
             <div className="dialog-cont fixedfull">
                 <div className="dialog-avoid" ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
                 <div className="dialog-ohno" ref={dialogOhnoRef}>OH NO!</div>
             </div>
+
+            <div className="side-leaderboard-cont fixedfull">
+                <div className="side-leaderboard">
+                    <div className="upper">
+                        <p className="title-leaderboard">LEADERBOARD</p>
+                        <div className="the-leaderboard">
+                            {Leaderboard.map((each, i)=>(
+                                <div key={i} className={`rank${i+1} eachLead`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
+                                    <p>{each.nickname}</p>
+                                    <div>
+                                        <p><span className="gray">{each.score.time/100} &ensp;</span></p>
+                                        <p><span className="orange food">{each.score.food}</span></p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="lower">
+                        
+                        <form onSubmit={handleSubmit}>
+                            <div className="input">
+                                <input type="text" onChange={(e)=> setnickname(e.target.value.toUpperCase())} value={nickname} placeholder="Enter a Nickname" maxLength="10"/>
+                                <p><span className="orange">{score.food}</span>&ensp;{score.time}</p>
+                            </div>
+                            <div>
+                                <button type="submit" className={`${gameStatus == "recorded" ? 'disabled' : ''}`} disabled={gameStatus == 'recorded'}>{gameStatus != 'recorded' ? 'SAVE SCORE' : 'SCORE SAVED'}</button>
+                                <p className="process">
+                                    {processMessage}
+                                </p>
+                            </div>
+                            {processMessage == ' ' && 
+                                <p>{`Sorry, ${UserData.nickname} already got a higher score!`}</p>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+                {/* {Leaderboard.map((each,i)=>(
+                    <style key={i}>{`.rank${i+1}{transition-delay: ${gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'};}`}</style>
+                ))} */}
         </Wrapper>
     )
 }
@@ -103,6 +217,143 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     top: 0;
     left: 0;
     z-index: -2;
+
+    .orange{
+        color: #FF5B14;
+    }
+    .gray{
+        color: gray;
+    }
+    
+    .upper{
+        width: 100%;
+    }
+
+    .the-leaderboard{
+        margin-top: 24px;
+        width: 100%;
+        padding-left: 8px;
+
+        .eachLead{
+            position: relative;
+            top: ${gameStatus == 'over' || gameStatus == 'recorded' ? 0 : 12}px;
+            opacity: ${gameStatus == 'over' || gameStatus == 'recorded' ? 1 : 0};
+            transition: opacity 1s, top 0.5s ${gameStatus == 'over' || gameStatus == 'recorded' ? 0 : 1}s;
+      
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            div{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                min-width: 60px;
+
+            }
+        }
+
+        p{
+            // width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+    }
+
+    form{
+        div.input{
+            background-color: rgba(0,0,0,0);
+            border: none;
+            border-bottom: solid 1px black;
+            width: 100%;
+            margin-bottom: 12px;
+
+            p{
+                font-size: 18px;
+                color: black;
+                width: 100%;
+                text-align: right;
+            }
+        }
+        input{
+            background-color: rgba(0,0,0,0);
+            border: none;;
+            width: 100%;
+            min-width: 140px;
+
+            font-family: Bahnschrift;
+            font-size: 18px;
+            padding: 8px 0;
+        }
+
+        div{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            p{
+                margin: 0;
+                font-size: 16px;
+            }
+        }
+        
+        p{
+            color: gray;
+            margin-top: 12px;
+            font-size: 14px;
+            max-width: 164px;
+        }
+
+        button{
+            margin: 12px 0;
+            transition: background .2s, color .2s;
+            min-width: 116px;
+            width: 116px;
+            max-width: 116px;
+            min-height: 36px;
+            height: 36px;
+            max-height: 36px;
+            font-size: 16px;
+            padding: ${gameStatus == 'recorded' ? '10px 2px 8px 2px' : '10px 10px 8px 10px'};
+        }
+    }
+
+    .side-leaderboard-cont{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        height:  calc(100% - 60px);
+        pointer-events: none;
+    }
+    .side-leaderboard{
+        height: 100%;
+        width: 272px;
+        position: relative;
+        right: ${gameStatus == 'over' || gameStatus == 'recorded' ? '0' : '-272px'};
+
+        transition: 1s;
+        padding: 20px 24px 24px 24px;
+        backdrop-filter: blur(8px);
+        box-shadow: -4px 0 4px rgba(0,0,0,0.15);
+        pointer-events: all;
+        background: linear-gradient(0deg, rgba(255,255,255,0.7) 11%, rgba(255,255,255,0) 37%);
+
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-direction: column;
+
+        p.title-leaderboard{
+            font-size: 18px;
+            text-shadow: 0 0 0.5px rgb(0, 0, 0);
+            // opacity: ${gameStatus == 'over' || gameStatus == 'recorded' ? 1 : 0};
+            // transition: opacity 1s ${gameStatus == 'over' ? '.25s' : '0s'};
+        }
+    }
     
     .dialog-cont{
         display: flex;
@@ -195,10 +446,6 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
             text-align: center;
         }
 
-        span.orange{
-            color: #FF5B14;
-        }
-
         p.fixed-size{
             min-width: 50px;
             text-align: left;
@@ -229,6 +476,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
         
         font-family: 'Bahnschrift';
         font-size: 20px;
+        z-index: 1;
     }
 
     .h1-cont{
@@ -372,7 +620,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     }
 
     button.newgame{
-        display: ${gameStatus == 'over' ? 'unset' : 'none'};
+        display: ${gameStatus == 'over' || gameStatus == 'recorded'? 'unset' : 'none'};
         pointer-events: all;
         margin-left: 12px;
         ${screen < 500 && 'font-size: 16px;'}

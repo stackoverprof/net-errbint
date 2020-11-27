@@ -1,7 +1,9 @@
 import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 
-const Canvas = ({setanimateValue, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, briRef, nrRef, etRef}) => {
+//idk what the problem is
+
+const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, briRef, nrRef, etRef}) => {
     const rightTouchRef = useRef()
     const leftTouchRef = useRef()
     const canvasRef = useRef()
@@ -213,6 +215,7 @@ const Canvas = ({setanimateValue, setgameStatus, setscore, newGameBtnRef, dialog
         
         const NewGame = () => {
             setgameStatus('running')
+            setprocessMessage('')
             GlimpseHandler('regular')
             isGameOver = false
             
