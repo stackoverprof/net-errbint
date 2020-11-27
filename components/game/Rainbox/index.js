@@ -170,6 +170,7 @@ const Rainbox = () => {
                 <div className="side-leaderboard">
                     <div className="upper">
                         <p className="title-leaderboard">LEADERBOARD</p>
+                        <div className="linesepar"></div>
                         <div className="the-leaderboard">
                             {Leaderboard.map((each, i)=>(
                                 <div key={i} className={`rank${i+1} eachLead`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
@@ -229,16 +230,23 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
         width: 100%;
     }
 
+    .linesepar{
+        height: 1px;
+        width: 100%;
+        background: black;
+        margin: 16px 0;
+    }
+
     .the-leaderboard{
         margin-top: 24px;
         width: 100%;
-        padding-left: 8px;
+        // padding-left: 8px;
 
         .eachLead{
             position: relative;
             top: ${gameStatus == 'over' || gameStatus == 'recorded' ? 0 : 12}px;
             opacity: ${gameStatus == 'over' || gameStatus == 'recorded' ? 1 : 0};
-            transition: opacity 1s, top 0.5s ${gameStatus == 'over' || gameStatus == 'recorded' ? 0 : 1}s;
+            transition: opacity 1s, top 0.5s ${gameStatus == 'over' || gameStatus == 'recorded' ? '0s' : '1s !important'};
       
             display: flex;
             justify-content: space-between;
@@ -260,6 +268,11 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
+            color: #555;
+
+            &:hover{        
+                color: #FF5B14;
+            }
         }
     }
 
