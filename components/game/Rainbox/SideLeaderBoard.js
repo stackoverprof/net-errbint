@@ -1,9 +1,9 @@
 import React from 'react'
 import Styled from '@emotion/styled'
     
-const SideLeaderBoard = ({Leaderboard, UserData, processMessage, score, gameStatus, sideRef, nickname, setnickname, handleSubmit}) => {
+const SideLeaderBoard = ({Leaderboard, UserData, checkRank, processMessage, score, gameStatus, sideRef, nickname, setnickname, handleSubmit}) => {
     return (
-        <Wrapper>
+        <Wrapper gameStatus={gameStatus}>
             <div className="side-leaderboard-cont fixedfull">
 
                 <div className="side-leaderboard">
@@ -11,13 +11,38 @@ const SideLeaderBoard = ({Leaderboard, UserData, processMessage, score, gameStat
                         <p className="title-leaderboard">LEADERBOARD</p>
                         <div className="linesepar"></div>
                         <div className="the-leaderboard">
-                            {Leaderboard.slice(0, 10).map((each, i)=>(
-                                <div key={i} className={`rank${i+1} eachLead`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
-                                    <p>{each.nickname}</p>
-                                    <div>
-                                        <p><span className="gray">{each.score.time/100} &ensp;</span></p>
-                                        <p><span className="orange food">{each.score.food}</span></p>
+                            {Leaderboard.slice(0, checkRank() <= 11 && gameStatus == 'over' ? 9 : 10).map((each, i)=>(
+                                <div key={i} >
+                                    <div className={`rank${i+1} eachLead`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
+                                        <div className="nick">
+                                            {gameStatus == 'over' ? 
+                                                <p className="num">{checkRank() > i+1? i+1 : i+2}.</p>
+                                                :
+                                                <p className="num">{i+1}.</p>
+                                            }
+                                            <p className="name">{each.nickname}</p>
+                                        </div>
+                                        <div>
+                                            <p><span className="gray">{each.score.time/100} &ensp;</span></p>
+                                            <p><span className="orange food">{each.score.food}</span></p>
+                                        </div>
                                     </div>
+                                    {(gameStatus == 'over' && checkRank() == i+2 )&&
+                                        <div className="newscore">
+                                            <div className="linesepar-org"></div>
+                                            <div className={`rank${i+1} eachLead`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
+                                                <div className="nick">
+                                                    <p className="orange num">{checkRank()}.</p>
+                                                    <p className="orange name">NEW SCORE</p>
+                                                </div>
+                                                <div>
+                                                    <p><span className="gray">{score.time} &ensp;</span></p>
+                                                    <p><span className="orange food">{score.food}</span></p>
+                                                </div>
+                                            </div>
+                                            <div className="linesepar-org"></div>
+                                        </div>
+                                    }
                                 </div>
                             ))}
                         </div>
@@ -47,7 +72,48 @@ const SideLeaderBoard = ({Leaderboard, UserData, processMessage, score, gameStat
     )
 }
     
-const Wrapper = Styled.div(() =>`
+const Wrapper = Styled.div(({gameStatus}) =>`
+
+.newscore{
+    margin-bottom: 8px;
+    
+    p{
+        margin: 8px 0;
+    }
+    .linesepar-org{
+        opacity: ${gameStatus == 'over' ? 1 : 0};
+        transition: 1s;
+        // transition-delay: 0.5s;
+        height: 1px;
+        width: 100%;
+        background: #FF5B1444;
+    }
+}
+
+.nick{
+    display: flex;
+    justify-content: flex-start !important;
+    align-items: center;
+
+    .name{
+        color: black;
+    }
+    
+    .num{
+        width: 20px;
+        color: gray;
+        text-align: right;
+
+        &:hover{
+            color: gray;
+        }
+
+        &:hover + .name{
+            color: #FF5B14;
+        }
+    }
+
+}
     
 `)
     

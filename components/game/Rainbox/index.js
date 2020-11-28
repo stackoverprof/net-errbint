@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import AnimatedNumber from "animated-number-react"
+import SideLeaderBoard from './SideLeaderBoard'
+import { DB } from '../../../services/firebase'
 import useResize from 'use-resizing'
 import Styled from '@emotion/styled'
 import Canvas from './Canvas'
-import { DB } from '../../../services/firebase'
-import SideLeaderBoard from './SideLeaderBoard'
 
 const Rainbox = () => {
     const [processMessage, setprocessMessage] = useState('')
@@ -29,10 +29,10 @@ const Rainbox = () => {
         let rank = 0
         Leaderboard.forEach( each => {
             if(score.food < each.score.food || 
-            (score.food == each.score.food && score.time > each.score.time)) 
+            (score.food == each.score.food && parseInt(toString(score.time).replace(".","")) > each.score.time)) 
             rank++
         })
-        return rank
+        return ++rank
     }
 
     const handleSubmit = async (e) => {
@@ -47,7 +47,7 @@ const Rainbox = () => {
             (score.food == old.score.food && parseInt(score.time.replace(".", "")) <= old.score.time)
         }
         
-        if(gameStatus == 'over' && /\S/.test(nickname)){
+        if(gameStatus == 'over' && /\S/.test(nickname) && nickname.match(/[0-9a-z]/i)){
             setprocessMessage('SAVING...')
 
             const userData = await DB.collection('Leaderboard').doc(nickname.trim()).get()
@@ -181,15 +181,16 @@ const Rainbox = () => {
             </div>
 
             <SideLeaderBoard 
-                Leaderboard={Leaderboard}
                 processMessage={processMessage}
+                handleSubmit={handleSubmit}
+                Leaderboard={Leaderboard}
+                setnickname={setnickname}
+                gameStatus={gameStatus}
+                checkRank={checkRank}
                 UserData={UserData}
                 nickname={nickname}
-                setnickname={setnickname}
                 sideRef={sideRef}
                 score={score}
-                gameStatus={gameStatus}
-                handleSubmit={handleSubmit}
             />
 
             <p>{checkRank()}</p>
@@ -206,7 +207,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     z-index: -2;
 
     .orange{
-        color: #FF5B14;
+        color: #FF5B14 !important;
     }
     .gray{
         color: gray;
