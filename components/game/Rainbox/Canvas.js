@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 
-const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, briRef, nrRef, etRef}) => {
+const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, sideRef, briRef, nrRef, etRef}) => {
     const rightTouchRef = useRef()
     const leftTouchRef = useRef()
     const canvasRef = useRef()
@@ -259,7 +259,7 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
                 isRightPressed = true
                 player.Velocity = 5
                 firstAttempt()
-            } else if (e.which == 13 && isGameOver) {
+            } else if (e.which == 13 && isGameOver && document.activeElement !== siderinput) {
                 //PRESSING ENTER
                 NewGame()
             } 
@@ -391,6 +391,7 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
         const handleInactive = () => tabInactive = document.hidden ? true : false   
         document.addEventListener("visibilitychange", handleInactive)        
         
+        const siderinput = sideRef.current
         
         /////////RUNNING THE GAME :: execution delayed within 5.5 seconds (for intro)
         const startingPosition = screenWidth < 744 ? screenWidth*10/100 : screenWidth/2-306

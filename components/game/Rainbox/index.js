@@ -4,24 +4,36 @@ import useResize from 'use-resizing'
 import Styled from '@emotion/styled'
 import Canvas from './Canvas'
 import { DB } from '../../../services/firebase'
+import SideLeaderBoard from './SideLeaderBoard'
 
 const Rainbox = () => {
     const [processMessage, setprocessMessage] = useState('')
-    const [Leaderboard, setLeaderboard] = useState([])
     const [score, setscore] = useState({food: 0, time: 0})
     const [gameStatus, setgameStatus] = useState('intro')
     const [animateValue, setanimateValue] = useState(0)
+    const [Leaderboard, setLeaderboard] = useState([])
     const [UserData, setUserData] = useState({})
     const [nickname, setnickname] = useState('')
+    const screen = useResize().width
     const dialogAvoidRef = useRef()
     const dialogOhnoRef = useRef()
     const newGameBtnRef = useRef()
+    const sideRef = useRef()
     const briRef = useRef()
     const etRef = useRef()
     const nrRef = useRef()
-    const screen = useResize().width
 
     const formatValue = (value) => `${(Number(value)/1000).toFixed(2)}`
+
+    const checkRank = () => {
+        let rank = 0
+        Leaderboard.forEach( each => {
+            if(score.food < each.score.food || 
+            (score.food == each.score.food && score.time > each.score.time)) 
+            rank++
+        })
+        return rank
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -64,9 +76,10 @@ const Rainbox = () => {
         }
     }
 
-    useEffect(() => {
+    useEffect(() => {           
+
         const FireAction = () => {
-            DB.collection('Leaderboard').orderBy("score.food", "desc").orderBy("score.time", "asc").limit(10).onSnapshot(querySnapshot => {
+            DB.collection('Leaderboard').orderBy("score.food", "desc").orderBy("score.time", "asc").onSnapshot(querySnapshot => {
                 var dataSnapshot = []
                 querySnapshot.forEach(doc => {
                     dataSnapshot.push({
@@ -113,6 +126,7 @@ const Rainbox = () => {
                             dialogAvoidRef={dialogAvoidRef}
                             dialogOhnoRef={dialogOhnoRef}
                             setscore={setscore} 
+                            sideRef={sideRef}
                             briRef={briRef}
                             etRef={etRef}
                             nrRef={nrRef}/>
@@ -166,47 +180,19 @@ const Rainbox = () => {
                 <div className="dialog-ohno" ref={dialogOhnoRef}>OH NO!</div>
             </div>
 
-            <div className="side-leaderboard-cont fixedfull">
-                <div className="side-leaderboard">
-                    <div className="upper">
-                        <p className="title-leaderboard">LEADERBOARD</p>
-                        <div className="linesepar"></div>
-                        <div className="the-leaderboard">
-                            {Leaderboard.map((each, i)=>(
-                                <div key={i} className={`rank${i+1} eachLead`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
-                                    <p>{each.nickname}</p>
-                                    <div>
-                                        <p><span className="gray">{each.score.time/100} &ensp;</span></p>
-                                        <p><span className="orange food">{each.score.food}</span></p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="lower">
-                        
-                        <form onSubmit={handleSubmit}>
-                            <div className="input">
-                                <input type="text" onChange={(e)=> setnickname(e.target.value.toUpperCase())} value={nickname} placeholder="Enter a Nickname" maxLength="10"/>
-                                <p><span className="orange">{score.food}</span>&ensp;{score.time}</p>
-                            </div>
-                            <div>
-                                <button type="submit" className={`${gameStatus == "recorded" ? 'disabled' : ''}`} disabled={gameStatus == 'recorded'}>{gameStatus != 'recorded' ? 'SAVE SCORE' : 'SCORE SAVED'}</button>
-                                <p className="process">
-                                    {processMessage}
-                                </p>
-                            </div>
-                            {processMessage == ' ' && 
-                                <p>{`Sorry, ${UserData.nickname} already got a higher score!`}</p>
-                            }
-                        </form>
-                    </div>
-                </div>
-            </div>
+            <SideLeaderBoard 
+                Leaderboard={Leaderboard}
+                processMessage={processMessage}
+                UserData={UserData}
+                nickname={nickname}
+                setnickname={setnickname}
+                sideRef={sideRef}
+                score={score}
+                gameStatus={gameStatus}
+                handleSubmit={handleSubmit}
+            />
 
-                {/* {Leaderboard.map((each,i)=>(
-                    <style key={i}>{`.rank${i+1}{transition-delay: ${gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'};}`}</style>
-                ))} */}
+            <p>{checkRank()}</p>
         </Wrapper>
     )
 }
@@ -235,6 +221,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
         width: 100%;
         background: black;
         margin: 16px 0;
+        opacity: .2;
     }
 
     .the-leaderboard{
