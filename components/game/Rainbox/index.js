@@ -257,7 +257,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
                 justify-content: space-between;
                 align-items: center;
 
-                min-width: 60px;
+                min-width: 68px;
 
             }
         }
