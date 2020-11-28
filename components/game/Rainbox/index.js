@@ -44,7 +44,7 @@ const Rainbox = () => {
             if (!userData.exists) return true
             const old = userData.data()
             return score.food > old.score.food || 
-            (score.food == old.score.food && score.time <= old.score.time)
+            (score.food == old.score.food && parseInt(score.time.replace(".", "")) <= old.score.time)
         }
         
         if(gameStatus == 'over' && /\S/.test(nickname)){
@@ -244,7 +244,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
                 justify-content: space-between;
                 align-items: center;
 
-                min-width: 60px;
+                min-width: 68px;
 
             }
         }
