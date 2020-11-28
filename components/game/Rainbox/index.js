@@ -32,7 +32,7 @@ const Rainbox = () => {
             if (!userData.exists) return true
             const old = userData.data()
             return score.food > old.score.food || 
-            (score.food == old.score.food && score.time <= old.score.time)
+            (score.food == old.score.food && parseInt(score.time.replace(".", "")) <= old.score.time)
         }
         
         if(gameStatus == 'over' && /\S/.test(nickname)){
