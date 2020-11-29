@@ -432,7 +432,7 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             
             setscore({
                 food: player.EatCount, 
-                time: ((isAttempted ? calcTiming() : 0)/1000).toFixed(2)
+                time: ((isAttempted ? calcTiming() : 0)/10).toFixed(0)
             })
             
             //Reseting canvas

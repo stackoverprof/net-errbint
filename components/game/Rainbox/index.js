@@ -26,22 +26,29 @@ const Rainbox = () => {
     const formatValue = (value) => `${(Number(value)/1000).toFixed(2)}`
 
     const checkRank = () => {
-        let rank = 0
+        let rank = 1
+        // console.log(parseInt(toString(score.time).replace(".","")))
+        // console.log(score.time.replace(".",""))
         Leaderboard.forEach( each => {
             if(score.food < each.score.food || 
-            (score.food == each.score.food && parseInt(toString(score.time).replace(".","")) > each.score.time)) 
+            (score.food == each.score.food && score.time > each.score.time))
             rank++
+            // console.log(each.nickname + 'cek' + rank)
+            // console.log((score.food == each.score.food && parseInt(toString(score.time).replace(".","")) > each.score.time))
+            // console.log((parseInt(toString(score.time).replace(".","")) + " > " + each.score.time))
         })
-        return ++rank
+        return rank
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
+        let isUpdate = false
         setprocessMessage('')
         
         const isScoreBigger = (userData) => {
             if (!userData.exists) return true
+            isUpdate = true
             const old = userData.data()
             return score.food > old.score.food || 
             (score.food == old.score.food && parseInt(score.time.replace(".", "")) <= old.score.time)
@@ -61,7 +68,7 @@ const Rainbox = () => {
                     },
                     timestamp: new Date().getTime()
                 }).then(() => {
-                    setprocessMessage('ALL OK!')
+                    setprocessMessage(isUpdate ? 'UPDATED!' : 'ALL OK!')
                     setscore({food: 0, time: 0})
                     setgameStatus('recorded')
                 }).catch(() => {
