@@ -13,7 +13,23 @@ const SideLeaderBoard = ({Leaderboard, UserData, checkRank, processMessage, scor
                         <div className="the-leaderboard">
                             {Leaderboard.slice(0, checkRank() < 11 && gameStatus == 'over' ? 9 : 10).map((each, i)=>(
                                 <div key={i} >
-                                    <div className={`rank${i+1} eachLead`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
+                                    {(gameStatus == 'over' && checkRank() == i+1 )&&
+                                        <div className="newscore">
+                                            <div className="linesepar-org"></div>
+                                            <div className="eachLead">
+                                                <div className="nick">
+                                                    <p className="orange num">{checkRank()}.</p>
+                                                    <p className="orange name">NEW SCORE</p>
+                                                </div>
+                                                <div>
+                                                    <p><span className="gray">{parseInt(score.time)/100} &ensp;</span></p>
+                                                    <p><span className="orange food">{score.food}</span></p>
+                                                </div>
+                                            </div>
+                                            <div className="linesepar-org"></div>
+                                        </div>
+                                    }
+                                    <div className="eachLead" style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
                                         <div className="nick">
                                             {gameStatus == 'over' ? 
                                                 <p className="num">{checkRank() > i+1? i+1 : i+2}.</p>
@@ -27,24 +43,25 @@ const SideLeaderBoard = ({Leaderboard, UserData, checkRank, processMessage, scor
                                             <p><span className="orange food">{each.score.food}</span></p>
                                         </div>
                                     </div>
-                                    {(gameStatus == 'over' && checkRank() == i+2 )&&
-                                        <div className="newscore">
-                                            <div className="linesepar-org"></div>
-                                            <div className={`rank${i+1} eachLead`} style={{transitionDelay : gameStatus == 'over' ? 0.75 + 0.10*i +'s' : '0s'}}>
-                                                <div className="nick">
-                                                    <p className="orange num">{checkRank()}.</p>
-                                                    <p className="orange name">NEW SCORE</p>
-                                                </div>
-                                                <div>
-                                                    <p><span className="gray">{parseInt(score.time)/100} &ensp;</span></p>
-                                                    <p><span className="orange food">{score.food}</span></p>
-                                                </div>
-                                            </div>
-                                            <div className="linesepar-org"></div>
-                                        </div>
-                                    }
                                 </div>
                             ))}
+                            {(gameStatus == 'over' && checkRank() == 10 ) &&
+                                <div className="newscore">
+                                    <div className="linesepar-org"></div>
+                                    <div className="eachLead">
+                                        <div className="nick">
+                                            <p className="orange num">{checkRank()}.</p>
+                                            <p className="orange name">NEW SCORE</p>
+                                        </div>
+                                        <div>
+                                            <p><span className="gray">{parseInt(score.time)/100} &ensp;</span></p>
+                                            <p><span className="orange food">{score.food}</span></p>
+                                        </div>
+                                    </div>
+                                    <div className="linesepar-org"></div>
+                                </div>
+                            }
+
                             {Leaderboard.length == 0 && <p className="no-connection">CONNECTION ERROR</p>}
                         </div>
                     </div>

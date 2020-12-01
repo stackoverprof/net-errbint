@@ -158,11 +158,15 @@ const Rainbox = () => {
 
             
             <p className="live-score">
-                <span>{score.food}</span>&nbsp;&nbsp;{score.time == 0.00 ? 0 : score.time}
+                <span>{score.food}</span>&nbsp;&nbsp;{score.time == 0 ? 0 : score.time/100}
             </p>
             <p className="game-status">
                 : : {gameStatus}
             </p>
+            <div className="live-position">
+                <p>CURRENT POSITION</p>
+                <p className="orange">#{checkRank()}</p>
+            </div>
             
             <div className="final-score fixedfull">
                 {
@@ -200,7 +204,6 @@ const Rainbox = () => {
                 score={score}
             />
 
-            <p>{checkRank()}</p>
         </Wrapper>
     )
 }
@@ -219,9 +222,22 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     .gray{
         color: gray;
     }
-    
     .upper{
         width: 100%;
+    }
+
+    .live-position{
+        position: fixed;
+        top: 54px;
+        right: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        flex-direction: column;
+        color: gray;
+
+        opacity: ${gameStatus == 'running' ? 1 : 0 };
+        transition: 0.25s;
     }
 
     .linesepar{
