@@ -151,9 +151,11 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             }
 
             this.Update = () => {
-                this.Position.Y += this.Velocity
-                this.DrawHead()
-                this.DrawTrail()
+                if(this.Position.Y < screenHeight-navbarOffset+this.Height*5){
+                    this.Position.Y += this.Velocity
+                    this.DrawHead()
+                    this.DrawTrail()
+                }
             }
         }
 
