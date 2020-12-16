@@ -42,9 +42,13 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             this.Height = 50
             this.Width = 50
             this.Shadow = 'orange'
-            this.Color = "#FF5B14"
+            this.RGB = {r: 255, g: 91, b: 20}
+            this.RGBChange = {r: 0, g: 0.5, b: 0}
+            this.Color = `rgb(255, ${this.RGB.g}, 20)`
             this.Blur = 25
             this.Velocity = 0
+
+            this.shine = 0
 
             //Scoring things
             this.EatCount = 0
@@ -75,8 +79,23 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
                 this.EatCount++
                 GlimpseHandler(this.EatCount)
                 food = new Food()
+                this.shine = 0.025
             }}
 
+            this.DrawShine = () => {
+                if(this.shine > 0){
+                    ctx.fillStyle =`rgba(255, 90, 20, ${-(this.shine*2-1)})`
+                    ctx.beginPath()
+                    ctx.rect(
+                        this.Position.X-(this.Width*(1+this.shine)-this.Width)/2, 
+                        this.Position.Y-(this.Width*(1+this.shine)-this.Width)/2, 
+                        this.Width*(1+this.shine), 
+                        this.Height*(1+this.shine))
+                    ctx.fill()
+                    this.shine += 0.025
+                    if (this.shine >= 0.5) this.shine = 0
+                }
+            }
             
             this.dialogAttachment = () => {
                 avoid.style.left = `${this.Position.X + 34}px`
@@ -84,6 +103,11 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             }
                         
             this.Draw = () => {
+                if(this.RGB.g == 152) this.RGBChange.g = -0.5
+                if(this.RGB.g == 91) this.RGBChange.g = 0.5
+                this.RGB.g += this.RGBChange.g
+                if (!isGameOver) this.Color = `rgb(255, ${this.RGB.g}, 20)`
+
                 ctx.shadowColor = this.Shadow
                 ctx.shadowBlur = this.Blur
                 ctx.fillStyle = this.Color
@@ -103,6 +127,7 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
                 this.checkCollisions()
                 this.checkEaten()
                 this.Draw()
+                this.DrawShine()
             }
         }
         
