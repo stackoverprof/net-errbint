@@ -10,11 +10,8 @@ const Index = () => {
     const handleDrawer = (e) => {
         if (e.wheelDelta < 0 && !showDrawer) {
             setshowDrawer(true)
-            console.log("down")
-            mainContentRef.current.focus()
-        } else if(e.wheelDelta > 0 && showDrawer && mainContentRef.current.scrollTop == 0) {
+        } else if(e.wheelDelta > 0 && showDrawer && mainContentRef.current.scrollTop <= 0) {
             setshowDrawer(false)
-            console.log("up")
         }
     }
 
@@ -30,59 +27,9 @@ const Index = () => {
         <Wrapper showDrawer={showDrawer}>
             <Rainbox />
             <div className="homepage">
-                <Navbar />
+                <Navbar showDrawer={showDrawer}/>
                 <div className="main-content" ref={mainContentRef}>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
-                    <h1>HAHA</h1>
+
                 </div>
             </div>
         </Wrapper>
@@ -103,7 +50,7 @@ const Wrapper = Styled.div(({showDrawer}) =>`
         top: ${showDrawer ? 0 : 'calc(100% - 60px)'};
         left: 0;
         background: black;
-        transition: 1s;
+        transition: 0.6s;
     }
 
     .main-content{

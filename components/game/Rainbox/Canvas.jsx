@@ -42,7 +42,7 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             this.Height = 50
             this.Width = 50
             this.Shadow = 'orange'
-            this.RGB = {r: 255, g: 91, b: 20}
+            this.RGB = {r: 255, g: 74, b: 20}
             this.RGBChange = {r: 0, g: 0.5, b: 0}
             this.Color = `rgb(255, ${this.RGB.g}, 20)`
             this.Blur = 25
@@ -93,7 +93,7 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
                         this.Height*(1+this.shine))
                     ctx.fill()
                     this.shine += 0.025
-                    if (this.shine >= 0.5) this.shine = 0
+                    if (this.shine >= 0.75) this.shine = 0
                 }
             }
             
@@ -104,7 +104,7 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
                         
             this.Draw = () => {
                 if(this.RGB.g == 152) this.RGBChange.g = -0.5
-                if(this.RGB.g == 91) this.RGBChange.g = 0.5
+                if(this.RGB.g == 74) this.RGBChange.g = 0.5
                 this.RGB.g += this.RGBChange.g
                 if (!isGameOver) this.Color = `rgb(255, ${this.RGB.g}, 20)`
 
@@ -115,14 +115,18 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
                 ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height)
                 ctx.fill()
             }
-            
-            this.Update = () => {
+
+            this.Move = () => {
                 if (!(this.Position.X + this.Velocity < 0 || this.Position.X + this.Velocity > screenWidth - 50)){    
                     this.Position.X += this.Velocity
                 }else if (this.Position.X > screenWidth - this.Width){
                     this.Position.X = screenWidth - (this.Width+2)
                 }
+            }
+            
+            this.Update = () => {
                 
+                this.Move()
                 this.dialogAttachment()
                 this.checkCollisions()
                 this.checkEaten()
@@ -529,11 +533,12 @@ const Wrapper = Styled.div(() =>`
     align-items: center;
     flex-direction: column;
     z-index: -1;
+    height: 100%;
 
     .control{
-        position: fixed;
+        position: absolute;
         width: 100%;
-        height: 100%;
+        height: calc(100% - 60px);
         top: 0;
         left: 0;
 
