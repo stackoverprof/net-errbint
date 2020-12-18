@@ -8,6 +8,8 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
     
     useEffect(() => {
         let _isMounted = true
+        
+        window.onload = console.log('loadeddd ctx');
 
         /////////CANVAS INITIALIZATION 
         const canvas = canvasRef.current
