@@ -251,7 +251,6 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     .the-leaderboard{
         margin-top: 24px;
         width: 100%;
-        // padding-left: 8px;
 
         .eachLead{
             position: relative;
@@ -582,7 +581,6 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
 
     div.canvas{
         background: url('/img/bg3d.webp');
-        // <a href="https://www.freepik.com/photos/background">Background photo created by kjpargeter - www.freepik.com</a>
         background-size: cover;
         background-position: top;
         background-repeat: no-repeat;

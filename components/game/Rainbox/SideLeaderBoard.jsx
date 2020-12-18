@@ -75,7 +75,7 @@ const SideLeaderBoard = ({Leaderboard, UserData, checkRank, processMessage, scor
                             <div>
                                 <button type="submit" className={`${gameStatus == "recorded" ? 'disabled' : ''}`} disabled={gameStatus == 'recorded'}>{gameStatus != 'recorded' ? 'SAVE SCORE' : 'SCORE SAVED'}</button>
                                 <p className="process">
-                                    {processMessage}
+                                    {processMessage == '' ? `RANK #${checkRank()}` : processMessage}
                                 </p>
                             </div>
                             {processMessage == ' ' && 

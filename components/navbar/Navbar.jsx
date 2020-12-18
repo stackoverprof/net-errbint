@@ -2,21 +2,25 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import Styled from '@emotion/styled'
 import Navmenu from './Navmenu'
+import useResize from 'use-resizing'
 
 const Navbar = ({showDrawer}) => {
     const [open, setopen] = useState(false)
+    const screen = useResize().width
     
     return (
-        <Wrapper open={open} showDrawer={showDrawer}>
+        <Wrapper screen={screen} open={open} showDrawer={showDrawer}>
             <div className="navbar">
                 <div className="contain-size">
                     <Navmenu showDrawer={showDrawer} open={open} setopen={setopen}/>
-                    <div className="nav-links">
-                        <Link href="/">Profile</Link>
-                        <Link href="/abilities">Abilities</Link>
-                        <Link href="/projects">Projects</Link>
-                        <Link href="/experiences">Experiences</Link>
-                    </div>
+                    {screen > 800 && 
+                        <div className="nav-links">
+                            <Link href="/">Profile</Link>
+                            <Link href="/abilities">Abilities</Link>
+                            <Link href="/projects">Projects</Link>
+                            <Link href="/experiences">Experiences</Link>
+                        </div>
+                    }
                 </div>
             </div>
             <div className="dropper">
@@ -65,7 +69,7 @@ const Navbar = ({showDrawer}) => {
     )
 }
 
-const Wrapper = Styled.div(({open, showDrawer}) =>`
+const Wrapper = Styled.div(({screen, open, showDrawer}) =>`
     height: 60px;
     width: 100%;
     background: black;
@@ -96,7 +100,7 @@ const Wrapper = Styled.div(({open, showDrawer}) =>`
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: 0.25s;
+            transition: 0.75s;
             cursor: pointer;
             height: 100%;
             color: white;
@@ -137,7 +141,7 @@ const Wrapper = Styled.div(({open, showDrawer}) =>`
                 color: #555;
                 overflow: hidden;
                 width: 0;
-                transition: 0.25s;
+                transition: 0.75s;
                 text-align: left;
             }
 
@@ -170,10 +174,10 @@ const Wrapper = Styled.div(({open, showDrawer}) =>`
     .contain-size{
         max-width: 1192px;
         width: 90%;
-        min-width: 720px;
+        min-width: 320px;
         height: 100%;
         display: flex;
-        justify-content: space-between;
+        justify-content: ${screen > 800 ? 'space-between' : 'center'};
         align-items: center;
     }
 

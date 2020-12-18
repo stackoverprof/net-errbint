@@ -1,10 +1,12 @@
 import React from 'react'
 import Styled from '@emotion/styled'
+import useResize from 'use-resizing'
 
 const Navmenu = ({showDrawer, open, setopen}) => {
+    const screen = useResize().width
 
     return (
-        <Wrapper onClick={() => setopen(!open)} open={open}>
+        <Wrapper onClick={() => setopen(!open)} screen={screen} open={open}>
             <div className="background"></div>
             <div className="navmenu">
                 <div className="three col">
@@ -23,9 +25,11 @@ const Navmenu = ({showDrawer, open, setopen}) => {
     )
 }
 
-const Wrapper = Styled.div(({open}) =>`
+const Wrapper = Styled.div(({screen, open}) =>`
     position: relative;
-    width: 232px;
+    max-width: 720px;
+    min-width: 320px;
+    width: ${screen > 800 ? '232px' : '90%'};
     height: 100%;
     transition: 0.1s;
     overflow-x: hidden;
@@ -45,7 +49,7 @@ const Wrapper = Styled.div(({open}) =>`
         /* height: ${open ? 0 : 60}px;
         width: 232px; */
         height: 60px;
-        width: ${open ? 0 : 232}px;
+        width: ${open ? 0 : screen > 800 ? '232px' : '100%' };
         transition: 0.5s;
         left:0;
     }

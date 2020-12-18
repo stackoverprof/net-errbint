@@ -186,6 +186,7 @@ const Canvas = ({isServer, setanimateValue, setprocessMessage, setgameStatus, se
                     this.Position.Y += this.Velocity
                     this.DrawHead()
                     this.DrawTrail()
+                    // if(player.EatCount % 5 != 0 || player.EatCount == 0) 
                 }
             }
         }
@@ -464,6 +465,8 @@ const Canvas = ({isServer, setanimateValue, setprocessMessage, setgameStatus, se
         
         /////////SCREEN UPDATER
         const Updater = setInterval(() => {
+            // canvas.style.backdropFilter =  player.EatCount % 5 == 0 && player.EatCount > 0? 'invert(100%) blur(4px)' : ''
+
             if (executeGame) {
             const calcTiming = () => {
                 return player.TimeEnd != 'initial' ? 
