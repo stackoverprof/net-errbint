@@ -28,7 +28,7 @@ const Navmenu = ({showDrawer, open, setopen}) => {
 const Wrapper = Styled.div(({screen, open}) =>`
     position: relative;
     max-width: 720px;
-    min-width: 320px;
+    min-width: 232px;
     width: ${screen > 800 ? '232px' : '90%'};
     height: 100%;
     transition: 0.1s;
@@ -50,14 +50,18 @@ const Wrapper = Styled.div(({screen, open}) =>`
         width: 232px; */
         height: 60px;
         width: ${open ? 0 : screen > 800 ? '232px' : '100%' };
-        transition: 0.5s;
+        transition: 1s;
         left:0;
     }
     
     &:hover .background{
         background: #111;
     }
-    
+
+    &:hover .three{
+        transform: scaleX(1.15);
+    }
+
     .col {
         display: block;
         float:left;
@@ -70,7 +74,8 @@ const Wrapper = Styled.div(({screen, open}) =>`
     
     .three{
         /* CLEARFIX */
-        
+        transition: 0.25s;
+
         .cf:before,
         .cf:after {
             content: " ";

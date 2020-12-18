@@ -198,7 +198,7 @@ const Wrapper = Styled.div(({screen, open, showDrawer}) =>`
             color: #FFFFFF;
 
             &:hover{
-                color: rgb(255, 120, 20);
+                color: #ff7814;
             }
         }
 `)
