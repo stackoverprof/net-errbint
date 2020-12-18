@@ -5,13 +5,15 @@ const Spinkit1 = () => {
     const [removeDisplay, setremoveDisplay] = useState(false)
     const [isLoaded, setisLoaded] = useState(false)
 
-    
-    useEffect(() => {
+    const remover = () => {
         setisLoaded(true)
         setTimeout(() => {
             setremoveDisplay(true)
         }, 1000)
+    }
     
+    useEffect(() => {
+        window.onload = remover
     }, [])
 
     return (

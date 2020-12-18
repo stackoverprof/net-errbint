@@ -11,7 +11,6 @@ function MyApp({ Component, pageProps }) {
   <>
     <Head>
         <title>Errbint.NET</title>
-        {/* <link rel="icon" href="/favicon.ico" /> */}
         <meta name="theme-color" content="#060410"/>
     </Head>
     <NextNprogress
