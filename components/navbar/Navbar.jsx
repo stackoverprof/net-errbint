@@ -13,23 +13,23 @@ const Navbar = ({showDrawer}) => {
             <div className="navbar">
                 <div className="contain-size">
                     <Navmenu showDrawer={showDrawer} open={open} setopen={setopen}/>
-                    {screen > 800 && 
-                        <div className="nav-links">
+                    <div className="nav-links nav-links-upper">
+                        <div className="nav-links-inner">
                             <Link href="/">Profile</Link>
                             <Link href="/abilities">Abilities</Link>
                             <Link href="/projects">Projects</Link>
                             <Link href="/experiences">Experiences</Link>
                         </div>
-                    }
+                    </div>
                 </div>
             </div>
             <div className="dropper">
                 <div className="contain-size">
                     <div className="nav-links">
-                        <Link href="/">Home</Link>
-                        <Link href="/contact">Contact</Link>
-                        <Link href="/about">About</Link>
-                        <Link href="/guestbook">Help</Link>
+                            <Link href="/">Home</Link>
+                            <Link href="/contact">Contact</Link>
+                            <Link href="/about">About</Link>
+                            <Link href="/guestbook">Help</Link>
                     </div>
                     <div className="sosmed">
                         <Link href="https://github.com/stackoverprof/">
@@ -173,34 +173,62 @@ const Wrapper = Styled.div(({screen, open, showDrawer}) =>`
 
     .contain-size{
         max-width: 1192px;
-        width: 90%;
+        width: ${screen > 800 ? '90%' : '100%'};
         min-width: 320px;
         height: 100%;
         display: flex;
-        justify-content: ${screen > 800 ? 'space-between' : 'center'};
+        justify-content: space-between;
         align-items: center;
     }
 
     .nav-links{
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
+        height: 100%;
+        overflow-x: scroll;
 
-    }
-        a{
-            font-family: 'Bahnschrift';
-            font-style: normal;
-            font-weight: normal;
-            font-size: 20px;
-            line-height: 24px;
-            text-align: center;
-            margin: 0 10px;
-            color: #FFFFFF;
+        .nav-links-inner{
+            display: flex;
+            justify-content: ${screen > 800 ? 'center' : 'flex-start'};
+            align-items: center;
+            padding: 0 16px;
+            height: 100%;
 
-            &:hover{
-                color: #ff7814;
-            }
         }
+
+
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+    .nav-links-upper::after{
+        content: '';
+        pointer-events: none;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background: rgb(0,0,0);
+        background: linear-gradient(90deg, rgba(0,0,0,0) 60%, rgba(0,0,0,1) 85%);
+    }
+
+    a{
+        font-family: 'Bahnschrift';
+        font-style: normal;
+        font-weight: normal;
+        font-size: 20px;
+        line-height: 24px;
+        text-align: center;
+        margin: 0 10px;
+        color: #FFFFFF;
+
+        &:hover{
+            color: #ff7814;
+        }
+    }
 `)
 
 export default Navbar

@@ -6,7 +6,7 @@ const Navmenu = ({showDrawer, open, setopen}) => {
     const screen = useResize().width
 
     return (
-        <Wrapper onClick={() => setopen(!open)} screen={screen} open={open}>
+        <Wrapper onClick={() => setopen(!open)} screen={screen}>
             <div className="background"></div>
             <div className="navmenu">
                 <div className="three col">
@@ -16,20 +16,21 @@ const Navmenu = ({showDrawer, open, setopen}) => {
                         <span className="line"></span>
                     </div>
                 </div>
-                <div className="text">
-                    <h2 className={`nav ${showDrawer && open ? '' : showDrawer ? 'sidehide' : ''}`}>NAVIGATION</h2>
-                    <h2 className={`erb ${!showDrawer || open ? 'sidehide' : ''}`}>ERRBINT</h2>
-                </div>
+                {screen > 800 &&
+                    <div className="text">
+                        <h2 className={`nav ${showDrawer && open ? '' : showDrawer ? 'sidehide' : ''}`}>NAVIGATION</h2>
+                        <h2 className={`erb ${!showDrawer || open ? 'sidehide' : ''}`}>ERRBINT</h2>
+                    </div>
+                }
             </div>
         </Wrapper>
     )
 }
 
-const Wrapper = Styled.div(({screen, open}) =>`
+const Wrapper = Styled.div(({screen}) =>`
     position: relative;
-    max-width: 720px;
-    min-width: 232px;
-    width: ${screen > 800 ? '232px' : '90%'};
+    min-width: 60px;
+    width: ${screen > 800 ? 232 : 60}px;
     height: 100%;
     transition: 0.1s;
     overflow-x: hidden;
@@ -38,18 +39,16 @@ const Wrapper = Styled.div(({screen, open}) =>`
         position: relative;
         height: 100%;
         display: flex;
-        justify-content: space-between;
+        justify-content: ${screen > 800 ? 'space-between' : 'center'};
         align-items: center;
-        padding-left: 22px;
+        ${screen > 800 ? 'padding-left: 22px;' : ''}
     }
 
     .background{
         position: absolute;
         background: #222;
-        /* height: ${open ? 0 : 60}px;
-        width: 232px; */
         height: 60px;
-        width: ${open ? 0 : screen > 800 ? '232px' : '100%' };
+        width: 100%;
         transition: 1s;
         left:0;
     }

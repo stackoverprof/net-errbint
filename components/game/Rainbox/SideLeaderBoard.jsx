@@ -92,6 +92,42 @@ const SideLeaderBoard = ({Leaderboard, UserData, checkRank, processMessage, scor
     
 const Wrapper = Styled.div(({gameStatus}) =>`
 
+
+.side-leaderboard-cont{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        height:  calc(100% - 60px);
+        pointer-events: none;
+    }
+    .side-leaderboard{
+        height: 100%;
+        width: 272px;
+        position: relative;
+        right: ${gameStatus == 'over' || gameStatus == 'recorded' ? '0' : '-292px'};
+
+        transition: 1s;
+        padding: 20px 24px 24px 24px;
+        backdrop-filter: blur(8px);
+        box-shadow: -4px 0 4px rgba(0,0,0,0.15);
+        pointer-events: all;
+        background: linear-gradient(0deg, rgba(255,255,255,0.7) 11%, rgba(255,255,255,0) 37%);
+
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-direction: column;
+
+        p.title-leaderboard{
+            font-size: 18px;
+            text-shadow: 0 0 0.5px rgb(0, 0, 0);
+            // opacity: ${gameStatus == 'over' || gameStatus == 'recorded' ? 1 : 0};
+            // transition: opacity 1s ${gameStatus == 'over' ? '.25s' : '0s'};
+        }
+    }
+    
+
 .no-connection{
     width: 100%;
     display: inline-block !important;
