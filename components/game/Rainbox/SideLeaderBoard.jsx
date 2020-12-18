@@ -70,7 +70,7 @@ const SideLeaderBoard = ({Leaderboard, UserData, checkRank, processMessage, scor
                         <form onSubmit={handleSubmit}>
                             <div className="input">
                                 <input type="text" onChange={(e)=> setnickname(e.target.value.toUpperCase())} value={nickname} ref={sideRef} placeholder="Enter a Nickname" maxLength="10"/>
-                                <p><span className="orange">{score.food}</span>&ensp;{score.time}</p>
+                                <p><span className="orange">{score.food}</span>&ensp;{parseInt(score.time)/100}</p>
                             </div>
                             <div>
                                 <button type="submit" className={`${gameStatus == "recorded" ? 'disabled' : ''}`} disabled={gameStatus == 'recorded'}>{gameStatus != 'recorded' ? 'SAVE SCORE' : 'SCORE SAVED'}</button>
