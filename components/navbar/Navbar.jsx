@@ -29,34 +29,34 @@ const Navbar = ({showDrawer}) => {
                     </div>
                     <div className="sosmed">
                         <Link href="https://github.com/stackoverprof/">
-                            <div>
-                                <img src="/img/icons/gh.svg" alt=""/>
+                            <a target="_blank">
+                                <img src="/img/icons/gh.svg"/>
                                 <p className="n0">stackoverprof</p>
-                            </div>
+                            </a>
                         </Link>
                         <Link href="https://instagram.com/errbint">
-                            <div>
-                                <img src="/img/icons/ig.svg" alt=""/>
+                            <a target="_blank">
+                                <img src="/img/icons/ig.svg"/>
                                 <p className="n1">@errbint</p>
-                            </div>
+                            </a>
                         </Link>
                         <Link href="https://line.me/ti/p/FwXuuM_qrV">
-                            <div>
-                                <img src="/img/icons/line.svg" alt=""/>
+                            <a target="_blank">
+                                <img src="/img/icons/line.svg"/>
                                 <p className="n2">@r.bintang11</p>
-                            </div>
+                            </a>
                         </Link>
                         <Link href="https://wa.me/628988355006">
-                            <div>
-                                <img src="/img/icons/wa.svg" alt=""/>
+                            <a target="_blank">
+                                <img src="/img/icons/wa.svg"/>
                                 <p className="n3">+62 8988355006</p>
-                            </div>
+                            </a>
                         </Link>
                         <Link href="https://www.linkedin.com/in/r-bintang-bagus-putra-angkasa-41a6b1188">
-                            <div>
-                                <img src="/img/icons/lkdn.svg" alt=""/>
+                            <a target="_blank">
+                                <img src="/img/icons/lkdn.svg"/>
                                 <p className="n4">R.Bintang Bagus</p>
-                            </div>
+                            </a>
                         </Link>
                     </div>
                 </div>
@@ -92,14 +92,15 @@ const Wrapper = Styled.div(({open, showDrawer}) =>`
             pointer-events: none;
         }
         
-        div{
+        a{
             display: flex;
             justify-content: center;
             align-items: center;
             transition: 0.25s;
             cursor: pointer;
             height: 100%;
-            
+            color: white;
+            margin: 0;
             
             &:hover img{
                 opacity: 1;
