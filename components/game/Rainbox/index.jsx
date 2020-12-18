@@ -97,7 +97,6 @@ const Rainbox = () => {
                         }
                     })
                 })
-                console.log("updating leaderboard")
                 setLeaderboard(dataSnapshot)
             })
         }
