@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import AnimatedNumber from "animated-number-react"
 import SideLeaderBoard from './SideLeaderBoard'
-import { DB } from '../../../services/firebase'
+import { DB } from '../../../core/services/firebase'
 import useResize from 'use-resizing'
 import Styled from '@emotion/styled'
 import Canvas from './Canvas'
 
-const Rainbox = () => {
+const Rainbox = ({isServer}) => {
     const [processMessage, setprocessMessage] = useState('')
     const [score, setscore] = useState({food: 0, time: 0})
     const [gameStatus, setgameStatus] = useState('intro')
@@ -131,6 +131,7 @@ const Rainbox = () => {
                             setprocessMessage={setprocessMessage}
                             dialogAvoidRef={dialogAvoidRef}
                             dialogOhnoRef={dialogOhnoRef}
+                            isServer={isServer}
                             setscore={setscore} 
                             sideRef={sideRef}
                             briRef={briRef}

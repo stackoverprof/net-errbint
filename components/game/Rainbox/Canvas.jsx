@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 
-const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, sideRef, briRef, nrRef, etRef}) => {
+const Canvas = ({isServer, setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, sideRef, briRef, nrRef, etRef}) => {
     const rightTouchRef = useRef()
     const leftTouchRef = useRef()
     const canvasRef = useRef()
@@ -459,7 +459,8 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             timeoutExecute = setTimeout(IgniteGame, delay + 4500)
         }
 
-        window.addEventListener('load', executeLoaded)
+        if(isServer) window.addEventListener('load', executeLoaded)
+        else executeLoaded()
         
         /////////SCREEN UPDATER
         const Updater = setInterval(() => {
@@ -535,7 +536,6 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
         </Wrapper>
     )
 }
-
 
 const Wrapper = Styled.div(() =>`
     display: flex;

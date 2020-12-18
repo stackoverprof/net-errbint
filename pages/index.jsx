@@ -3,7 +3,7 @@ import Styled from '@emotion/styled'
 import Rainbox from '../components/game/Rainbox'
 import Navbar from '../components/navbar/Navbar'
     
-const Index = () => {
+const Index = ({isServer}) => {
     const [showDrawer, setshowDrawer] = useState(false)
     const mainContentRef = useRef()
 
@@ -25,15 +25,19 @@ const Index = () => {
 
     return (
         <Wrapper showDrawer={showDrawer}>
-            <Rainbox />
+            <Rainbox isServer={isServer}/>
             <div className="homepage">
                 <Navbar showDrawer={showDrawer}/>
                 <div className="main-content" ref={mainContentRef}>
-
                 </div>
             </div>
         </Wrapper>
     )
+}
+
+Index.getInitialProps = async (ctx) => {
+    if(ctx.req) return {isServer : true}
+    return {isServer : false}
 }
     
 const Wrapper = Styled.div(({showDrawer}) =>`
