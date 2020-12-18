@@ -7,10 +7,6 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
     const canvasRef = useRef()
     
     useEffect(() => {
-        function logger(){
-            console.log('fully loaded')
-        }
-        window.addEventListener('onload', logger)
         let _isMounted = true
 
         /////////CANVAS INITIALIZATION 
@@ -502,7 +498,6 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             document.removeEventListener('keydown', controlling)
             document.removeEventListener('keyup', uncontrolling) 
             window.removeEventListener('resize', reportWindowSize)
-            window.removeEventListener('onload', logger)
 
             right.removeEventListener("touchstart", controlRight, false)
             left.removeEventListener("touchstart", controlLeft, false)
