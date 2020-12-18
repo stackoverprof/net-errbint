@@ -451,11 +451,13 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
         }
         
         /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
-        window.onload = () => {
-            setTimeout(() => GlimpseHandler('intro'), delay)
-            setTimeout(() => GlimpseHandler('regular'), delay + 3900)
-            setTimeout(IgniteGame, delay + 4500)
-        }
+        const timeoutIntro = () => setTimeout(() => GlimpseHandler('intro'), delay)
+        const timeoutInitial = () => setTimeout(() => GlimpseHandler('regular'), delay + 3900)
+        const timeoutExecute = () => setTimeout(IgniteGame, delay + 4500)
+
+        window.addEventListener('load', timeoutIntro)
+        window.addEventListener('load', timeoutInitial)
+        window.addEventListener('load', timeoutExecute)
         
         /////////SCREEN UPDATER
         const Updater = setInterval(() => {
@@ -501,14 +503,18 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             document.removeEventListener('keyup', uncontrolling) 
             window.removeEventListener('resize', reportWindowSize)
 
+            window.removeEventListener('load', timeoutIntro)
+            window.removeEventListener('load', timeoutInitial)
+            window.removeEventListener('load', timeoutExecute)
+
             right.removeEventListener("touchstart", controlRight, false)
             left.removeEventListener("touchstart", controlLeft, false)
             right.removeEventListener("touchend", uncontrolRight, false)
             left.removeEventListener("touchend", uncontrolLeft, false)
             
-            // clearTimeout(timingIntro)
-            // clearTimeout(timingInitial)
-            // clearTimeout(timingExecute)
+            clearTimeout(timingIntro)
+            clearTimeout(timingInitial)
+            clearTimeout(timingExecute)
 
             clearInterval(Updater)
             clearTimeout(GenerateRain)
