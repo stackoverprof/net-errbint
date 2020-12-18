@@ -70,6 +70,7 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
                         this.Position.Y <= shapes[i].Position.Y + shapes[i].Height 
                         ){
                             GameOver()
+                            this.shine = 0.025
                         }
                 }
             }
@@ -84,7 +85,7 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
 
             this.DrawShine = () => {
                 if(this.shine > 0){
-                    ctx.fillStyle =`rgba(255, 90, 20, ${-(this.shine*2-1)})`
+                    ctx.fillStyle = `rgba(${isGameOver ? '0, 0, 0,' : '255, 90, 20,'} ${-(this.shine*2-1)})`
                     ctx.beginPath()
                     ctx.rect(
                         this.Position.X-(this.Width*(1+this.shine)-this.Width)/2, 
@@ -92,9 +93,10 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
                         this.Width*(1+this.shine), 
                         this.Height*(1+this.shine))
                     ctx.fill()
+                    
                     this.shine += 0.025
                     if (this.shine >= 0.75) this.shine = 0
-                }
+                } 
             }
             
             this.dialogAttachment = () => {
