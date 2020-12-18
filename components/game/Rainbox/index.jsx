@@ -627,13 +627,13 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     }
 
     .bri{
-        background-image: url('/img/glimpse/bri.svg');
+        background-image: url('/img/glimpse/bri.webp');
     }
     .et{
-        background-image: url('/img/glimpse/et.svg');
+        background-image: url('/img/glimpse/et.webp');
     }
     .nr{
-        background-image: url('/img/glimpse/nr.svg');
+        background-image: url('/img/glimpse/nr.webp');
     }
 
     .nav-filler{
