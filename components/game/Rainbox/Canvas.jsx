@@ -450,14 +450,16 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             left.addEventListener("touchend", uncontrolLeft, false)
         }
         
-        /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
-        const timeoutIntro = () => setTimeout(() => GlimpseHandler('intro'), delay)
-        const timeoutInitial = () => setTimeout(() => GlimpseHandler('regular'), delay + 3900)
-        const timeoutExecute = () => setTimeout(IgniteGame, delay + 4500)
+        let timeoutIntro, timeoutInitial, timeoutExecute
 
-        window.addEventListener('load', timeoutIntro)
-        window.addEventListener('load', timeoutInitial)
-        window.addEventListener('load', timeoutExecute)
+        const executeLoaded = () => {
+            /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
+            timeoutIntro = setTimeout(() => GlimpseHandler('intro'), delay)
+            timeoutInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900)
+            timeoutExecute = setTimeout(IgniteGame, delay + 4500)
+        }
+
+        window.addEventListener('load', executeLoaded)
         
         /////////SCREEN UPDATER
         const Updater = setInterval(() => {
@@ -503,18 +505,16 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             document.removeEventListener('keyup', uncontrolling) 
             window.removeEventListener('resize', reportWindowSize)
 
-            window.removeEventListener('load', timeoutIntro)
-            window.removeEventListener('load', timeoutInitial)
-            window.removeEventListener('load', timeoutExecute)
+            window.removeEventListener('load', executeLoaded)
 
             right.removeEventListener("touchstart", controlRight, false)
             left.removeEventListener("touchstart", controlLeft, false)
             right.removeEventListener("touchend", uncontrolRight, false)
             left.removeEventListener("touchend", uncontrolLeft, false)
             
-            clearTimeout(timingIntro)
-            clearTimeout(timingInitial)
-            clearTimeout(timingExecute)
+            clearTimeout(timeoutIntro)
+            clearTimeout(timeoutInitial)
+            clearTimeout(timeoutExecute)
 
             clearInterval(Updater)
             clearTimeout(GenerateRain)
