@@ -451,9 +451,11 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
         }
         
         /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
-        const timingIntro = setTimeout(() => GlimpseHandler('intro'), delay)
-        const timingInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900)
-        const timingExecute = setTimeout(IgniteGame, delay + 4500)
+        window.onload = () => {
+            setTimeout(() => GlimpseHandler('intro'), delay)
+            setTimeout(() => GlimpseHandler('regular'), delay + 3900)
+            setTimeout(IgniteGame, delay + 4500)
+        }
         
         /////////SCREEN UPDATER
         const Updater = setInterval(() => {
@@ -504,9 +506,9 @@ const Canvas = ({setanimateValue, setprocessMessage, setgameStatus, setscore, ne
             right.removeEventListener("touchend", uncontrolRight, false)
             left.removeEventListener("touchend", uncontrolLeft, false)
             
-            clearTimeout(timingIntro)
-            clearTimeout(timingInitial)
-            clearTimeout(timingExecute)
+            // clearTimeout(timingIntro)
+            // clearTimeout(timingInitial)
+            // clearTimeout(timingExecute)
 
             clearInterval(Updater)
             clearTimeout(GenerateRain)
