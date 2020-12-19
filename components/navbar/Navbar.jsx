@@ -75,7 +75,7 @@ const Wrapper = Styled.div(({screen, open, showDrawer}) =>`
             display: flex;
             justify-content: ${screen > 800 ? 'center' : 'flex-start'};
             align-items: center;
-            padding: 0 16px;
+            ${screen < 800 ? 'padding: 0 64px 0 16px;' : ''}
             height: 100%;
 
         }
