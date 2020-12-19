@@ -6,7 +6,7 @@ const Navmenu = ({showDrawer, open, setopen}) => {
     const screen = useResize().width
 
     return (
-        <Wrapper onClick={() => setopen(!open)} screen={screen}>
+        <Wrapper onClick={() => setopen(!open)} screen={screen} open={open}>
             <div className="background"></div>
             <div className="navmenu">
                 <div className="three col">
@@ -27,10 +27,10 @@ const Navmenu = ({showDrawer, open, setopen}) => {
     )
 }
 
-const Wrapper = Styled.div(({screen}) =>`
+const Wrapper = Styled.div(({screen, open}) =>`
     position: relative;
-    min-width: 60px;
-    width: ${screen > 800 ? 232 : 60}px;
+    min-width: 64px;
+    width: ${screen > 800 ? 232 : 64}px;
     height: 100%;
     transition: 0.1s;
     overflow-x: hidden;
@@ -41,14 +41,14 @@ const Wrapper = Styled.div(({screen}) =>`
         display: flex;
         justify-content: ${screen > 800 ? 'space-between' : 'center'};
         align-items: center;
-        ${screen > 800 ? 'padding-left: 22px;' : ''}
+        padding-left: ${screen > 800 ? '22px' : '4px'};
     }
 
     .background{
         position: absolute;
         background: #222;
         height: 60px;
-        width: 100%;
+        width: ${open ? '0' : '100%'};
         transition: 1s;
         left:0;
     }
