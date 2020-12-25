@@ -110,6 +110,7 @@ const Wrapper = Styled.div(({screen, open, showDrawer}) =>`
         text-align: center;
         margin: 0 10px;
         color: #FFFFFF;
+        transition: 0.1s;
 
         &:hover{
             color: #ff7814;
