@@ -35,7 +35,7 @@ const Wrapper = Styled.div(({el, screen, showDrawer}) =>`
         position: absolute;
         /* height: calc(100% - 4px); */
         box-shadow: inset 4px 0 2px -4px gray;
-        height: ${showDrawer ? '60px' : '100%'};
+        height: 100%;
         width: 100%;
         background: #E5E5E5;
         transition: 0.6s;
