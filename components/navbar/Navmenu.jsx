@@ -46,7 +46,7 @@ const Wrapper = Styled.div(({screen, open}) =>`
 
     .background{
         position: absolute;
-        background: #222;
+        background: ${screen > 800 ? '#222' : '#2D2D2D'};
         height: 60px;
         width: ${open ? '0' : '100%'};
         transition: 1s;
