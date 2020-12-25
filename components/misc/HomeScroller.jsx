@@ -35,7 +35,7 @@ const Wrapper = Styled.div(({el, screen, showDrawer}) =>`
         position: absolute;
         /* height: calc(100% - 4px); */
         box-shadow: inset 4px 0 2px -4px gray;
-        height: 100%;
+        height: ${showDrawer ? '0' : '100%'};
         width: 100%;
         background: #E5E5E5;
         transition: 0.6s;
@@ -43,13 +43,19 @@ const Wrapper = Styled.div(({el, screen, showDrawer}) =>`
     
     .scroll-thing{
         position: relative;
+        min-height: 180px;
         top: ${(screen.height -screen.height * screen.height/el.scrollHeight)* el.scrollTop/el.scrollHeight}px;
         width: 100%;
         height: ${screen.height * screen.height/el.scrollHeight}px;
-        background: #ACACAC;
-        ${showDrawer ? 'height: 0; top: 60px;' : ''};
-        transition: 0.2s;
-        transition-delay:  ${showDrawer ? 0.6 : 0}s;
+        background-color: #ACACAC;
+        ${showDrawer ? 'min-height: 0px; height: 0;' : ''};
+        ${showDrawer ? screen > 600 ? 'top: 120px;' : 'top: 180px;' : ''};
+        transition: all 0.6s ${showDrawer ? 0.6 : 0}s, background-color 0.25s 1.2s;
+
+        &:hover{
+            background-color: #909090;
+            transition: all 0.6s ${showDrawer ? 0.6 : 0}s, background-color 0.25s 0s;
+        }
     }
 `)
 

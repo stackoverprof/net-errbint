@@ -6,7 +6,7 @@ import DropperDesktop from './dropper/Desktop'
 import DropperMobile from './dropper/Mobile'
 import useResize from 'use-resizing'
 
-const Navbar = ({showDrawer, open, setopen}) => {
+const Navbar = ({showDrawer, open, setopen, handleDrawer}) => {
     const screen = useResize().width
     
     return (
@@ -29,6 +29,7 @@ const Navbar = ({showDrawer, open, setopen}) => {
             :
                 <DropperMobile open={open} />
             }
+            <div className="fake-scroller-nav" onClick={handleDrawer}></div>
         </Wrapper>
     )
 }
@@ -41,7 +42,6 @@ const Wrapper = Styled.div(({screen, open, showDrawer}) =>`
     top: 0;
     z-index: 100;
     transition: ${screen > 600 ? '0.25s' : '0.5s'};
-
     
 
     .navbar{
@@ -109,6 +109,15 @@ const Wrapper = Styled.div(({screen, open, showDrawer}) =>`
         &:hover{
             color: #ff7814;
         }
+    }
+
+    .fake-scroller-nav{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 16px;
+        height: 100%;
+        background: #E5E5E5;
     }
 `)
 

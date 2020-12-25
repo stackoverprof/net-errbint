@@ -41,7 +41,7 @@ const Index = ({isServer}) => {
             <div className="home">
                 <Rainbox isServer={isServer}/>
                 <div className="homepage">
-                    <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar}/>
+                    <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer}/>
                     <div className="main-content" ref={mainContentRef}>
                         <h1>HAHA</h1>
                         <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way. When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then</p>
@@ -130,11 +130,6 @@ const Wrapper = Styled.div(({showDrawer, openNavbar, screen, drawerTransition}) 
             background-color: ${showDrawer ? '#ACACAC' : '#E5E5E5'};
 
             transition: 0.6s;
-            /* transition-delay: 0.6s; */
-            /* background: #E5E5E5; */
-            outline: 2px solid #FFF0;
-            outline-offset: -2px;
-            border: .1px solid #B7B7B7;
         }
 
         &::-webkit-scrollbar-thumb:hover{
