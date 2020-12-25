@@ -9,6 +9,11 @@ import useResize from 'use-resizing'
 const Navbar = ({showDrawer, open, setopen, handleDrawer}) => {
     const screen = useResize().width
     
+    const goToProfile = (e) => {
+        e.preventDefault()
+        if(!showDrawer) handleDrawer(e)
+    }
+
     return (
         <Wrapper screen={screen} open={open} showDrawer={showDrawer}>
             <div className="navbar">
@@ -16,7 +21,7 @@ const Navbar = ({showDrawer, open, setopen, handleDrawer}) => {
                     <Navmenu showDrawer={showDrawer} open={open} setopen={setopen}/>
                     <div className="nav-links nav-links-upper">
                         <div className="nav-links-inner">
-                            <Link href="/">Profile</Link>
+                            <a href="" onClick={goToProfile}>Profile</a>
                             <Link href="/abilities">Abilities</Link>
                             <Link href="/projects">Projects</Link>
                             <Link href="/experiences">Experiences</Link>
