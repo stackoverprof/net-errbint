@@ -4,6 +4,7 @@ import Rainbox from '../components/game/Rainbox'
 import Navbar from '../components/navbar/Navbar'
 import HomeScroller from '../components/misc/HomeScroller'
 import useResize from 'use-resizing'
+import { useSwipeable } from "react-swipeable"
     
 const Index = ({isServer}) => {
     const [showDrawer, setshowDrawer] = useState(false)
@@ -12,18 +13,18 @@ const Index = ({isServer}) => {
     const mainContentRef = useRef()
     const screen = useResize().width
 
+    const drawerSwipe = useSwipeable({
+        onSwipedUp: e => handleDrawer(e),
+        onSwipedDown: e => handleDrawer(e)
+    })
+
     const handleDrawer = (e) => {
-        if(e.type != 'wheel') {
+        const triggerOpen = (e.wheelDelta < 0 || e.dir == 'Up') && !showDrawer
+        const triggerClose = (e.wheelDelta > 0 || e.dir == 'Down') && showDrawer && mainContentRef.current.scrollTop <= 0
+
+        if ((e.type == 'click') || triggerOpen || triggerClose ){    
             setdrawerTransition(true)
             setshowDrawer(!showDrawer)
-            setTimeout(() => setdrawerTransition(false), 600)
-        } else if (e.wheelDelta < 0 && !showDrawer) {
-            setdrawerTransition(true)
-            setshowDrawer(true)
-            setTimeout(() => setdrawerTransition(false), 600)
-        } else if(e.wheelDelta > 0 && showDrawer && mainContentRef.current.scrollTop <= 0) {
-            setdrawerTransition(true)
-            setshowDrawer(false)
             setTimeout(() => setdrawerTransition(false), 600)
         }
     }
@@ -38,7 +39,7 @@ const Index = ({isServer}) => {
 
     return (
         <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition}>
-            <div className="home">
+            <div {...drawerSwipe} className="home">
                 <Rainbox isServer={isServer}/>
                 <div className="homepage">
                     <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer}/>

@@ -545,7 +545,8 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     }        
 
     div.canvas{
-        position: relative;
+        position: absolute;
+        top: 0;
         width: 100%;
         height: calc(100% - 60px);
 
@@ -583,8 +584,9 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     }
     .glimpse{
         position: absolute;
+        top: 0;
         width: 100%;
-        height: calc(100% - 60px);
+        height: 100%;
         
         background-size: cover;
         background-position: top;

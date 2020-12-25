@@ -1,9 +1,12 @@
 import React from 'react'
 import Styled from '@emotion/styled'
+import useResize from 'use-resizing'
     
 const SideLeaderBoard = ({Leaderboard, UserData, checkRank, processMessage, score, gameStatus, sideRef, nickname, setnickname, handleSubmit}) => {
+    const screen = useResize().width
+
     return (
-        <Wrapper gameStatus={gameStatus}>
+        <Wrapper gameStatus={gameStatus} screen={screen}>
             <div className="side-leaderboard-cont fixedfull">
 
                 <div className="side-leaderboard">
@@ -90,7 +93,7 @@ const SideLeaderBoard = ({Leaderboard, UserData, checkRank, processMessage, scor
     )
 }
     
-const Wrapper = Styled.div(({gameStatus}) =>`
+const Wrapper = Styled.div(({gameStatus, screen}) =>`
 
 
     .side-leaderboard-cont{
@@ -108,7 +111,7 @@ const Wrapper = Styled.div(({gameStatus}) =>`
             right: ${gameStatus == 'over' || gameStatus == 'recorded' ? '0' : '-292px'};
 
             transition: 1s;
-            padding: 20px 40px 24px 24px;
+            padding: 20px ${screen < 600 ? 24 : 40}px 24px 24px;
             backdrop-filter: blur(8px);
             box-shadow: -4px 0 4px rgba(0,0,0,0.15);
             pointer-events: all;
