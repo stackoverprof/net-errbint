@@ -26,10 +26,10 @@ const Wrapper = Styled.div(({el, screen, showDrawer}) =>`
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    /* opacity: ${showDrawer ? 0 : 1}; */
     transition: ${showDrawer ? 0.2 : 0}s;
     transition-delay:  ${showDrawer ? 1 : 0}s;
     ${showDrawer ? 'pointer-events: none;' : ''}
+    ${screen.width < 600 ? 'display: none;' : ''}
     
     .scroll-offset{
         position: absolute;
@@ -49,7 +49,7 @@ const Wrapper = Styled.div(({el, screen, showDrawer}) =>`
         height: ${screen.height * screen.height/el.scrollHeight}px;
         background-color: #ACACAC;
         ${showDrawer ? 'min-height: 0px; height: 0;' : ''};
-        ${showDrawer ? screen > 600 ? 'top: 120px;' : 'top: 180px;' : ''};
+        ${showDrawer ? screen.width > 600 ? 'top: 120px;' : 'top: 180px;' : ''};
         transition: all 0.6s ${showDrawer ? 0.6 : 0}s, background-color 0.25s 1.2s;
 
         &:hover{

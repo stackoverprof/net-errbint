@@ -118,6 +118,8 @@ const Wrapper = Styled.div(({screen, open, showDrawer}) =>`
         width: 16px;
         height: 100%;
         background: #E5E5E5;
+
+        ${screen < 600 ? 'display: none;' : ''}
     }
 `)
 

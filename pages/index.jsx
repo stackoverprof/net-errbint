@@ -116,10 +116,13 @@ const Wrapper = Styled.div(({showDrawer, openNavbar, screen, drawerTransition}) 
         p{
             margin: 12px 0;
             max-width: 1000px;
+            width: 90%;
+            min-width: 320px;
         }
 
         &::-webkit-scrollbar{
             width: 16px;
+            ${screen < 600 ? 'display: none;' : ''}
         }
 
         &::-webkit-scrollbar-track-piece{
