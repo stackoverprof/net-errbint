@@ -46,7 +46,7 @@ const Wrapper = Styled.div(({screen, open}) =>`
 
     .background{
         position: absolute;
-        background: ${screen > 800 ? '#222' : '#2D2D2D'};
+        background: #222;
         height: 60px;
         width: ${open ? '0' : '100%'};
         transition: 1s;
@@ -54,7 +54,7 @@ const Wrapper = Styled.div(({screen, open}) =>`
     }
     
     &:hover .background{
-        background: #111;
+        background: ${screen > 800 ? '#111' : '#222'};
     }
 
     &:hover .three{
