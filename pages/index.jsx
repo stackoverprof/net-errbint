@@ -122,7 +122,7 @@ const Wrapper = Styled.div(({showDrawer, openNavbar, screen, drawerTransition}) 
         }
 
         &::-webkit-scrollbar{
-            width: 16px;
+            width: 10px;
             ${screen < 600 ? 'display: none;' : ''}
         }
 

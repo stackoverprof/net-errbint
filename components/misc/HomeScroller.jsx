@@ -22,7 +22,7 @@ const HomeScroller = ({elRef, showDrawer, handleDrawer}) => {
 const Wrapper = Styled.div(({el, screen, showDrawer}) =>`
     position: relative;
     height: 100%;
-    width: 16px;
+    width: 10px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -50,11 +50,12 @@ const Wrapper = Styled.div(({el, screen, showDrawer}) =>`
         background-color: #ACACAC;
         ${showDrawer ? 'min-height: 0px; height: 0;' : ''};
         ${showDrawer ? screen.width > 600 ? 'top: 120px;' : 'top: 180px;' : ''};
-        transition: all 0.6s ${showDrawer ? 0.6 : 0}s, background-color 0.25s 1.2s;
+        opacity: ${showDrawer ? 0 : 1};
+        transition: all 0.6s ${showDrawer ? 0.6 : 0}s, background-color 0.25s ${showDrawer ? 1.2 : 0}s, opacity 0.6s ${showDrawer ? 0.6 : 0}s;
 
         &:hover{
             background-color: #909090;
-            transition: all 0.6s ${showDrawer ? 0.6 : 0}s, background-color 0.25s 0s;
+        transition: all 0.6s ${showDrawer ? 0.6 : 0}s, background-color 0.25s ${showDrawer ? 1.2 : 0}s, opacity 0.3s ${showDrawer ? 0.6 : 0}s;
         }
     }
 `)
