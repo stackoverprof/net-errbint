@@ -84,10 +84,9 @@ const Rainbox = ({isServer}) => {
     }
 
     useEffect(() => {           
-
         const FireAction = () => {
             DB.collection('Leaderboard').orderBy("score.food", "desc").orderBy("score.time", "asc").onSnapshot(querySnapshot => {
-                var dataSnapshot = []
+                let dataSnapshot = []
                 querySnapshot.forEach(doc => {
                     dataSnapshot.push({
                         nickname:doc.data().nickname,
@@ -209,12 +208,12 @@ const Rainbox = ({isServer}) => {
 }
     
 const Wrapper = Styled.div(({gameStatus, screen}) =>`
-    position: fixed;
+    position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    z-index: -2;
+    z-index: 0;
 
     .orange{
         color: #FF5B14 !important;
@@ -227,7 +226,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     }
 
     .live-position{
-        position: fixed;
+        position: absolute;
         top: 54px;
         right: 20px;
         display: flex;
@@ -351,7 +350,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
 
 
         .dialog-avoid{
-            position: fixed;
+            position: absolute;
             bottom: 118px;
             left: 0;
 
@@ -373,7 +372,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
             font-weight: bold;
         }
         .dialog-ohno{
-            position: fixed;
+            position: absolute;
             bottom: 118px;
             left: 0;
 
@@ -435,14 +434,14 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
             text-align: center;
         }
 
-        p.fixed-size{
+        p.absolute-size{
             min-width: 50px;
             text-align: left;
         }
     }
 
     .live-score{
-        position: fixed;
+        position: absolute;
         opacity: ${gameStatus == 'initial' ? 0.75 : gameStatus == 'running' ? 1 : 0 };
         transition: 0.25s;
         top: 16px;
@@ -457,7 +456,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     }
     
     .game-status{
-        position: fixed;
+        position: absolute;
         opacity: ${gameStatus == 'initial' ? 0.25 : gameStatus == 'running' ? 0.50 : gameStatus == 'over' ? 0.50 : 0.15 };
         transition: 0.25s;
         top: 18px;
@@ -532,7 +531,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     }
 
     .container-canvas{
-        position: fixed;
+        position: absolute;
         width: 100%;
         height: 100%;
         top: 0;
@@ -546,6 +545,10 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     }        
 
     div.canvas{
+        position: relative;
+        width: 100%;
+        height: calc(100% - 60px);
+
         background: url('/img/bg3d.webp');
         background-size: cover;
         background-position: top;

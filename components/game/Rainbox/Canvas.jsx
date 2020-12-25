@@ -551,14 +551,14 @@ const Wrapper = Styled.div(() =>`
     .control{
         position: absolute;
         width: 100%;
-        height: calc(100% - 60px);
+        height: 100%;
         top: 0;
         left: 0;
 
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: -1;
+        z-index: 0;
 
         div{
             height: 100%;

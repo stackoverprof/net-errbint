@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import Styled from '@emotion/styled'
 import Navmenu from './Navmenu'
@@ -6,8 +6,7 @@ import DropperDesktop from './dropper/Desktop'
 import DropperMobile from './dropper/Mobile'
 import useResize from 'use-resizing'
 
-const Navbar = ({showDrawer}) => {
-    const [open, setopen] = useState(false)
+const Navbar = ({showDrawer, open, setopen}) => {
     const screen = useResize().width
     
     return (
@@ -35,12 +34,11 @@ const Navbar = ({showDrawer}) => {
 }
 
 const Wrapper = Styled.div(({screen, open, showDrawer}) =>`
-    height: 100%;
     width: 100%;
     background: black;
 
-    position: relative;
-    top: ${open && !showDrawer ? screen > 600 ? '-60px' : '-110px' : 0};
+    position: sticky;
+    top: 0;
     z-index: 100;
     transition: ${screen > 600 ? '0.25s' : '0.5s'};
 
