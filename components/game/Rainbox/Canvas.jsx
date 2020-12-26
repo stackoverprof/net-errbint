@@ -462,7 +462,7 @@ const Canvas = ({isServer, setanimateValue, setprocessMessage, setgameStatus, se
 
         if(isServer && !executeGame) window.addEventListener('load', executeLoaded)
         else executeLoaded()
-        const executeFallback = setTimeout(executeLoaded, 4000)
+        const executeFallback = setTimeout(executeLoaded, 2000)
         
         /////////SCREEN UPDATER
         const Updater = setInterval(() => {
