@@ -453,8 +453,10 @@ const Canvas = ({isServer, setanimateValue, setprocessMessage, setgameStatus, se
         
         let timeoutIntro, timeoutInitial, timeoutExecute
 
+        let executeLoadedRun = false
         const executeLoaded = () => {
-            if(!executeGame){
+            if(!executeLoadedRun){
+                executeLoadedRun = true
                 /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
                 timeoutIntro = setTimeout(() => GlimpseHandler('intro'), delay)
                 timeoutInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900)
