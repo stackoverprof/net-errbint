@@ -411,7 +411,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
     
     .instruction-mobile{
         width: 40%;
-        min-width: 164px; 
+        min-width: 200px; 
         text-align: right !important; 
         margin-right: 10%;
         font-size: 16px;
