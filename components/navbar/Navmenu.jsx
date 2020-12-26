@@ -41,7 +41,7 @@ const Wrapper = Styled.div(({screen, open}) =>`
         display: flex;
         justify-content: ${screen > 800 ? 'space-between' : 'center'};
         align-items: center;
-        padding-left: ${screen > 800 ? '22px' : '4px'};
+        padding-left: ${screen > 800 ? '22px' : '0'};
     }
 
     .background{

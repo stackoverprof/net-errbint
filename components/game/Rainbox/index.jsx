@@ -66,7 +66,7 @@ const Rainbox = ({isServer}) => {
                         food : score.food,
                         time : parseInt(score.time.replace('.',''))
                     },
-                    timestamp: new Date().getTime()
+                    timestamp: new Date().toDateString()
                 }).then(() => {
                     setprocessMessage(isUpdate ? 'UPDATED!' : 'ALL OK!')
                     setscore({food: 0, time: 0})
