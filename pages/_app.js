@@ -4,7 +4,7 @@ import '../styles/typefaces.css'
 
 import NextNprogress from 'nextjs-progressbar'
 import Head from 'next/head'
-import Loader from '../components/spinner/Spinkit1'
+// import Loader from '../components/spinner/Spinkit1'
 
 function MyApp({ Component, pageProps }) {
   return ( 
@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }) {
       stopDelayMs={200}
       height="3"
     />
-    <Loader />
+    {/* <Loader /> */}
     <Component {...pageProps} />
   </>
   )
