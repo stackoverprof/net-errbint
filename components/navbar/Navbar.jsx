@@ -42,10 +42,11 @@ const Wrapper = Styled.div(({screen}) =>`
     background: black;
     height: auto;
 
-    position: relative;
+    position: sticky;
     top: 0;
     z-index: 100;
     transition: ${screen > 600 ? '0.25s' : '0.5s'};
+    margin-bottom: 0;
     
     .navbar{
         width: 100%;
