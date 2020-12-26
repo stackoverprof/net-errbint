@@ -10,7 +10,7 @@ const Index = ({isServer}) => {
     const [showDrawer, setshowDrawer] = useState(false)
     const [drawerTransition, setdrawerTransition] = useState(false)
     const [openNavbar, setopenNavbar] = useState(false)
-    const mainContentRef = useRef()
+    const homepageRef = useRef()
     const screen = useResize().width
 
     const drawerSwipe = useSwipeable({
@@ -20,12 +20,16 @@ const Index = ({isServer}) => {
 
     const handleDrawer = (e) => {
         const triggerOpen = (e.wheelDelta < 0 || e.dir == 'Up') && !showDrawer
-        const triggerClose = (e.wheelDelta > 0 || e.dir == 'Down') && showDrawer && mainContentRef.current.scrollTop <= 0
-
+        const triggerClose = (e.wheelDelta > 0 || e.dir == 'Down') && showDrawer && homepageRef.current.scrollTop <= 0
+        
         if ((e.type == 'click') || triggerOpen || triggerClose ){  
             setdrawerTransition(true)
             setshowDrawer(!showDrawer)
-            setTimeout(() => setdrawerTransition(false), 600)
+            
+            setTimeout(() => {
+                setdrawerTransition(false)
+                homepageRef.current.scrollTo(0, 0)
+            }, 600)
         }
     }
 
@@ -41,8 +45,8 @@ const Index = ({isServer}) => {
         <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition}>
             <div {...drawerSwipe} className="home">
                 <Rainbox isServer={isServer}/>
-                <div className="homepage" ref={mainContentRef}>
-                    <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={mainContentRef}/>
+                <div className="homepage" ref={homepageRef}>
+                    <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
                     <div className="page-content">
                         <h1>HAHA</h1>
                         <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way. When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then</p>
@@ -60,7 +64,7 @@ const Index = ({isServer}) => {
                     </div>
                 </div>
             </div>
-            <HomeScroller elRef={mainContentRef} showDrawer={showDrawer} handleDrawer={handleDrawer}/>
+            <HomeScroller elRef={homepageRef} showDrawer={showDrawer} handleDrawer={handleDrawer}/>
         </Wrapper>
     )
 }
@@ -93,16 +97,20 @@ const Wrapper = Styled.div(({showDrawer, openNavbar, screen, drawerTransition}) 
         top: ${showDrawer ? 0 : openNavbar ? screen > 600 ? 'calc(100% - 120px)' : 'calc(100% - 170px)' : 'calc(100% - 60px)'};
         left: 0;
         background: black;
-        transition: ${drawerTransition ? '0.6s' : screen > 600 ? '0.25s' : '0.5s'};
+        transition: all ${drawerTransition ? '0.6s' : screen > 600 ? '0.25s' : '0.5s'}, padding 0s;
 
-        overflow: hidden;
         color: white;
         
         display: flex;
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
-        overflow-y: scroll;
+        overflow-x: hidden;
+        overflow-y: ${drawerTransition ? 'hidden' : 'scroll'};
+
+        ${drawerTransition && screen > 600 ? 'padding-right: 10px;' : ''}
+
+        ${drawerTransition && screen > 600 ? fakeScrollbar : ''}
 
         &::-webkit-scrollbar{
             width: 10px;
@@ -141,5 +149,15 @@ const Wrapper = Styled.div(({showDrawer, openNavbar, screen, drawerTransition}) 
         }
     }
 `)
+
+const fakeScrollbar = `&::after{
+    position: absolute;
+    content: '';
+    height: 200%;
+    width: 10px;
+    top: 0;
+    right: 0;
+    background: #E5E5E5;
+}`
     
 export default Index
