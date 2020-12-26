@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import Styled from '@emotion/styled'
 import Navmenu from './Navmenu'
@@ -6,36 +6,21 @@ import DropperDesktop from './dropper/Desktop'
 import DropperMobile from './dropper/Mobile'
 import useResize from 'use-resizing'
 
-const Navbar = ({showDrawer, open, setopen, handleDrawer, elRef}) => {
-    const [atTop, setatTop] = useState(false)
+const Navbar = ({showDrawer, open, setopen, handleDrawer}) => {
     const screen = useResize().width
     
     const goToProfile = (e) => {
         e.preventDefault()
         if(!showDrawer) handleDrawer(e)
     }
-    
-    const atTopHandler = () => {
-        if (elRef.current.scrollTop == 0) setatTop(true)
-        else setatTop(false)
-    }
-
-    useEffect(() => {
-        elRef.current.addEventListener('scroll', atTopHandler)
-        console.log(atTop);
-        return () => {
-            elRef.current.removeEventListener('scroll', atTopHandler)
-        }
-    }, [showDrawer, atTop])
-
     return (
-        <Wrapper screen={screen} atTop={atTop}>
+        <Wrapper screen={screen}>
             <div className="navbar">
                 <div className="contain-size">
                     <Navmenu showDrawer={showDrawer} open={open} setopen={setopen}/>
                     <div className="nav-links nav-links-upper">
                         <div className="nav-links-inner">
-                            <a href="" onClick={goToProfile}>{atTop ? 'kosong' : 'maxw'} Profile</a>
+                            <a href="" onClick={goToProfile}>Profile</a>
                             <Link href="/abilities">Abilities</Link>
                             <Link href="/projects">Projects</Link>
                             <Link href="/experiences">Experiences</Link>
@@ -44,28 +29,23 @@ const Navbar = ({showDrawer, open, setopen, handleDrawer, elRef}) => {
                 </div>
             </div>
             {screen > 600 ?
-                <div className="dropDesk">
-                    <DropperDesktop open={open} />
-                    <div className="fake-scroller-nav posr" onClick={handleDrawer}></div>
-                </div>
+                <DropperDesktop open={open} />
             :
                 <DropperMobile open={open} />
             }
-            <div className="fake-scroller-nav" onClick={handleDrawer}></div>
         </Wrapper>
     )
 }
 
-const Wrapper = Styled.div(({screen, atTop}) =>`
+const Wrapper = Styled.div(({screen}) =>`
     width: 100%;
     background: black;
     height: auto;
-    
+
     position: relative;
     top: 0;
     z-index: 100;
-    transition: ${screen > 600 ? '0.25s' : '0.5s'};    
-    ${atTop ? '' : 'max-height: 60px;'}
+    transition: ${screen > 600 ? '0.25s' : '0.5s'};
     
     .navbar{
         width: 100%;
@@ -133,30 +113,6 @@ const Wrapper = Styled.div(({screen, atTop}) =>`
         &:hover{
             color: #ff7814;
         }
-    }
-
-    .fake-scroller-nav{
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 10px;
-        height: 100%;
-        background: #E5E5E5;
-
-        ${screen < 600 ? 'display: none;' : ''}
-        
-    }
-
-    .posr{
-        position: relative;
-        background: ${atTop? '#E5E5E5' : 'none'};
-    }
-
-    .dropDesk{
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
 `)
 
