@@ -15,9 +15,11 @@ const Spinkit1 = () => {
     
     useEffect(() => {
         window.onload = remover
+        const timeout = setTimeout(remover, 4000)
         const fallbackRemover = setTimeout(() => setshowMessage(true), 9000)
 
         return () => {
+            clearTimeout(timeout)
             clearTimeout(fallbackRemover)
         }
     }, [])

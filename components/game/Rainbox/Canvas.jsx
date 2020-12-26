@@ -460,33 +460,33 @@ const Canvas = ({isServer, setanimateValue, setprocessMessage, setgameStatus, se
             timeoutExecute = setTimeout(IgniteGame, delay + 4500)
         }
 
-        if(isServer) window.addEventListener('load', executeLoaded)
+        if(isServer && !executeGame) window.addEventListener('load', executeLoaded)
         else executeLoaded()
+        const executeFallback = setTimeout(executeLoaded, 4000)
         
         /////////SCREEN UPDATER
         const Updater = setInterval(() => {
             // canvas.style.backdropFilter =  player.EatCount % 5 == 0 && player.EatCount > 0? 'invert(100%) blur(4px)' : ''
-
             if (executeGame) {
-            const calcTiming = () => {
-                return player.TimeEnd != 'initial' ? 
-                player.TimeSpan : new Date().getTime() - player.TimeStart 
+                const calcTiming = () => {
+                    return player.TimeEnd != 'initial' ? 
+                    player.TimeSpan : new Date().getTime() - player.TimeStart 
+                }
+                
+                setscore({
+                    food: player.EatCount, 
+                    time: ((isAttempted ? calcTiming() : 0)/10).toFixed(0)
+                })
+                
+                //Reseting canvas
+                ctx.clearRect(0, 0, screenWidth, screenHeight)
+                
+                //Then, redrawing objects
+                if(!isGameOver && isAttempted) food.Update()
+                for(let i in shapes) shapes[i].Update()
+                player.Update()
             }
-            
-            setscore({
-                food: player.EatCount, 
-                time: ((isAttempted ? calcTiming() : 0)/10).toFixed(0)
-            })
-            
-            //Reseting canvas
-            ctx.clearRect(0, 0, screenWidth, screenHeight)
-            
-            //Then, redrawing objects
-            if(!isGameOver && isAttempted) food.Update()
-            for(let i in shapes) shapes[i].Update()
-            player.Update()
-
-        }}, 10)
+        }, 10)
         
         const GenerateRain = () => {
             if (!isGameOver && !tabInactive && executeGame){
@@ -519,6 +519,8 @@ const Canvas = ({isServer, setanimateValue, setprocessMessage, setgameStatus, se
             clearTimeout(timeoutIntro)
             clearTimeout(timeoutInitial)
             clearTimeout(timeoutExecute)
+
+            clearTimeout(executeFallback)
 
             clearInterval(Updater)
             clearTimeout(GenerateRain)
