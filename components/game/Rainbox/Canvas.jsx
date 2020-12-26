@@ -454,13 +454,15 @@ const Canvas = ({isServer, setanimateValue, setprocessMessage, setgameStatus, se
         let timeoutIntro, timeoutInitial, timeoutExecute
 
         const executeLoaded = () => {
-            /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
-            timeoutIntro = setTimeout(() => GlimpseHandler('intro'), delay)
-            timeoutInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900)
-            timeoutExecute = setTimeout(IgniteGame, delay + 4500)
+            if(!executeGame){
+                /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
+                timeoutIntro = setTimeout(() => GlimpseHandler('intro'), delay)
+                timeoutInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900)
+                timeoutExecute = setTimeout(IgniteGame, delay + 4500)
+            }
         }
 
-        if(isServer && !executeGame) window.addEventListener('load', executeLoaded)
+        if(isServer) window.addEventListener('load', executeLoaded)
         else executeLoaded()
         const executeFallback = setTimeout(executeLoaded, 2000)
         
