@@ -22,7 +22,7 @@ const Index = ({isServer}) => {
         const triggerOpen = (e.wheelDelta < 0 || e.dir == 'Up') && !showDrawer
         const triggerClose = (e.wheelDelta > 0 || e.dir == 'Down') && showDrawer && mainContentRef.current.scrollTop <= 0
 
-        if ((e.type == 'click') || triggerOpen || triggerClose ){    
+        if ((e.type == 'click') || triggerOpen || triggerClose ){  
             setdrawerTransition(true)
             setshowDrawer(!showDrawer)
             setTimeout(() => setdrawerTransition(false), 600)
@@ -102,24 +102,7 @@ const Wrapper = Styled.div(({showDrawer, openNavbar, screen, drawerTransition}) 
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
-    }
-    
-    .main-content{
-        height: calc(100% - 60px);
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-direction: column;
-        padding-top: 40px;
         overflow-y: scroll;
-
-        p{
-            margin: 12px 0;
-            max-width: 1000px;
-            width: 90%;
-            min-width: 320px;
-        }
 
         &::-webkit-scrollbar{
             width: 10px;
@@ -138,6 +121,23 @@ const Wrapper = Styled.div(({showDrawer, openNavbar, screen, drawerTransition}) 
 
         &::-webkit-scrollbar-thumb:hover{
             background-color: #909090;
+        }
+    }
+
+    .page-content{
+        height: calc(100% - 60px);
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
+        padding-top: 40px;
+        
+        p{
+            margin: 12px 0;
+            max-width: 1000px;
+            width: 90%;
+            min-width: 320px;
         }
     }
 `)

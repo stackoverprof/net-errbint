@@ -115,6 +115,7 @@ const Wrapper = Styled.div(({screen}) =>`
             color: #ff7814;
         }
     }
+    
 `)
 
 export default Navbar
