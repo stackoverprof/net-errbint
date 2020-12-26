@@ -4,6 +4,7 @@ import Styled from '@emotion/styled'
 const Spinkit1 = () => {
     const [removeDisplay, setremoveDisplay] = useState(false)
     const [isLoaded, setisLoaded] = useState(false)
+    const [showMessage, setshowMessage] = useState(false)
 
     const remover = () => {
         setisLoaded(true)
@@ -14,12 +15,17 @@ const Spinkit1 = () => {
     
     useEffect(() => {
         window.onload = remover
+        const fallbackRemover = setTimeout(() => setshowMessage(true), 3000)
+
+        return () => {
+            clearTimeout(fallbackRemover)
+        }
     }, [])
 
     return (
     <>
         {!removeDisplay && 
-            <Wrapper isLoaded={isLoaded}>
+            <Wrapper isLoaded={isLoaded} showMessage={showMessage}>
                 <div className="loading">
                     <div className="spinner">
                         <div className="rect1"></div>
@@ -28,6 +34,8 @@ const Spinkit1 = () => {
                         <div className="rect4"></div>
                         <div className="rect5"></div>
                     </div>
+                    <p className="p1">Try refreshing your browser</p>
+                    <p className="p2">This might be your internet connection or your browser doesn't support webGL</p>
                 </div>
             </Wrapper>
         }
@@ -35,7 +43,7 @@ const Spinkit1 = () => {
     )
 }
     
-const Wrapper = Styled.div(({isLoaded}) =>`
+const Wrapper = Styled.div(({isLoaded, showMessage}) =>`
 
     .loading{
         opacity: ${isLoaded ? 0 : 1};
@@ -50,11 +58,15 @@ const Wrapper = Styled.div(({isLoaded}) =>`
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
         padding-bottom: 10%;
     }
+
     .spinner {
         opacity: ${isLoaded ? 0 : 1};
         margin: 100px auto;
+        margin-top: 48px;
+        margin-bottom: 68px;
         height: 50px;
         text-align: center;
         font-size: 10px;
@@ -106,6 +118,22 @@ const Wrapper = Styled.div(({isLoaded}) =>`
         transform: scaleY(1.0);
         -webkit-transform: scaleY(1.0);
         }
+    }
+
+    p{
+        width: 320px;
+        text-align: center;
+        opacity: ${showMessage ? 1 : 0};
+        transition: 0.5s;
+    }
+    .p1{
+        font-size: 18px;
+        margin-bottom: 16px;
+    }
+    .p2{
+        font-size: 14px;
+        color: #acacac;
+        transition-delay: 1s;
     }
 `)
     
