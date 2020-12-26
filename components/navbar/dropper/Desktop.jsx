@@ -53,7 +53,8 @@ const DropperDesktop = ({open}) => {
 }
 
 const Wrapper = Styled.div(({open}) =>`
-    
+    width: 100%;
+        
     .dropper{
         width: 100%;
         height: ${open ? 60 : 0}px;

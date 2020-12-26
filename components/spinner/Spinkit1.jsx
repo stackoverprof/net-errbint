@@ -16,11 +16,11 @@ const Spinkit1 = () => {
     useEffect(() => {
         window.onload = remover
         const timeout = setTimeout(remover, 2000)
-        const fallbackRemover = setTimeout(() => setshowMessage(true), 9000)
+        // const fallbackRemover = setTimeout(() => setshowMessage(true), 9000)
 
         return () => {
             clearTimeout(timeout)
-            clearTimeout(fallbackRemover)
+            // clearTimeout(fallbackRemover)
         }
     }, [])
 
@@ -36,6 +36,7 @@ const Spinkit1 = () => {
                         <div className="rect4"></div>
                         <div className="rect5"></div>
                     </div>
+                    {/* <p>HAVE A NICE DAY!</p> */}
                     <p className="p1">Try refreshing your browser</p>
                     <p className="p2">This might be your internet connection or your browser doesn't support webGL</p>
                 </div>
@@ -46,22 +47,28 @@ const Spinkit1 = () => {
 }
     
 const Wrapper = Styled.div(({isLoaded, showMessage}) =>`
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(245,245,245);
+    opacity: ${isLoaded ? 0 : 1};
+    transition: 1s;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    padding-bottom: 10%;
 
     .loading{
-        opacity: ${isLoaded ? 0 : 1};
-        transition: 1s;
-        background-color: rgb(245,245,245);
-        position: fixed;
-        z-index: 50;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
+        position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        padding-bottom: 10%;
+        height: calc(100% - 60px);
+        top: 0;
     }
 
     .spinner {
@@ -123,6 +130,8 @@ const Wrapper = Styled.div(({isLoaded, showMessage}) =>`
     }
 
     p{
+        position: absolute;
+        bottom: 0;
         width: 320px;
         text-align: center;
         opacity: ${showMessage ? 1 : 0};
@@ -131,6 +140,7 @@ const Wrapper = Styled.div(({isLoaded, showMessage}) =>`
     .p1{
         font-size: 18px;
         margin-bottom: 16px;
+        bottom: 32px;
     }
     .p2{
         font-size: 14px;
