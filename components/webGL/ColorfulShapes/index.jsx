@@ -16,7 +16,6 @@ const Wrapper = Styled.div(() =>`
     height: 348px;
     // min-height: 348px;
     width: 100%;
-    background: red;
 `)
 
 export default ColorfulShapes

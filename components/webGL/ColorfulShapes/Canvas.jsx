@@ -1,63 +1,65 @@
-import React, { useState, useRef } from 'react'
-import { Canvas, useFrame } from 'react-three-fiber'
-import { softShadows, MeshWobbleMaterial, OrbitControls } from 'drei'
-import { useSpring, a } from 'react-spring/three'
+import React, { useRef, useState } from 'react'
+import { Canvas, useFrame, useThree, extend } from 'react-three-fiber/web.cjs'
+import { useSpring, animated } from 'react-spring/three.cjs'
+import './setupRegTHREE'
+import 'three/examples/js/controls/OrbitControls'
 
-softShadows()
+extend({ OrbitControls: THREE.OrbitControls });
 
-const SpiningMesh = ({position, args, color}) => {
-    const mesh = useRef(null)
-    useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01))
-
-    const [expand, setExpand] = useState(false)
-
-    const props = useSpring({
-        scale: expand ? [1.4, 1.4, 1.4] : [1, 1, 1]
+function Box(props) {
+    // This reference will give us direct access to the mesh
+    const mesh = useRef()
+    // Set up state for the hovered and active state
+    const [hovered, setHover] = useState(false)
+    const [active, setActive] = useState(false)
+    // Rotate mesh every frame, this is outside of React without overhead
+    useFrame(() => {
+      mesh.current.rotation.x = mesh.current.rotation.y += 0.01
     })
 
+    const springs = useSpring({
+        scale: active ? [1.4, 1.4, 1.4] : [1, 1, 1]
+    })
+    
     return (
-        <a.mesh onClick={() => setExpand(!expand)} scale={props.scale} castShadow position={position} ref={mesh}>
-            <boxBufferGeometry attach="geometry" args={args}/>
-            <MeshWobbleMaterial attach="material" color={color} speed={1} factor={0.6}/>
-        </a.mesh>
+      <animated.mesh
+        {...props}
+        ref={mesh}
+        scale={springs.scale}
+        onClick={(e) => setActive(!active)}
+        onPointerOver={(e) => setHover(true)}
+        onPointerOut={(e) => setHover(false)}>
+        <boxBufferGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+      </animated.mesh>
+    )
+  }
+
+const Scene = ({children}) => {
+    const {
+        camera,
+        gl: { domElement }
+    } = useThree()
+    return (
+    <>
+        {children}
+        <orbitControls args={[camera, domElement]} />
+    </>
     )
 }
 
 const CanvasApp = () => {
-    //cube-animation
 
     return (
     <>
-        <Canvas shadowMap colorManagement camera={{position: [-5, 2, 10], fov: 60}}>
-            <ambientLight intensity={0.3}/>
-            <directionalLight 
-                castShadow
-                position={[0, 10, 0]} 
-                intensity={0.5} 
-                shadow-mapSize-width={1024}
-                shadow-mapSize-height={1024}
-                shadow-camera-far={50}
-                shadow-camera-left={-10}
-                shadow-camera-right={10}
-                shadow-camera-top={10}
-                shadow-camera-bottom={-10}
-
-            />
-            <pointLight position={[-10, 0, -20]} intensity={0.5}/>
-            <pointLight position={[0, -10, 0]} intensity={1.5}/>
-
-            <group>
-                <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -3, 0]}>
-                    <planeBufferGeometry attach="geometry" args={[100, 100]}/>
-                    <shadowMaterial attach="material" opacity={0.3} />
-                </mesh>
-
-                <SpiningMesh position={[0, 1, 0]} args={[3, 2, 1]} color="lightblue" speed={2}/>
-                <SpiningMesh position={[-2, 1,-5]} color="pink" speed={6}/>
-                <SpiningMesh position={[5, 1, -2]} color="pink" speed={6}/>
-            </group>
-
-            <OrbitControls />
+        <Canvas>
+            <Scene>
+                <ambientLight intensity={0.5} />
+                <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+                <pointLight position={[-10, -10, -10]} />
+                <Box position={[-1.2, 0, 0]} />
+                <Box position={[1.2, 0, 0]} />
+            </Scene>
         </Canvas>
     </>
     )
