@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Canvas, useFrame, useThree, extend } from 'react-three-fiber/web.cjs'
 import { useSpring, animated } from 'react-spring/three.cjs'
 import './setupRegTHREE'
 import 'three/examples/js/controls/OrbitControls'
+// import * as THREE from 'three'
 
 extend({ OrbitControls: THREE.OrbitControls });
 
@@ -40,10 +41,26 @@ const Scene = ({children}) => {
         camera,
         gl: { domElement }
     } = useThree()
+
+    // const [mouse, setmouse] = useState({ x: 0, y: 0 })
+
+    // useEffect(() => {
+    //     const setFromEvent = e => setmouse({ x: e.clientX, y: e.clientY })
+    //     window.addEventListener("mousemove", setFromEvent)
+    //     console.log(camera.position.x)
+
+    //     return () => window.removeEventListener("mousemove", setFromEvent)
+    // }, [])
+
+    // useFrame(()=>{
+    //     camera.position.x += (mouse.x - camera.position.x)*.05
+    //     camera.position.y += (-mouse.y - camera.position.z)*.05
+    // })
+
     return (
     <>
         {children}
-        <orbitControls args={[camera, domElement]} />
+        <orbitControls args={[camera, domElement]} enableZoom={false}/>
     </>
     )
 }
