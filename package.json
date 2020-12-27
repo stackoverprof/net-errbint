@@ -11,13 +11,17 @@
     "@emotion/core": "^10.1.1",
     "@emotion/styled": "^10.0.27",
     "animated-number-react": "^0.1.1",
+    "drei": "^2.2.12",
     "emotion": "^10.0.27",
     "firebase": "^8.1.1",
     "next": "^10.0.3",
     "nextjs-progressbar": "0.0.7",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-spring": "^8.0.27",
     "react-swipeable": "^6.0.1",
+    "react-three-fiber": "^5.3.10",
+    "three": "^0.124.0",
     "use-resizing": "^2.1.5"
   }
 }

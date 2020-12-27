@@ -135,13 +135,13 @@ const Wrapper = Styled.div(({showDrawer, openNavbar, screen, drawerTransition}) 
     }
 
     .page-content{
+        position: relative;
         height: calc(100% - 60px);
         width: 100%;
         display: flex;
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
-        padding-top: 40px;
         
         p{
             margin: 12px 0;
