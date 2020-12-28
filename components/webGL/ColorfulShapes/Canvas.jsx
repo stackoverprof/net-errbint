@@ -57,12 +57,7 @@ const FlashLight = ({colorful}) => {
   })
 
   return (
-    <a.pointLight ref={mesh} castShadow position={[0, -1, 0]} intensity={springs.intensity} color="white">
-      <mesh>
-        <sphereBufferGeometry args={[0.02, 16, 8]} />
-        <meshStandardMaterial attach="material" emissive="#ffffee" emissiveIntensity="1" color="#FFFFFF" />
-      </mesh>
-    </a.pointLight>
+    <a.pointLight ref={mesh} castShadow position={[0, -1, 0]} intensity={springs.intensity} color="white"/>
   )
 }
 
@@ -134,7 +129,7 @@ const Scene = ({children, mouse}) => {
 
           <Box args={[1, 1, 1]} colorful={colorful} position={[5, 0, 0]} rotate={30}/>
           <Box args={[1, 1, 1]} colorful={colorful} position={[6, 2, 0]} rotate={60}/>
-          <Box args={[1, 1, 1]} colorful={colorful} position={[4, 0, 5]} rotate={90}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[4, 0, 5]} rotate={110}/>
           {/* <Box args={[0.05, 0.05, 0.05]} position={[0, 0, 0]} /> */}
         </Scene>
       </Canvas>

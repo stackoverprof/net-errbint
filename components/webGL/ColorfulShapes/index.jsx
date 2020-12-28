@@ -19,10 +19,10 @@ const ColorfulShapes = ({drawerTransition, showR3F}) => {
                 {showR3F && <Canvas drawerTransition={drawerTransition} colorful={flipText}/>}
                 <div className="content">
                     <div className="h1">
-                        <h1>Codes are Colorful</h1>
+                        <h1>Hi There! Whatsup?</h1>
                     </div>
                     <div className="h2">
-                        <h2>So is your life should be</h2>
+                        <h2>Salam kenal, Erbin</h2>
                     </div>
                 </div>
             </div>
