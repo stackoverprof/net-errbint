@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Canvas, useFrame, useThree, extend } from 'react-three-fiber/web.cjs'
 import { useSpring, a } from 'react-spring/three.cjs'
 import { softShadows } from 'drei/softShadows.cjs'
 import './setupRegTHREE'
-import './colorMaterial'
 import 'three/examples/js/controls/OrbitControls'
+import useMouse from './useMouse'
 
 extend({ OrbitControls: THREE.OrbitControls })
 softShadows({
@@ -19,10 +19,10 @@ const Box = ({args, position}) => {
     const mesh = useRef()
     const [hovered, setHover] = useState(false)
     
-    useFrame(state => {
-      mesh.current.material.forEach(material => (material.uniforms.time.value = state.clock.getElapsedTime()))
-      mesh.current.rotation.x = mesh.current.rotation.y = mesh.current.rotation.z += 0.01
-    })
+    useEffect(() => {
+      mesh.current.rotation.x += 30
+      mesh.current.rotation.y += 30
+    }, [])
 
     const springs = useSpring({
         scale: hovered ? [1.15, 1.15, 1.15] : [1, 1, 1],
@@ -38,14 +38,7 @@ const Box = ({args, position}) => {
         onPointerOver={() => setHover(true)}
         onPointerOut={() => setHover(false)}>
         <boxBufferGeometry args={args} />
-        {/* <a.meshStandardMaterial color={springs.color} /> */}
-        <colorMaterial attachArray="material" color="#A2CCB6" />
-        <colorMaterial attachArray="material" color="#FCEEB5" />
-        <colorMaterial attachArray="material" color="#EE786E" />
-        <colorMaterial attachArray="material" color="#E0FEFF" />
-        <colorMaterial attachArray="material" color="lightpink" />
-        <colorMaterial attachArray="material" color="lightblue" />
-      
+        <a.meshStandardMaterial color={springs.color} />
       </a.mesh>
     )
   }
@@ -75,22 +68,23 @@ const Scene = ({children, mouse}) => {
           <meshStandardMaterial attach="material" color="#333" />
         </mesh>
         {children}
-        <orbitControls args={[camera, domElement]} enableZoom={false} enablePan={false} enableKey={false}/>
+        {/* <orbitControls args={[camera, domElement]} enableZoom={false} enablePan={false} enableKey={false}/> */}
         <Rig mouse={mouse} />
     </>
     )
 }
   
 const CanvasApp = () => {
-  const mouse = useRef([0, 0])
+  const mouse = {
+    current: useMouse()
+  }
   
   return (
     <>
       <Canvas 
         shadowMap 
         colorManagement 
-        camera={{ position: [0, 0, 10], fov: 25 }} 
-        onMouseMove={e => (mouse.current = [e.clientX - window.innerWidth / 2, e.clientY - window.innerHeight / 2])}>
+        camera={{ position: [0, 0, 10], fov: 25 }}>
         <Scene mouse={mouse}>
           <ambientLight intensity={0.3}/>
           <directionalLight 
@@ -114,6 +108,7 @@ const CanvasApp = () => {
           <Box args={[0.05, 0.05, 0.05]} position={[0, 0, 0]} />
         </Scene>
       </Canvas>
+      <p>{mouse.current[0]} {mouse.current[1]}</p>
   </>
   )
 }
