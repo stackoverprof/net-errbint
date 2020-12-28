@@ -1,85 +1,82 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import { Canvas, useFrame, useThree, extend } from 'react-three-fiber/web.cjs'
-import { useSpring, animated } from 'react-spring/three.cjs'
+import { useSpring, a } from 'react-spring/three.cjs'
 import './setupRegTHREE'
 import 'three/examples/js/controls/OrbitControls'
-// import * as THREE from 'three'
 
 extend({ OrbitControls: THREE.OrbitControls });
 
-function Box(props) {
-    // This reference will give us direct access to the mesh
+const Box = (props) => {
     const mesh = useRef()
-    // Set up state for the hovered and active state
     const [hovered, setHover] = useState(false)
-    const [active, setActive] = useState(false)
-    // Rotate mesh every frame, this is outside of React without overhead
+    
     useFrame(() => {
       mesh.current.rotation.x = mesh.current.rotation.y += 0.01
     })
 
     const springs = useSpring({
-        scale: active ? [1.4, 1.4, 1.4] : [1, 1, 1]
+        scale: hovered ? [1.4, 1.4, 1.4] : [1, 1, 1],
+        color: hovered ? '#FF5B14' : '#DADADA'
     })
     
     return (
-      <animated.mesh
+      <a.mesh
         {...props}
         ref={mesh}
         scale={springs.scale}
-        onClick={(e) => setActive(!active)}
-        onPointerOver={(e) => setHover(true)}
-        onPointerOut={(e) => setHover(false)}>
+        onPointerOver={() => setHover(true)}
+        onPointerOut={() => setHover(false)}>
         <boxBufferGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
-      </animated.mesh>
+        <a.meshStandardMaterial color={springs.color} />
+      </a.mesh>
     )
   }
 
-const Scene = ({children}) => {
+const Rig = ({ mouse }) => {
+  const { camera } = useThree()
+  useFrame(() => {
+    camera.position.x += (mouse.current[0] / 50 - camera.position.x) * 0.05
+    camera.position.y += (-mouse.current[1] / 50 - camera.position.y) * 0.05
+    camera.lookAt(0, 0, 0)
+  })
+  return null
+}
+
+const Scene = ({children, mouse}) => {
     const {
         camera,
         gl: { domElement }
     } = useThree()
 
-    // const [mouse, setmouse] = useState({ x: 0, y: 0 })
-
-    // useEffect(() => {
-    //     const setFromEvent = e => setmouse({ x: e.clientX, y: e.clientY })
-    //     window.addEventListener("mousemove", setFromEvent)
-    //     console.log(camera.position.x)
-
-    //     return () => window.removeEventListener("mousemove", setFromEvent)
-    // }, [])
-
-    // useFrame(()=>{
-    //     camera.position.x += (mouse.x - camera.position.x)*.05
-    //     camera.position.y += (-mouse.y - camera.position.z)*.05
-    // })
-
     return (
-    <>
+      <>
         {children}
         <orbitControls args={[camera, domElement]} enableZoom={false}/>
+        <Rig mouse={mouse} />
     </>
     )
 }
-
+  
 const CanvasApp = () => {
-
-    return (
+  const mouse = useRef([0, 0])
+  
+  return (
     <>
-        <Canvas>
-            <Scene>
-                <ambientLight intensity={0.5} />
-                <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-                <pointLight position={[-10, -10, -10]} />
-                <Box position={[-1.2, 0, 0]} />
-                <Box position={[1.2, 0, 0]} />
-            </Scene>
-        </Canvas>
-    </>
-    )
+      <Canvas 
+        shadowMap 
+        colorManagement 
+        camera={{ position: [0, 0, 10], fov: 25 }} 
+        onMouseMove={e => (mouse.current = [e.clientX - window.innerWidth / 2, e.clientY - window.innerHeight / 2])}>
+        <Scene mouse={mouse}>
+            <ambientLight intensity={0.5} />
+            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+            <pointLight position={[-10, -10, -10]} />
+            <Box position={[-1.2, 0, 0]} />
+            <Box position={[1.2, 0, 0]} />
+        </Scene>
+      </Canvas>
+  </>
+  )
 }
   
   export default CanvasApp
