@@ -23,6 +23,9 @@ const Wrapper = Styled.div(({drawerTransition}) =>`
     position: relative;
     height: 348px;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:hover .content div.h1{
         ${!drawerTransition ? 'height: 0;' : ''}
@@ -35,8 +38,8 @@ const Wrapper = Styled.div(({drawerTransition}) =>`
     .content{
         position: absolute;
         width: 100%;
-        height: 100%;
-        top: 0;
+        height: 40%;
+        top: 104.4px;
         left: 0;
         
         display: flex;
@@ -62,7 +65,7 @@ const Wrapper = Styled.div(({drawerTransition}) =>`
             h1{
                 position: absolute;
                 top: 0;
-                height: 348px;
+                height: 139.2px;
                 width: 100%;
                 display: flex;
                 justify-content: center;
@@ -87,7 +90,7 @@ const Wrapper = Styled.div(({drawerTransition}) =>`
             h2{
                 position: absolute;
                 bottom: 0;
-                height: 348px;
+                height: 139.2px;
                 width: 100%;
                 display: flex;
                 justify-content: center;

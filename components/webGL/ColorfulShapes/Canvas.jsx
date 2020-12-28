@@ -13,37 +13,61 @@ softShadows({
 })
 
 const Box = ({args, position, rotate}) => {
-    const mesh = useRef()
-    const [hovered, setHover] = useState(false)
-    
-    useEffect(() => {
-      mesh.current.rotation.x += rotate
-      mesh.current.rotation.y += rotate
-    }, [])
-    
-    useFrame(() => {
-      mesh.current.rotation.x += 0.002
-      mesh.current.rotation.y += 0.002
-    })
+  const mesh = useRef()
+  const [hovered, setHover] = useState(false)
+  
+  useEffect(() => {
+    mesh.current.rotation.x += rotate
+    mesh.current.rotation.y += rotate
+  }, [])
+  
+  useFrame(() => {
+    mesh.current.rotation.x += 0.002
+    mesh.current.rotation.y += 0.002
+  })
 
-    const springs = useSpring({
-        scale: hovered ? [1.25, 1.25, 1.25] : [1, 1, 1],
-        color: hovered ? '#FF5B14' : '#555555'
-    })
-    
-    return (
-      <a.mesh
-        position={position}
-        ref={mesh}
-        scale={springs.scale}
-        castShadow
-        onPointerOver={() => setHover(true)}
-        onPointerOut={() => setHover(false)}>
-        <boxBufferGeometry args={args} />
-        <a.meshStandardMaterial color={springs.color} />
-      </a.mesh>
-    )
-  }
+  const springs = useSpring({
+      scale: hovered ? [1.25, 1.25, 1.25] : [1, 1, 1],
+      color: hovered ? '#0000' : '#555555'
+  })
+  
+  return (
+    <a.mesh
+      position={position}
+      ref={mesh}
+      scale={springs.scale}
+      castShadow
+      onPointerOver={() => setHover(true)}
+      onPointerOut={() => setHover(false)}>
+      <boxBufferGeometry args={args} />
+      {hovered ?
+        <meshNormalMaterial attach="material"/>
+      :
+        <meshStandardMaterial color="#555555" />
+      }
+    </a.mesh>
+  )
+}
+
+const FlashLight = ({lightPos}) => {
+  const mesh = useRef(null)
+
+  // useFrame(()=>{
+  //   // mesh.current.position.x += 0.005
+  //   mesh.current.position.y -= 0.005
+  //   console.log(mesh.current.position.y)
+  //   // console.log(mesh.current.position.x + " " + mesh.current.position.y + " " + lightPos.x + " " + lightPos.y)
+  // })
+
+  return (
+    <pointLight ref={mesh} castShadow position={[0, -1, 0]} intensity={3.5} color="white">
+      <mesh castShadow>
+        <sphereBufferGeometry args={[0.02, 16, 8]} />
+        <meshStandardMaterial attach="material" emissive="#ffffee" emissiveIntensity="1" color="#FFFFFF" />
+      </mesh>
+    </pointLight>
+  )
+}
 
 const Rig = ({ mouse }) => {
   const { camera } = useThree()
@@ -68,18 +92,21 @@ const Scene = ({children, mouse}) => {
         <Rig mouse={mouse} />
     </>
     )
-}
-  
-const CanvasApp = () => {
-  const mouse = {
-    current: useMouse()
   }
   
-  return (
-    <>
+  const CanvasApp = () => {
+    const mouse = {
+      current: useMouse()
+    }
+
+    const [lightPos, setlightPos] = useState({x: 0, y: 0})
+    
+    return (
+      <>
       <Canvas 
         shadowMap 
         colorManagement 
+        onMouseMove={e => setlightPos({x: e.clientX - window.innerWidth/2, y: e.clientY - 60 -348/2})}
         camera={{ position: [0, 0, 10], fov: 25 }}>
         <Scene mouse={mouse}>
           <ambientLight intensity={0.3}/>
@@ -98,6 +125,8 @@ const CanvasApp = () => {
           />
           <pointLight position={[-10, 0, -20]} intensity={0.5}/>
           <pointLight position={[0, -10, 0]} intensity={1.5}/>
+          
+          <FlashLight lightPos={lightPos}/>
 
           <Box args={[1, 1, 1]} position={[-5, 1, 0]} rotate={10}/>
           <Box args={[1, 1, 1]} position={[-5, -1, -3]} rotate={40}/>
