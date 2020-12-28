@@ -3,10 +3,10 @@ import { Canvas, useFrame, useThree, extend } from 'react-three-fiber/web.cjs'
 import { useSpring, a } from 'react-spring/three.cjs'
 import { softShadows } from 'drei/softShadows.cjs'
 import './setupRegTHREE'
-import 'three/examples/js/controls/OrbitControls'
 import useMouse from './useMouse'
 
 extend({ OrbitControls: THREE.OrbitControls })
+
 softShadows({
   frustrum: 3.75, // Frustrum width (default: 3.75)
   size: 0.01, // World size (default: 0.005)
@@ -54,11 +54,6 @@ const Rig = ({ mouse }) => {
 }
 
 const Scene = ({children, mouse}) => {
-    const {
-        camera,
-        gl: { domElement }
-    } = useThree()
-
     return (
       <>
         <color attach="background" args={['#000']} />
@@ -68,7 +63,6 @@ const Scene = ({children, mouse}) => {
           <meshStandardMaterial attach="material" color="#333" />
         </mesh>
         {children}
-        {/* <orbitControls args={[camera, domElement]} enableZoom={false} enablePan={false} enableKey={false}/> */}
         <Rig mouse={mouse} />
     </>
     )
