@@ -8,24 +8,26 @@ import useMouse from './useMouse'
 extend({ OrbitControls: THREE.OrbitControls })
 
 softShadows({
-  frustrum: 3.75, // Frustrum width (default: 3.75)
-  size: 0.01, // World size (default: 0.005)
-  near: 9.5, // Near plane (default: 9.5)
-  samples: 27, // Samples (default: 17)
-  rings: 11, // Rings (default: 11)
+  size: 0.01,
+  samples: 27
 })
 
-const Box = ({args, position}) => {
+const Box = ({args, position, rotate}) => {
     const mesh = useRef()
     const [hovered, setHover] = useState(false)
     
     useEffect(() => {
-      mesh.current.rotation.x += 30
-      mesh.current.rotation.y += 30
+      mesh.current.rotation.x += rotate
+      mesh.current.rotation.y += rotate
     }, [])
+    
+    useFrame(() => {
+      mesh.current.rotation.x += 0.002
+      mesh.current.rotation.y += 0.002
+    })
 
     const springs = useSpring({
-        scale: hovered ? [1.15, 1.15, 1.15] : [1, 1, 1],
+        scale: hovered ? [1.25, 1.25, 1.25] : [1, 1, 1],
         color: hovered ? '#FF5B14' : '#555555'
     })
     
@@ -97,12 +99,16 @@ const CanvasApp = () => {
           <pointLight position={[-10, 0, -20]} intensity={0.5}/>
           <pointLight position={[0, -10, 0]} intensity={1.5}/>
 
-          <Box args={[1, 1, 1]} position={[-4, 0, 0]} />
-          <Box args={[1, 1, 1]} position={[4, 0, 0]} />
-          <Box args={[0.05, 0.05, 0.05]} position={[0, 0, 0]} />
+          <Box args={[1, 1, 1]} position={[-5, 1, 0]} rotate={10}/>
+          <Box args={[1, 1, 1]} position={[-5, -1, -3]} rotate={40}/>
+          <Box args={[1, 1, 1]} position={[-5, 1, 4]} rotate={110}/>
+
+          <Box args={[1, 1, 1]} position={[5, 0, 0]} rotate={30}/>
+          <Box args={[1, 1, 1]} position={[6, 2, 0]} rotate={60}/>
+          <Box args={[1, 1, 1]} position={[4, 0, 5]} rotate={90}/>
+          {/* <Box args={[0.05, 0.05, 0.05]} position={[0, 0, 0]} /> */}
         </Scene>
       </Canvas>
-      <p>{mouse.current[0]} {mouse.current[1]}</p>
   </>
   )
 }
