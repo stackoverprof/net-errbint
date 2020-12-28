@@ -12,7 +12,7 @@ softShadows({
   samples: 27
 })
 
-const Box = ({args, position, rotate}) => {
+const Box = ({args, position, rotate, colorful}) => {
   const mesh = useRef()
   const [hovered, setHover] = useState(false)
   
@@ -40,7 +40,7 @@ const Box = ({args, position, rotate}) => {
       onPointerOver={() => setHover(true)}
       onPointerOut={() => setHover(false)}>
       <boxBufferGeometry args={args} />
-      {hovered ?
+      {hovered || colorful ?
         <meshNormalMaterial attach="material"/>
       :
         <meshStandardMaterial color="#555555" />
@@ -49,23 +49,20 @@ const Box = ({args, position, rotate}) => {
   )
 }
 
-const FlashLight = ({lightPos}) => {
+const FlashLight = ({colorful}) => {
   const mesh = useRef(null)
 
-  // useFrame(()=>{
-  //   // mesh.current.position.x += 0.005
-  //   mesh.current.position.y -= 0.005
-  //   console.log(mesh.current.position.y)
-  //   // console.log(mesh.current.position.x + " " + mesh.current.position.y + " " + lightPos.x + " " + lightPos.y)
-  // })
+  const springs = useSpring({
+    intensity: colorful ? 7 : 0
+  })
 
   return (
-    <pointLight ref={mesh} castShadow position={[0, -1, 0]} intensity={3.5} color="white">
-      <mesh castShadow>
+    <a.pointLight ref={mesh} castShadow position={[0, -1, 0]} intensity={springs.intensity} color="white">
+      <mesh>
         <sphereBufferGeometry args={[0.02, 16, 8]} />
         <meshStandardMaterial attach="material" emissive="#ffffee" emissiveIntensity="1" color="#FFFFFF" />
       </mesh>
-    </pointLight>
+    </a.pointLight>
   )
 }
 
@@ -94,18 +91,21 @@ const Scene = ({children, mouse}) => {
     )
   }
   
-  const CanvasApp = () => {
+  const CanvasApp = ({drawerTransition, colorful}) => {
     const mouse = {
       current: useMouse()
     }
 
     const [lightPos, setlightPos] = useState({x: 0, y: 0})
+    // const [colorful, setcolorful] = useState(false)
     
     return (
       <>
       <Canvas 
         shadowMap 
         colorManagement 
+        // onPointerOver={() => setcolorful(!drawerTransition)}
+        // onPointerOut={() => setcolorful(false)}
         onMouseMove={e => setlightPos({x: e.clientX - window.innerWidth/2, y: e.clientY - 60 -348/2})}
         camera={{ position: [0, 0, 10], fov: 25 }}>
         <Scene mouse={mouse}>
@@ -126,15 +126,15 @@ const Scene = ({children, mouse}) => {
           <pointLight position={[-10, 0, -20]} intensity={0.5}/>
           <pointLight position={[0, -10, 0]} intensity={1.5}/>
           
-          <FlashLight lightPos={lightPos}/>
+          <FlashLight lightPos={lightPos} colorful={colorful}/>
 
-          <Box args={[1, 1, 1]} position={[-5, 1, 0]} rotate={10}/>
-          <Box args={[1, 1, 1]} position={[-5, -1, -3]} rotate={40}/>
-          <Box args={[1, 1, 1]} position={[-5, 1, 4]} rotate={110}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[-5, 1, 0]} rotate={10}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[-5.5, -1, -3]} rotate={40}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[-5, 1, 4]} rotate={110}/>
 
-          <Box args={[1, 1, 1]} position={[5, 0, 0]} rotate={30}/>
-          <Box args={[1, 1, 1]} position={[6, 2, 0]} rotate={60}/>
-          <Box args={[1, 1, 1]} position={[4, 0, 5]} rotate={90}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[5, 0, 0]} rotate={30}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[6, 2, 0]} rotate={60}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[4, 0, 5]} rotate={90}/>
           {/* <Box args={[0.05, 0.05, 0.05]} position={[0, 0, 0]} /> */}
         </Scene>
       </Canvas>

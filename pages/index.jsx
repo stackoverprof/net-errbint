@@ -9,6 +9,7 @@ import { useSwipeable } from "react-swipeable"
     
 const Index = ({isServer}) => {
     const [showDrawer, setshowDrawer] = useState(false)
+    const [showR3F, setshowR3F] = useState(false)
     const [drawerTransition, setdrawerTransition] = useState(false)
     const [openNavbar, setopenNavbar] = useState(false)
     const homepageRef = useRef()
@@ -26,10 +27,12 @@ const Index = ({isServer}) => {
         if ((e.type == 'click') || triggerOpen || triggerClose ){  
             setdrawerTransition(true)
             setshowDrawer(!showDrawer)
+            if (triggerOpen) setshowR3F(true)
             
             setTimeout(() => {
                 setdrawerTransition(false)
                 homepageRef.current.scrollTo(0, 0)
+                if (triggerClose) setshowR3F(false)
             }, 600)
         }
     }
@@ -49,7 +52,7 @@ const Index = ({isServer}) => {
                 <div className="homepage" ref={homepageRef}>
                     <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
                     <div className="page-content">
-                        <ColorfulShapes drawerTransition={drawerTransition}/>
+                        <ColorfulShapes showR3F={showR3F} drawerTransition={drawerTransition}/>
                     </div>
                 </div>
             </div>
