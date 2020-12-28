@@ -49,7 +49,7 @@ const Index = ({isServer}) => {
                 <div className="homepage" ref={homepageRef}>
                     <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
                     <div className="page-content">
-                        <ColorfulShapes />
+                        <ColorfulShapes drawerTransition={drawerTransition}/>
                     </div>
                 </div>
             </div>

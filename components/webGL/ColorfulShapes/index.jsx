@@ -2,10 +2,10 @@ import React from 'react'
 import Styled from '@emotion/styled'
 import Canvas from './Canvas'
 
-const ColorfulShapes = () => {
+const ColorfulShapes = ({drawerTransition}) => {
 
     return (
-        <Wrapper>
+        <Wrapper drawerTransition={drawerTransition}>
             <Canvas />
             <div className="content">
                 <div className="h1">
@@ -19,16 +19,16 @@ const ColorfulShapes = () => {
     )
 }
 
-const Wrapper = Styled.div(() =>`
+const Wrapper = Styled.div(({drawerTransition}) =>`
     position: relative;
     height: 348px;
     width: 100%;
 
     &:hover .content div.h1{
-        height: 0;
+        ${!drawerTransition ? 'height: 0;' : ''}
     }
     &:hover .content div.h2{
-        height: 100%;
+        ${!drawerTransition ? 'height: 100%;' : ''}
     }
     
     
