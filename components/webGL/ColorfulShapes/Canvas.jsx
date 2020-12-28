@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree, extend } from 'react-three-fiber/web.cjs'
 import { useSpring, a } from 'react-spring/three.cjs'
 import { softShadows } from 'drei/softShadows.cjs'
 import './setupRegTHREE'
+import './colorMaterial'
 import 'three/examples/js/controls/OrbitControls'
 
 extend({ OrbitControls: THREE.OrbitControls })
@@ -18,9 +19,9 @@ const Box = ({args, position}) => {
     const mesh = useRef()
     const [hovered, setHover] = useState(false)
     
-    useFrame(() => {
-      mesh.current.rotation.x += 0.01
-      mesh.current.rotation.y += 0.01
+    useFrame(state => {
+      mesh.current.material.forEach(material => (material.uniforms.time.value = state.clock.getElapsedTime()))
+      mesh.current.rotation.x = mesh.current.rotation.y = mesh.current.rotation.z += 0.01
     })
 
     const springs = useSpring({
@@ -37,7 +38,14 @@ const Box = ({args, position}) => {
         onPointerOver={() => setHover(true)}
         onPointerOut={() => setHover(false)}>
         <boxBufferGeometry args={args} />
-        <a.meshStandardMaterial color={springs.color} />
+        {/* <a.meshStandardMaterial color={springs.color} /> */}
+        <colorMaterial attachArray="material" color="#A2CCB6" />
+        <colorMaterial attachArray="material" color="#FCEEB5" />
+        <colorMaterial attachArray="material" color="#EE786E" />
+        <colorMaterial attachArray="material" color="#E0FEFF" />
+        <colorMaterial attachArray="material" color="lightpink" />
+        <colorMaterial attachArray="material" color="lightblue" />
+      
       </a.mesh>
     )
   }
