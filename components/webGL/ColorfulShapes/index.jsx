@@ -38,7 +38,7 @@ const ColorfulShapes = ({drawerTransition, showR3F}) => {
                         <h1>Hi There! Whatsup?</h1>
                     </div>
                     <div className="h2">
-                        <h2>Salam kenal, Erbin</h2>
+                        <h2>Welcome Aboard</h2>
                     </div>
                 </div>
             </div>
