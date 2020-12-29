@@ -7,11 +7,14 @@ import ColorfulShapes from '../components/webGL/ColorfulShapes/'
 import useResize from 'use-resizing'
 import { useSwipeable } from "react-swipeable"
     
-const Index = ({isServer}) => {
+const Index = ({initialLoad}) => {
     const [showDrawer, setshowDrawer] = useState(false)
+    const [_initialLoad, set_initialLoad] = useState(initialLoad)
     const [showR3F, setshowR3F] = useState(false)
+    const [showRainbox, setshowRainbox] = useState(true)
     const [drawerTransition, setdrawerTransition] = useState(false)
     const [openNavbar, setopenNavbar] = useState(false)
+    const [skipIntro, setskipIntro] = useState(false)
     const homepageRef = useRef()
     const screen = useResize().width
 
@@ -28,27 +31,36 @@ const Index = ({isServer}) => {
             setdrawerTransition(true)
             setshowDrawer(!showDrawer)
             if (triggerOpen) setshowR3F(true)
+            if (triggerClose) setshowRainbox(true)
+            setskipIntro(true)
             
             setTimeout(() => {
                 setdrawerTransition(false)
                 homepageRef.current.scrollTo(0, 0)
+                if (triggerOpen) setshowRainbox(false)
                 if (triggerClose) setshowR3F(false)
             }, 600)
         }
     }
 
+    const doneLoaded = () => {
+        set_initialLoad(false)
+    }
+
     useEffect(() => {
         document.addEventListener('wheel', handleDrawer)
+        window.addEventListener('load', doneLoaded)
         
         return () => {
             document.removeEventListener('wheel', handleDrawer)
+            window.removeEventListener('load', doneLoaded)
         }
     }, [showDrawer])
 
     return (
         <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition}>
             <div {...drawerSwipe} className="home">
-                <Rainbox isServer={isServer}/>
+                {(showRainbox || !showDrawer) && <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro}/> }
                 <div className="homepage" ref={homepageRef}>
                     <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
                     <div className="page-content">
@@ -62,8 +74,8 @@ const Index = ({isServer}) => {
 }
 
 Index.getInitialProps = async (ctx) => {
-    if(ctx.req) return {isServer : true}
-    return {isServer : false}
+    if(ctx.req) return {initialLoad : true}
+    return {initialLoad : false}
 }
 
 const Wrapper = Styled.div(({showDrawer, openNavbar, screen, drawerTransition}) =>`

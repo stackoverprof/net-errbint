@@ -1,22 +1,38 @@
 import React, { useState } from 'react'
 import Styled from '@emotion/styled'
 import Canvas from './Canvas'
+import useResize from 'use-resizing'
 
 const ColorfulShapes = ({drawerTransition, showR3F}) => {
     const [flipText, setflipText] = useState(false)
+    const [touchDevice, settouchDevice] = useState(false)
+
+    const screen = useResize().width
 
     const handleHover = () => {
-        if (!drawerTransition) setflipText(!flipText)
+        if (!drawerTransition) setflipText(true)
+        else setTimeout(() => setflipText(true), 1600)
     }
-
+    
     const handleunHover = () => {
         setflipText(false) 
     }
+    
+    const touchDetected = () => {
+        settouchDevice(true)
+        handleHover()
+    }
 
     return (
-        <Wrapper flipText={flipText}>
-            <div className="hoverable" onMouseOver={handleHover} onMouseOut={handleunHover}>
-                {showR3F && <Canvas drawerTransition={drawerTransition} colorful={flipText}/>}
+        <Wrapper flipText={flipText} screen={screen}>
+            <div className="hoverable" 
+                onMouseOver={handleHover} 
+                onMouseOut={handleunHover} 
+                onTouchStart={touchDetected} 
+                onTouchEnd={handleunHover}>
+
+                {showR3F && <Canvas colorful={flipText} touchDevice={touchDevice}/> }
+
                 <div className="content">
                     <div className="h1">
                         <h1>Hi There! Whatsup?</h1>
@@ -30,7 +46,7 @@ const ColorfulShapes = ({drawerTransition, showR3F}) => {
     )
 }
 
-const Wrapper = Styled.div(({flipText}) =>`
+const Wrapper = Styled.div(({flipText, screen}) =>`
     position: relative;
     height: 348px;
     width: 100%;
@@ -58,18 +74,22 @@ const Wrapper = Styled.div(({flipText}) =>`
         display: flex;
         justify-content: center;
         align-items: flex-start;      
-        pointer-events: none;  
+        pointer-events: none;
+
+        padding: 0 80px;
         
         div.h1{
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            max-width: 80%;
+            min-width: 380px;
 
             position: absolute;
             top: 0;
             height: 100%;
             
-            transition: 1s;
+            transition: ${screen > 680 ? '1s' : '0.7s'};
             
             overflow: hidden;
             ${flipText ? 'height: 0;' : ''}
@@ -83,6 +103,7 @@ const Wrapper = Styled.div(({flipText}) =>`
                 height: 139.2px;
                 width: 100%;
                 font-size: 64px;
+                text-align: center;
             }
         }
         
@@ -90,12 +111,15 @@ const Wrapper = Styled.div(({flipText}) =>`
             display: flex;
             justify-content: center;
             align-items: flex-end;
+            max-width: 80%;
+            min-width: 380px;
+
             position: absolute;
             width: 100%;
             height: 0;
             bottom: 0;
             
-            transition: 1s;
+            transition: ${screen > 680 ? '1s' : '0.7s'};
             
             overflow: hidden;
             ${flipText ? 'height: 100%;' : ''}
@@ -108,6 +132,7 @@ const Wrapper = Styled.div(({flipText}) =>`
                 bottom: 0;
                 height: 139.2px;
                 font-size: 64px;
+                text-align: center;
             }
         }
     }

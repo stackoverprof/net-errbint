@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import Styled from '@emotion/styled'
 
-const Canvas = ({isServer, setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, sideRef, briRef, nrRef, etRef}) => {
+const Canvas = ({_initialLoad, skipIntro, setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, sideRef, briRef, nrRef, etRef}) => {
     const rightTouchRef = useRef()
     const leftTouchRef = useRef()
     const canvasRef = useRef()
@@ -458,13 +458,16 @@ const Canvas = ({isServer, setanimateValue, setprocessMessage, setgameStatus, se
             if(!executeLoadedRun){
                 executeLoadedRun = true
                 /////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
-                timeoutIntro = setTimeout(() => GlimpseHandler('intro'), delay)
-                timeoutInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900)
-                timeoutExecute = setTimeout(IgniteGame, delay + 4500)
+                if(skipIntro) IgniteGame()
+                else {
+                    timeoutIntro = setTimeout(() => GlimpseHandler('intro'), delay)
+                    timeoutInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900)
+                    timeoutExecute = setTimeout(IgniteGame, delay + 4500)
+                }
             }
         }
 
-        if(isServer) window.addEventListener('load', executeLoaded)
+        if(_initialLoad) window.addEventListener('load', executeLoaded)
         else executeLoaded()
         const executeFallback = setTimeout(executeLoaded, 2000)
         

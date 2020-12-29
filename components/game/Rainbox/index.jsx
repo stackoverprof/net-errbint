@@ -6,7 +6,7 @@ import useResize from 'use-resizing'
 import Styled from '@emotion/styled'
 import Canvas from './Canvas'
 
-const Rainbox = ({isServer}) => {
+const Rainbox = ({_initialLoad, skipIntro = false}) => {
     const [processMessage, setprocessMessage] = useState('')
     const [score, setscore] = useState({food: 0, time: 0})
     const [gameStatus, setgameStatus] = useState('intro')
@@ -104,7 +104,7 @@ const Rainbox = ({isServer}) => {
     }, [])
 
     return (
-        <Wrapper gameStatus={gameStatus} screen={screen}>
+        <Wrapper gameStatus={gameStatus} screen={screen} skipIntro={skipIntro}>
             <div className="container-canvas" id="game-container">
                 <div className="canvas">
                     <div className="h1-cont zi-dimm fixedfull">
@@ -125,12 +125,13 @@ const Rainbox = ({isServer}) => {
                     <div ref={etRef} className="glimpse et"></div>
                     <div ref={briRef} className="glimpse bri"></div>
                     <Canvas setgameStatus={setgameStatus} 
+                            skipIntro={skipIntro}
                             newGameBtnRef={newGameBtnRef}
                             setanimateValue={setanimateValue}
                             setprocessMessage={setprocessMessage}
                             dialogAvoidRef={dialogAvoidRef}
                             dialogOhnoRef={dialogOhnoRef}
-                            isServer={isServer}
+                            _initialLoad={_initialLoad}
                             setscore={setscore} 
                             sideRef={sideRef}
                             briRef={briRef}
@@ -207,7 +208,7 @@ const Rainbox = ({isServer}) => {
     )
 }
     
-const Wrapper = Styled.div(({gameStatus, screen}) =>`
+const Wrapper = Styled.div(({gameStatus, screen, skipIntro}) =>`
     position: absolute;
     width: 100%;
     height: 100%;
@@ -509,7 +510,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
                 font-family: 'Bahnschrift', sans-serif;
                 font-size: ${screen >  500 ? '32px' : '24px'};
                 text-align: center;
-                transition: 0.5s;
+                transition: all 0.5s, font-size 0s;
                 color: ${ gameStatus == 'running' ? '#BBBBBB' : 
                           gameStatus == 'over' ? 'black' : 'gray'};
             }
@@ -592,7 +593,7 @@ const Wrapper = Styled.div(({gameStatus, screen}) =>`
         background-position: top;
         background-repeat: no-repeat;
         z-index: -4;
-        opacity: 1;
+        opacity: ${skipIntro ? 0 : 1};
         transition: 0.2s;
     }
 

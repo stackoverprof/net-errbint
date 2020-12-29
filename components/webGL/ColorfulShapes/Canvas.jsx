@@ -3,7 +3,9 @@ import { Canvas, useFrame, useThree, extend } from 'react-three-fiber/web.cjs'
 import { useSpring, a } from 'react-spring/three.cjs'
 import { softShadows } from 'drei/softShadows.cjs'
 import './setupRegTHREE'
+import 'three/examples/js/controls/OrbitControls'
 import useMouse from './useMouse'
+import useResize from "use-resizing"
 
 extend({ OrbitControls: THREE.OrbitControls })
 
@@ -71,7 +73,11 @@ const Rig = ({ mouse }) => {
   return null
 }
 
-const Scene = ({children, mouse}) => {
+const Scene = ({children, mouse, touchDevice}) => {  
+    const { camera, gl } = useThree()
+    const controlRef = useRef(null)
+
+
     return (
       <>
         <color attach="background" args={['#000']} />
@@ -81,15 +87,22 @@ const Scene = ({children, mouse}) => {
           <meshStandardMaterial attach="material" color="#333" />
         </mesh>
         {children}
-        <Rig mouse={mouse} />
+        { touchDevice ? 
+          <orbitControls args={[camera, gl.domElement]} ref={controlRef} enableZoom={false} enablePan={false} enableKey={false}/>
+        :
+          <Rig mouse={mouse} />
+        }
     </>
     )
   }
   
-  const CanvasApp = ({drawerTransition, colorful}) => {
+  const CanvasApp = ({colorful, touchDevice}) => {
     const mouse = {
       current: useMouse()
     }
+
+    const screen = useResize().width
+    const adjustWide = screen < 600 ? 600/1300 : screen/1300
 
     const [lightPos, setlightPos] = useState({x: 0, y: 0})
     // const [colorful, setcolorful] = useState(false)
@@ -103,7 +116,7 @@ const Scene = ({children, mouse}) => {
         // onPointerOut={() => setcolorful(false)}
         onMouseMove={e => setlightPos({x: e.clientX - window.innerWidth/2, y: e.clientY - 60 -348/2})}
         camera={{ position: [0, 0, 10], fov: 25 }}>
-        <Scene mouse={mouse}>
+        <Scene mouse={mouse} touchDevice={touchDevice}>
           <ambientLight intensity={0.3}/>
           <directionalLight 
               castShadow
@@ -123,13 +136,13 @@ const Scene = ({children, mouse}) => {
           
           <FlashLight lightPos={lightPos} colorful={colorful}/>
 
-          <Box args={[1, 1, 1]} colorful={colorful} position={[-5, 1, 0]} rotate={10}/>
-          <Box args={[1, 1, 1]} colorful={colorful} position={[-5.5, -1, -3]} rotate={40}/>
-          <Box args={[1, 1, 1]} colorful={colorful} position={[-5, 1, 4]} rotate={110}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*-5, 1, 0]} rotate={10}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*-5.5, -1, -3]} rotate={40}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*-5, 1, 4]} rotate={110}/>
 
-          <Box args={[1, 1, 1]} colorful={colorful} position={[5, 0, 0]} rotate={30}/>
-          <Box args={[1, 1, 1]} colorful={colorful} position={[6, 2, 0]} rotate={60}/>
-          <Box args={[1, 1, 1]} colorful={colorful} position={[4, 0, 5]} rotate={110}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*5, 0, 0]} rotate={30}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*6, 2, 0]} rotate={60}/>
+          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*4, 0, 5]} rotate={110}/>
           {/* <Box args={[0.05, 0.05, 0.05]} position={[0, 0, 0]} /> */}
         </Scene>
       </Canvas>
