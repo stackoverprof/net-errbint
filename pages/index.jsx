@@ -38,8 +38,8 @@ const Index = ({initialLoad}) => {
             setTimeout(() => {
                 setdrawerTransition(false)
                 homepageRef.current.scrollTo(0, 0)
-                if (triggerOpen) setshowRainbox(false)
-                if (triggerClose) setshowR3F(false)
+                if (triggerOpen && showR3F) setshowRainbox(false)
+                if (triggerClose && !showDrawer) setshowR3F(false)
             }, 600)
         }
     }

@@ -10,8 +10,8 @@ const ColorfulShapes = ({drawerTransition, showR3F}) => {
     const screen = useResize().width
 
     const handleHover = () => {
-        if (!drawerTransition) setflipText(true)
-        else setTimeout(() => setflipText(true), 1600)
+        if (drawerTransition) setTimeout(() => setflipText(true), 1600)
+        else setflipText(true)
     }
     
     const handleunHover = () => {
