@@ -8,13 +8,13 @@ import useResize from 'use-resizing'
 import { useSwipeable } from "react-swipeable"
     
 const Index = ({initialLoad}) => {
-    const [showDrawer, setshowDrawer] = useState(false)
-    const [_initialLoad, set_initialLoad] = useState(initialLoad)
-    const [showR3F, setshowR3F] = useState(false)
-    const [showRainbox, setshowRainbox] = useState(true)
     const [drawerTransition, setdrawerTransition] = useState(false)
+    const [_initialLoad, set_initialLoad] = useState(initialLoad)
+    const [showRainbox, setshowRainbox] = useState(true)
+    const [showDrawer, setshowDrawer] = useState(false)
     const [openNavbar, setopenNavbar] = useState(false)
     const [skipIntro, setskipIntro] = useState(false)
+    const [showR3F, setshowR3F] = useState(false)
     const homepageRef = useRef()
     const screen = useResize().width
 
@@ -24,15 +24,16 @@ const Index = ({initialLoad}) => {
     })
 
     const handleDrawer = (e) => {
-        const triggerOpen = (e.wheelDelta < 0 || e.dir == 'Up') && !showDrawer
+        const triggerOpen = (e.wheelDelta < 0 || e.dir == 'Up' || e.type == 'click') && !showDrawer
         const triggerClose = (e.wheelDelta > 0 || e.dir == 'Down') && showDrawer && homepageRef.current.scrollTop <= 0
         
-        if ((e.type == 'click') || triggerOpen || triggerClose ){  
+        if (triggerOpen || triggerClose ){
             setdrawerTransition(true)
             setshowDrawer(!showDrawer)
+            setskipIntro(true)
+            
             if (triggerOpen) setshowR3F(true)
             if (triggerClose) setshowRainbox(true)
-            setskipIntro(true)
             
             setTimeout(() => {
                 setdrawerTransition(false)
