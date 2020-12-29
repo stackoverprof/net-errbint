@@ -67,8 +67,8 @@ const Wrapper = Styled.div(({flipText, screen}) =>`
         position: absolute;
         margin: 0 auto;
         width: 100%;
-        height: 40%;
-        top: 80px;
+        height: 45%;
+        top: 86px;
         left: 0;
         
         display: flex;
@@ -100,7 +100,7 @@ const Wrapper = Styled.div(({flipText, screen}) =>`
                 justify-content: center;
                 align-items: center;
                 top: 0;
-                height: 139.2px;
+                height: 156.59px;
                 width: 100%;
                 font-size: 64px;
                 text-align: center;
@@ -130,7 +130,7 @@ const Wrapper = Styled.div(({flipText, screen}) =>`
                 justify-content: center;
                 align-items: center;
                 bottom: 0;
-                height: 139.2px;
+                height: 156.59px;
                 font-size: 64px;
                 text-align: center;
             }
