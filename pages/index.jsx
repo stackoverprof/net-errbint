@@ -9,6 +9,7 @@ import useResize from 'use-resizing'
     
 const Index = ({initialLoad}) => {
     const [_initialLoad, set_initialLoad] = useState(initialLoad)
+    const [touchDevice, settouchDevice] = useState(false)
     const [showDrawer, setshowDrawer] = useState(false)
     const [drawerTransition, setdrawerTransition] = useState(false)
     const [sleepGame, setsleepGame] = useState(0)
@@ -42,6 +43,10 @@ const Index = ({initialLoad}) => {
         set_initialLoad(false)
     }
 
+    const touchDetected = () => {
+        settouchDevice(true)
+    }
+
     useEffect(() => {
         document.addEventListener('wheel', handleDrawer)
         window.addEventListener('load', doneLoaded)
@@ -63,13 +68,13 @@ const Index = ({initialLoad}) => {
     }, [showDrawer, sleepGame])
 
     return (
-        <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition}>
+        <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition} onTouchStart={touchDetected}>
             <div {...drawerSwipe} className="home">
                 {(!showDrawer || sleepGame < 5) && <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro}/> }
                 <div className="homepage" ref={homepageRef}>
                     <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
                     <div className="page-content">
-                        <ColorfulShapes drawerTransition={drawerTransition} showDrawer={showDrawer}/>
+                        <ColorfulShapes drawerTransition={drawerTransition} showDrawer={showDrawer} touchDevice={touchDevice}/>
                     </div>
                 </div>
             </div>

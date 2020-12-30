@@ -3,9 +3,8 @@ import Styled from '@emotion/styled'
 import Canvas from './Canvas'
 import useResize from 'use-resizing'
 
-const ColorfulShapes = ({drawerTransition, showDrawer}) => {
+const ColorfulShapes = ({drawerTransition, showDrawer, touchDevice}) => {
     const [flipText, setflipText] = useState(false)
-    const [touchDevice, settouchDevice] = useState(false)
 
     const screen = useResize().width
 
@@ -16,18 +15,13 @@ const ColorfulShapes = ({drawerTransition, showDrawer}) => {
     const handleunHover = () => {
         setflipText(false) 
     }
-    
-    const touchDetected = () => {
-        settouchDevice(true)
-        handleHover()
-    }
 
     return (
         <Wrapper flipText={flipText} screen={screen}>
             <div className="hoverable" 
                 onMouseOver={handleHover} 
                 onMouseOut={handleunHover} 
-                onTouchStart={touchDetected} 
+                onTouchStart={handleHover} 
                 onTouchEnd={handleunHover}>
 
                 {(showDrawer || drawerTransition) && <Canvas canvasHover={drawerTransition ? false : flipText} touchDevice={touchDevice}/> }

@@ -80,8 +80,6 @@ const Rig = ({ mouse }) => {
 
 const Scene = ({children, mouse, touchDevice}) => {  
     const { camera, gl } = useThree()
-    const controlRef = useRef(null)
-
 
     return (
       <>
@@ -91,9 +89,9 @@ const Scene = ({children, mouse, touchDevice}) => {
           <planeBufferGeometry attach="geometry" args={[1000, 1000]}/>
           <meshStandardMaterial attach="material" color="#333" />
         </mesh>
-        {children}
-        { touchDevice ? 
-          <orbitControls args={[camera, gl.domElement]} ref={controlRef} enableZoom={false} enablePan={false} enableKey={false}/>
+        { children }
+        {touchDevice ? 
+          <orbitControls args={[camera, gl.domElement]} enableZoom={false} enablePan={false} enableKey={false}/>
         :
           <Rig mouse={mouse} />
         }
