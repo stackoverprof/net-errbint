@@ -14,7 +14,7 @@ softShadows({
   samples: 27
 })
 
-const Box = ({args, position, rotate, colorful, spotlight, setspotlight}) => {
+const Box = ({args, position, rotate, colorful}) => {
   const mesh = useRef()
   const [hovered, setHover] = useState(false)
   
@@ -29,8 +29,8 @@ const Box = ({args, position, rotate, colorful, spotlight, setspotlight}) => {
   })
 
   const springs = useSpring({
-      scale: hovered ? [1.25, 1.25, 1.25] : [1, 1, 1],
-      color: hovered || colorful ? '#FF5B14' : '#555555'
+      scale: colorful ? [1.25, 1.25, 1.25] : [1, 1, 1],
+      color: hovered ? '#FFFFFF' : '#555555'
   })
   
   return (
@@ -39,22 +39,16 @@ const Box = ({args, position, rotate, colorful, spotlight, setspotlight}) => {
       ref={mesh}
       scale={springs.scale}
       castShadow
-      onPointerOver={() => {
-        setHover(true)
-        setspotlight(spotlight+1)
-      }}
-      onPointerOut={() => {
-        setHover(false)
-        setspotlight(spotlight - 1)
-      }}>
+      onPointerOver={() => setHover(true)}
+      onPointerOut={() => setHover(false)}>
 
       <boxBufferGeometry args={args} />
       {/* <a.meshStandardMaterial color={springs.color} /> */}
 
-      {(colorful && spotlight == 0) || hovered ?
+      {colorful && !hovered ?
         <meshNormalMaterial attach="material"/>
-      :
-        <meshStandardMaterial color="#555555" />
+      : 
+        <a.meshStandardMaterial color={springs.color} emissive="#FFFFFF" emissiveIntensity={10}/>
       }
 
     </a.mesh>
@@ -115,12 +109,7 @@ const Scene = ({children, mouse, touchDevice}) => {
     const adjustWide = screen < 600 ? 600/1300 : screen/1300
 
     const [lightPos, setlightPos] = useState({x: 0, y: 0})
-    const [spotlight, setspotlight] = useState(0)
     // const [colorful, setcolorful] = useState(false)
-
-    useEffect(() => {
-      console.log(spotlight)
-    }, [spotlight])
     
     return (
       <>
@@ -151,13 +140,13 @@ const Scene = ({children, mouse, touchDevice}) => {
           
           <FlashLight lightPos={lightPos} colorful={colorful}/>
 
-          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*-5, 1, 0]} rotate={10} spotlight={spotlight} setspotlight={setspotlight}/>
-          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*-5.5, -1, -3]} rotate={40} spotlight={spotlight} setspotlight={setspotlight}/>
-          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*-5, 1, 4]} rotate={110} spotlight={spotlight} setspotlight={setspotlight}/>
+          <Box position={[adjustWide*-5, 1, 0]} rotate={10} args={[1, 1, 1]} colorful={colorful}/>
+          <Box position={[adjustWide*-5.5, -1, -3]} rotate={40} args={[1, 1, 1]} colorful={colorful}/>
+          <Box position={[adjustWide*-5, 1, 4]} rotate={110} args={[1, 1, 1]} colorful={colorful}/>
 
-          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*5, 0, 0]} rotate={30} spotlight={spotlight} setspotlight={setspotlight}/>
-          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*6, 2, 0]} rotate={60} spotlight={spotlight} setspotlight={setspotlight}/>
-          <Box args={[1, 1, 1]} colorful={colorful} position={[adjustWide*4, 0, 5]} rotate={110} spotlight={spotlight} setspotlight={setspotlight}/>
+          <Box position={[adjustWide*5, 0, 0]} rotate={30} args={[1, 1, 1]} colorful={colorful}/>
+          <Box position={[adjustWide*6, 2, 0]} rotate={60} args={[1, 1, 1]} colorful={colorful}/>
+          <Box position={[adjustWide*4, 0, 5]} rotate={110} args={[1, 1, 1]} colorful={colorful}/>
           {/* <Box args={[0.05, 0.05, 0.05]} position={[0, 0, 0]} /> */}
         </Scene>
       </Canvas>
