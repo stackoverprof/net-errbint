@@ -114,8 +114,7 @@ const Rainbox = ({_initialLoad, skipIntro = false}) => {
                                 <p>
                                     {
                                         gameStatus == 'over' ? <span>&emsp;</span> :
-                                        gameStatus != 'running' ? <span>&emsp;&emsp;</span> : 
-                                        screen < 500 ? 'CREATIVE DEVELOPER' : 'A CREATIVE DEVELOPER'
+                                        gameStatus != 'running' ? <span>&emsp;&emsp;</span> : 'A CREATIVE DEVELOPER'
                                     }
                                 </p>                     
                             </div>
@@ -144,8 +143,7 @@ const Rainbox = ({_initialLoad, skipIntro = false}) => {
                                 <p>
                                     {
                                         gameStatus == 'over' ? 'GAME OVER' : 
-                                        gameStatus == 'recorded' ? 'SCORE SAVED' : 
-                                        screen < 500 ? 'CREATIVE DEVELOPER' : 'A CREATIVE DEVELOPER'
+                                        gameStatus == 'recorded' ? 'SCORE SAVED' : 'A CREATIVE DEVELOPER'
                                     }
                                 </p>
                                 <button className="newgame" ref={newGameBtnRef}>PLAY AGAIN</button>
