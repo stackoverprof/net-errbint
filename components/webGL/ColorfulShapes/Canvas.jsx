@@ -29,13 +29,14 @@ const Box = ({args, position, rotate, colorful}) => {
   })
 
   const springs = useSpring({
-      scale: colorful ? [1.25, 1.25, 1.25] : [1, 1, 1],
-      color: hovered ? '#FFFFFF' : '#555555'
+      scale: colorful ? [1.3, 1.3, 1.3] : [1, 1, 1],
+      color: hovered ? '#ff7214' : '#555555',
+      position: [colorful ? position[0]*1.15 : position[0], position[1], position[2]]
   })
   
   return (
     <a.mesh
-      position={position}
+      position={springs.position}
       ref={mesh}
       scale={springs.scale}
       castShadow
@@ -43,13 +44,13 @@ const Box = ({args, position, rotate, colorful}) => {
       onPointerOut={() => setHover(false)}>
 
       <boxBufferGeometry args={args} />
-      {/* <a.meshStandardMaterial color={springs.color} /> */}
+      <a.meshStandardMaterial color={springs.color} />
 
-      {colorful && !hovered ?
+      {/* {colorful && !hovered ?
         <meshNormalMaterial attach="material"/>
       : 
         <a.meshStandardMaterial color={springs.color}/>
-      }
+      } */}
 
     </a.mesh>
   )
@@ -59,7 +60,7 @@ const FlashLight = ({colorful}) => {
   const mesh = useRef(null)
 
   const springs = useSpring({
-    intensity: colorful ? 7 : 0
+    intensity: !colorful ? 2 : 0
   })
 
   return (
