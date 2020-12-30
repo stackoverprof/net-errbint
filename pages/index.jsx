@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Styled from '@emotion/styled'
+import ColorfulShapes from '../components/webGL/ColorfulShapes/'
+import HomeScroller from '../components/misc/HomeScroller'
 import Rainbox from '../components/game/Rainbox'
 import Navbar from '../components/navbar/Navbar'
-import HomeScroller from '../components/misc/HomeScroller'
-import ColorfulShapes from '../components/webGL/ColorfulShapes/'
-import useResize from 'use-resizing'
 import { useSwipeable } from "react-swipeable"
+import useResize from 'use-resizing'
     
 const Index = ({initialLoad}) => {
     const [drawerTransition, setdrawerTransition] = useState(false)

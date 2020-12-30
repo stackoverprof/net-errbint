@@ -48,7 +48,7 @@ const Box = ({args, position, rotate, colorful}) => {
       {colorful && !hovered ?
         <meshNormalMaterial attach="material"/>
       : 
-        <a.meshStandardMaterial color={springs.color} emissive="#FFFFFF" emissiveIntensity={10}/>
+        <a.meshStandardMaterial color={springs.color}/>
       }
 
     </a.mesh>
