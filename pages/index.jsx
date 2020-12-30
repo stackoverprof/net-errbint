@@ -10,7 +10,7 @@ import useResize from 'use-resizing'
 const Index = ({initialLoad}) => {
     const [drawerTransition, setdrawerTransition] = useState(false)
     const [_initialLoad, set_initialLoad] = useState(initialLoad)
-    const [showRainbox, setshowRainbox] = useState(true)
+    const [sleepGame, setsleepGame] = useState(0)
     const [showDrawer, setshowDrawer] = useState(false)
     const [openNavbar, setopenNavbar] = useState(false)
     const [skipIntro, setskipIntro] = useState(false)
@@ -27,23 +27,19 @@ const Index = ({initialLoad}) => {
         const triggerOpen = (e.wheelDelta < 0 || e.dir == 'Up' || e.type == 'click') && !showDrawer
         const triggerClose = (e.wheelDelta > 0 || e.dir == 'Down') && showDrawer && homepageRef.current.scrollTop <= 0
         
-        if (triggerOpen || triggerClose ){
+        if (triggerOpen || triggerClose){
+            // console.log("handled")
             setdrawerTransition(true)
             setshowDrawer(!showDrawer)
             setskipIntro(true)
             
             if (triggerOpen) setshowR3F(true)
-            if (triggerClose) setshowRainbox(true)
-            
+                           
             setTimeout(() => {
+                // console.log(showDrawer)
                 setdrawerTransition(false)
                 homepageRef.current.scrollTo(0, 0)
-                if (triggerOpen) {
-                    setTimeout(() => {
-                        if(showDrawer) setshowRainbox(false)
-                    }, 5000)
-                }
-                if (triggerClose && !showDrawer) setshowR3F(false)
+                if (triggerClose) setshowR3F(false)
             }, 600)
         }
     }
@@ -55,17 +51,30 @@ const Index = ({initialLoad}) => {
     useEffect(() => {
         document.addEventListener('wheel', handleDrawer)
         window.addEventListener('load', doneLoaded)
+
         
+        const sleepTimer = setInterval(() => {
+            setsleepGame(sleepGame + 1)
+        }, 1000)
+        
+        if (!showDrawer) {
+            clearInterval(sleepTimer)
+            setsleepGame(0)
+        }
+
+        console.log(sleepGame)
+
         return () => {
             document.removeEventListener('wheel', handleDrawer)
             window.removeEventListener('load', doneLoaded)
+            clearInterval(sleepTimer)
         }
-    }, [showDrawer])
+    }, [showDrawer, sleepGame])
 
     return (
         <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition}>
             <div {...drawerSwipe} className="home">
-                {(showRainbox || !showDrawer) && <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro}/> }
+                {(!showDrawer || sleepGame < 5)&& <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro}/> }
                 <div className="homepage" ref={homepageRef}>
                     <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
                     <div className="page-content">
