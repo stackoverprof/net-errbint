@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Styled from '@emotion/styled'
 import Canvas from './Canvas'
 import useResize from 'use-resizing'
 
-const ColorfulShapes = ({drawerTransition, showDrawer, touchDevice}) => {
+const ColorfulShapes = ({drawerTransition, touchDevice}) => {
     const [flipText, setflipText] = useState(false)
 
     const screen = useResize().width
@@ -13,8 +13,12 @@ const ColorfulShapes = ({drawerTransition, showDrawer, touchDevice}) => {
     }
     
     const handleunHover = () => {
-        setflipText(false) 
+        if (!touchDevice) setflipText(false) 
     }
+
+    useEffect(() => {
+        if (touchDevice) setTimeout(handleHover, 2000)
+    }, [touchDevice])
 
     return (
         <Wrapper flipText={flipText} screen={screen}>
@@ -24,7 +28,7 @@ const ColorfulShapes = ({drawerTransition, showDrawer, touchDevice}) => {
                 onTouchStart={handleHover} 
                 onTouchEnd={handleunHover}>
 
-                {(showDrawer || drawerTransition) && <Canvas canvasHover={drawerTransition ? false : flipText} touchDevice={touchDevice}/> }
+                <Canvas canvasHover={drawerTransition ? false : flipText} touchDevice={touchDevice}/>                
 
                 <div className="content">
                     <div className="h1">

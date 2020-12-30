@@ -74,7 +74,9 @@ const Index = ({initialLoad}) => {
                 <div className="homepage" ref={homepageRef}>
                     <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
                     <div className="page-content">
-                        <ColorfulShapes drawerTransition={drawerTransition} showDrawer={showDrawer} touchDevice={touchDevice}/>
+                        {(showDrawer || drawerTransition) && 
+                            <ColorfulShapes drawerTransition={drawerTransition} touchDevice={touchDevice}/>
+                        }
                     </div>
                 </div>
             </div>
