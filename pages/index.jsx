@@ -8,13 +8,12 @@ import { useSwipeable } from "react-swipeable"
 import useResize from 'use-resizing'
     
 const Index = ({initialLoad}) => {
-    const [drawerTransition, setdrawerTransition] = useState(false)
     const [_initialLoad, set_initialLoad] = useState(initialLoad)
-    const [sleepGame, setsleepGame] = useState(0)
     const [showDrawer, setshowDrawer] = useState(false)
+    const [drawerTransition, setdrawerTransition] = useState(false)
+    const [sleepGame, setsleepGame] = useState(0)
     const [openNavbar, setopenNavbar] = useState(false)
     const [skipIntro, setskipIntro] = useState(false)
-    const [showR3F, setshowR3F] = useState(false)
     const homepageRef = useRef()
     const screen = useResize().width
 
@@ -28,18 +27,13 @@ const Index = ({initialLoad}) => {
         const triggerClose = (e.wheelDelta > 0 || e.dir == 'Down') && showDrawer && homepageRef.current.scrollTop <= 0
         
         if (triggerOpen || triggerClose){
-            // console.log("handled")
             setdrawerTransition(true)
             setshowDrawer(!showDrawer)
             setskipIntro(true)
             
-            if (triggerOpen) setshowR3F(true)
-                           
             setTimeout(() => {
-                // console.log(showDrawer)
                 setdrawerTransition(false)
                 homepageRef.current.scrollTo(0, 0)
-                if (triggerClose) setshowR3F(false)
             }, 600)
         }
     }
@@ -52,7 +46,6 @@ const Index = ({initialLoad}) => {
         document.addEventListener('wheel', handleDrawer)
         window.addEventListener('load', doneLoaded)
 
-        
         const sleepTimer = setInterval(() => {
             setsleepGame(sleepGame + 1)
         }, 1000)
@@ -61,8 +54,6 @@ const Index = ({initialLoad}) => {
             clearInterval(sleepTimer)
             setsleepGame(0)
         }
-
-        console.log(sleepGame)
 
         return () => {
             document.removeEventListener('wheel', handleDrawer)
@@ -74,11 +65,11 @@ const Index = ({initialLoad}) => {
     return (
         <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition}>
             <div {...drawerSwipe} className="home">
-                {(!showDrawer || sleepGame < 5)&& <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro}/> }
+                {(!showDrawer || sleepGame < 5) && <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro}/> }
                 <div className="homepage" ref={homepageRef}>
                     <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
                     <div className="page-content">
-                        <ColorfulShapes showR3F={showR3F} drawerTransition={drawerTransition}/>
+                        <ColorfulShapes drawerTransition={drawerTransition} showDrawer={showDrawer}/>
                     </div>
                 </div>
             </div>

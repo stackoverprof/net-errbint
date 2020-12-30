@@ -3,7 +3,7 @@ import Styled from '@emotion/styled'
 import Canvas from './Canvas'
 import useResize from 'use-resizing'
 
-const ColorfulShapes = ({drawerTransition, showR3F}) => {
+const ColorfulShapes = ({drawerTransition, showDrawer}) => {
     const [flipText, setflipText] = useState(false)
     const [touchDevice, settouchDevice] = useState(false)
 
@@ -30,7 +30,7 @@ const ColorfulShapes = ({drawerTransition, showR3F}) => {
                 onTouchStart={touchDetected} 
                 onTouchEnd={handleunHover}>
 
-                {showR3F && <Canvas canvasHover={drawerTransition ? false : flipText} touchDevice={touchDevice}/> }
+                {(showDrawer || drawerTransition) && <Canvas canvasHover={drawerTransition ? false : flipText} touchDevice={touchDevice}/> }
 
                 <div className="content">
                     <div className="h1">
