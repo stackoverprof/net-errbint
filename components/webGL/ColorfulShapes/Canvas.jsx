@@ -14,7 +14,7 @@ softShadows({
   samples: 27
 })
 
-const Box = ({args, position, rotate, colorful}) => {
+const Box = ({args, pos, rotate, canvasHover}) => {
   const mesh = useRef()
   const [hovered, setHover] = useState(false)
   
@@ -29,9 +29,9 @@ const Box = ({args, position, rotate, colorful}) => {
   })
 
   const springs = useSpring({
-      scale: colorful ? [1.3, 1.3, 1.3] : [1, 1, 1],
+      scale: canvasHover ? [1.3, 1.3, 1.3] : [1, 1, 1],
       color: hovered ? '#ff7214' : '#555555',
-      position: [colorful ? position[0]*1.15 : position[0], position[1], position[2]]
+      position: [canvasHover ? pos[0]*1.15 : pos[0], pos[1], pos[2]]
   })
   
   return (
@@ -46,7 +46,7 @@ const Box = ({args, position, rotate, colorful}) => {
       <boxBufferGeometry args={args} />
       <a.meshStandardMaterial color={springs.color} />
 
-      {/* {colorful && !hovered ?
+      {/* {canvasHover && !hovered ?
         <meshNormalMaterial attach="material"/>
       : 
         <a.meshStandardMaterial color={springs.color}/>
@@ -56,11 +56,11 @@ const Box = ({args, position, rotate, colorful}) => {
   )
 }
 
-const FlashLight = ({colorful}) => {
+const FlashLight = ({canvasHover}) => {
   const mesh = useRef(null)
 
   const springs = useSpring({
-    intensity: !colorful ? 2 : 0
+    intensity: !canvasHover ? 2 : 0
   })
 
   return (
@@ -101,7 +101,7 @@ const Scene = ({children, mouse, touchDevice}) => {
     )
   }
   
-  const CanvasApp = ({colorful, touchDevice}) => {
+  const CanvasApp = ({canvasHover, touchDevice}) => {
     const mouse = {
       current: useMouse()
     }
@@ -110,15 +110,15 @@ const Scene = ({children, mouse, touchDevice}) => {
     const adjustWide = screen < 600 ? 600/1300 : screen/1300
 
     const [lightPos, setlightPos] = useState({x: 0, y: 0})
-    // const [colorful, setcolorful] = useState(false)
+    // const [canvasHover, setcanvasHover] = useState(false)
     
     return (
       <>
       <Canvas 
         shadowMap 
         colorManagement 
-        // onPointerOver={() => setcolorful(!drawerTransition)}
-        // onPointerOut={() => setcolorful(false)}
+        // onPointerOver={() => setcanvasHover(!drawerTransition)}
+        // onPointerOut={() => setcanvasHover(false)}
         onMouseMove={e => setlightPos({x: e.clientX - window.innerWidth/2, y: e.clientY - 60 -348/2})}
         camera={{ position: [0, 0, 10], fov: 25 }}>
         <Scene mouse={mouse} touchDevice={touchDevice}>
@@ -139,15 +139,15 @@ const Scene = ({children, mouse, touchDevice}) => {
           <pointLight position={[-10, 0, -20]} intensity={0.5}/>
           <pointLight position={[0, -10, 0]} intensity={1.5}/>
           
-          <FlashLight lightPos={lightPos} colorful={colorful}/>
+          <FlashLight lightPos={lightPos} canvasHover={canvasHover}/>
 
-          <Box position={[adjustWide*-5, 1, 0]} rotate={10} args={[1, 1, 1]} colorful={colorful}/>
-          <Box position={[adjustWide*-5.5, -1, -3]} rotate={40} args={[1, 1, 1]} colorful={colorful}/>
-          <Box position={[adjustWide*-5, 1, 4]} rotate={110} args={[1, 1, 1]} colorful={colorful}/>
+          <Box pos={[adjustWide*-5, 1, 0]} rotate={10} args={[1, 1, 1]} canvasHover={canvasHover}/>
+          <Box pos={[adjustWide*-5.5, -1, -3]} rotate={40} args={[1, 1, 1]} canvasHover={canvasHover}/>
+          <Box pos={[adjustWide*-5, 1, 4]} rotate={110} args={[1, 1, 1]} canvasHover={canvasHover}/>
 
-          <Box position={[adjustWide*5, 0, 0]} rotate={30} args={[1, 1, 1]} colorful={colorful}/>
-          <Box position={[adjustWide*6, 2, 0]} rotate={60} args={[1, 1, 1]} colorful={colorful}/>
-          <Box position={[adjustWide*4, 0, 5]} rotate={110} args={[1, 1, 1]} colorful={colorful}/>
+          <Box pos={[adjustWide*5, 0, 0]} rotate={30} args={[1, 1, 1]} canvasHover={canvasHover}/>
+          <Box pos={[adjustWide*6, 2, 0]} rotate={60} args={[1, 1, 1]} canvasHover={canvasHover}/>
+          <Box pos={[adjustWide*4, 0, 5]} rotate={110} args={[1, 1, 1]} canvasHover={canvasHover}/>
           {/* <Box args={[0.05, 0.05, 0.05]} position={[0, 0, 0]} /> */}
         </Scene>
       </Canvas>

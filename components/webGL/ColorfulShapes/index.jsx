@@ -30,7 +30,7 @@ const ColorfulShapes = ({drawerTransition, showR3F}) => {
                 onTouchStart={touchDetected} 
                 onTouchEnd={handleunHover}>
 
-                {showR3F && <Canvas colorful={flipText} touchDevice={touchDevice}/> }
+                {showR3F && <Canvas canvasHover={drawerTransition ? false : flipText} touchDevice={touchDevice}/> }
 
                 <div className="content">
                     <div className="h1">
