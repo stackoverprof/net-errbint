@@ -1,52 +1,44 @@
 import React, { useEffect, useState } from 'react'
 import Styled from '@emotion/styled'
+import { AnimatePresence ,motion } from 'framer-motion'
     
 const Spinkit1 = () => {
-    const [removeDisplay, setremoveDisplay] = useState(false)
-    const [isLoaded, setisLoaded] = useState(false)
-    const [showMessage, setshowMessage] = useState(false)
+    const [loaded, setloaded] = useState(false)
 
     const remover = () => {
-        setisLoaded(true)
-        setTimeout(() => {
-            setremoveDisplay(true)
-        }, 1000)
+        setloaded(true)
     }
-    
+
     useEffect(() => {
         window.onload = remover
         const timeout = setTimeout(remover, 2000)
-        // const fallbackRemover = setTimeout(() => setshowMessage(true), 9000)
-
         return () => {
             clearTimeout(timeout)
-            // clearTimeout(fallbackRemover)
         }
     }, [])
 
     return (
-    <>
-        {!removeDisplay && 
-            <Wrapper isLoaded={isLoaded} showMessage={showMessage}>
-                <div className="loading">
-                    <div className="spinner">
-                        <div className="rect1"></div>
-                        <div className="rect2"></div>
-                        <div className="rect3"></div>
-                        <div className="rect4"></div>
-                        <div className="rect5"></div>
-                    </div>
-                    {/* <p>HAVE A NICE DAY!</p> */}
-                    <p className="p1">Try refreshing your browser</p>
-                    <p className="p2">This might be your internet connection or your browser doesn't support webGL</p>
-                </div>
-            </Wrapper>
-        }
-    </>
+        <AnimatePresence exitBeforeEnter>
+            {!loaded && 
+                <motion.div initial="visible" animate={{ opacity: 0.5, transition: { duration: 10 }}} exit={{ opacity: 0 }}>
+                    <Wrapper>
+                        <div className="loading">
+                            <div className="spinner">
+                                <div className="rect1"></div>
+                                <div className="rect2"></div>
+                                <div className="rect3"></div>
+                                <div className="rect4"></div>
+                                <div className="rect5"></div>
+                            </div>
+                        </div>
+                    </Wrapper>
+                </motion.div>
+            }
+        </AnimatePresence>
     )
 }
     
-const Wrapper = Styled.div(({isLoaded, showMessage}) =>`
+const Wrapper = Styled.div(() =>`
     position: fixed;
     height: 100%;
     width: 100%;
@@ -54,7 +46,6 @@ const Wrapper = Styled.div(({isLoaded, showMessage}) =>`
     justify-content: center;
     align-items: center;
     background-color: rgb(245,245,245);
-    opacity: ${isLoaded ? 0 : 1};
     transition: 1s;
     z-index: 50;
     top: 0;
@@ -72,7 +63,6 @@ const Wrapper = Styled.div(({isLoaded, showMessage}) =>`
     }
 
     .spinner {
-        opacity: ${isLoaded ? 0 : 1};
         margin: 100px auto;
         margin-top: 48px;
         margin-bottom: 68px;
@@ -127,25 +117,6 @@ const Wrapper = Styled.div(({isLoaded, showMessage}) =>`
         transform: scaleY(1.0);
         -webkit-transform: scaleY(1.0);
         }
-    }
-
-    p{
-        position: absolute;
-        bottom: 0;
-        width: 320px;
-        text-align: center;
-        opacity: ${showMessage ? 1 : 0};
-        transition: 0.5s;
-    }
-    .p1{
-        font-size: 18px;
-        margin-bottom: 16px;
-        bottom: 32px;
-    }
-    .p2{
-        font-size: 14px;
-        color: #acacac;
-        transition-delay: 1s;
     }
 `)
     

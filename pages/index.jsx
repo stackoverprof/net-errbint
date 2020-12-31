@@ -6,6 +6,7 @@ import Rainbox from '../components/game/Rainbox'
 import Navbar from '../components/navbar/Navbar'
 import { useSwipeable } from "react-swipeable"
 import useResize from 'use-resizing'
+import FadeTransition from '../components/transition/Fade'
     
 const Index = ({initialLoad}) => {
     const [_initialLoad, set_initialLoad] = useState(initialLoad)
@@ -68,20 +69,22 @@ const Index = ({initialLoad}) => {
     }, [showDrawer, sleepGame])
 
     return (
-        <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition} onTouchStart={touchDetected}>
-            <div {...drawerSwipe} className="home">
-                {(!showDrawer || sleepGame < 5) && <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro}/> }
-                <div className="homepage" ref={homepageRef}>
-                    <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
-                    <div className="page-content">
-                        {(showDrawer || drawerTransition) && 
-                            <ColorfulShapes drawerTransition={drawerTransition} touchDevice={touchDevice}/>
-                        }
+        <FadeTransition>
+            <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition} onTouchStart={touchDetected}>
+                <div {...drawerSwipe} className="home">
+                    {(!showDrawer || sleepGame < 5) && <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro}/> }
+                    <div className="homepage" ref={homepageRef}>
+                        <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
+                        <div className="page-content">
+                            {(showDrawer || drawerTransition) && 
+                                <ColorfulShapes drawerTransition={drawerTransition} touchDevice={touchDevice}/>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
-            <HomeScroller elRef={homepageRef} showDrawer={showDrawer} handleDrawer={handleDrawer}/>
-        </Wrapper>
+                <HomeScroller elRef={homepageRef} showDrawer={showDrawer} handleDrawer={handleDrawer}/>
+            </Wrapper>
+        </FadeTransition>
     )
 }
 

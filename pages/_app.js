@@ -5,8 +5,9 @@ import '../styles/typefaces.css'
 import NextNprogress from 'nextjs-progressbar'
 import Head from 'next/head'
 import Loader from '../components/spinner/Spinkit1'
+import { AnimatePresence } from 'framer-motion'
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps, router }) {
   return ( 
   <>
     <Head>
@@ -20,7 +21,9 @@ function MyApp({ Component, pageProps }) {
       height="3"
     />
     <Loader />
-    <Component {...pageProps} />
+    <AnimatePresence exitBeforeEnter>
+      <Component {...pageProps} key={router.route} />
+    </AnimatePresence>
   </>
   )
 }
