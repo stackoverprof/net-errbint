@@ -20,7 +20,7 @@ const Spinkit1 = () => {
     return (
         <AnimatePresence exitBeforeEnter>
             {!loaded && 
-                <motion.div initial="visible" animate={{ opacity: 0.5, transition: { duration: 10 }}} exit={{ opacity: 0 }}>
+                <motion.div initial="visible" animate={{ opacity: 0.5, transition: { duration: 1 }}} exit={{ opacity: 0 }}>
                     <Wrapper>
                         <div className="loading">
                             <div className="spinner">
