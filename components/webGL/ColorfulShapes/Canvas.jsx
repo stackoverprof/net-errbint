@@ -50,41 +50,41 @@ const Box = ({args, pos, rotate, canvasHover}) => {
   )
 }
 
+const Lighting = ({canvasHover}) => {
+  const springs = useSpring({
+    intensity: !canvasHover ? 2 : 0
+  })
+
+  return (
+  <>  
+    <ambientLight intensity={0.3}/>
+    <a.pointLight castShadow position={[0, -1, 0]} intensity={springs.intensity} color="white"/>
+    <pointLight position={[-10, 0, -20]} intensity={0.5}/>
+    <pointLight position={[0, -10, 0]} intensity={1.5}/>
+    <directionalLight 
+      castShadow
+      position={[0, 10, 0]} 
+      intensity={0.5} 
+      shadow-mapSize-width={1024}
+      shadow-mapSize-height={1024}
+      shadow-camera-far={50}
+      shadow-camera-left={-10}
+      shadow-camera-right={10}
+      shadow-camera-top={10}
+      shadow-camera-bottom={-10}
+      />
+  </>
+  )
+}
+
 const Scene = ({children, mouse, touchDevice, canvasHover}) => {  
     const { camera, gl } = useThree()
-
-    const springs = useSpring({
-      intensity: !canvasHover ? 2 : 0
-    })
-
-    const Lighting = () => {
-      return (
-      <>  
-        <ambientLight intensity={0.3}/>
-        <a.pointLight castShadow position={[0, -1, 0]} intensity={springs.intensity} color="white"/>
-        <pointLight position={[-10, 0, -20]} intensity={0.5}/>
-        <pointLight position={[0, -10, 0]} intensity={1.5}/>
-        <directionalLight 
-          castShadow
-          position={[0, 10, 0]} 
-          intensity={0.5} 
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
-          shadow-camera-far={50}
-          shadow-camera-left={-10}
-          shadow-camera-right={10}
-          shadow-camera-top={10}
-          shadow-camera-bottom={-10}
-          />
-      </>
-      )
-    }
 
     return (
       <>
         <fog attach="fog" near={0} far={30} color="#000" />
         <color attach="background" args={['#000']} />
-        <Lighting />
+        <Lighting canvasHover={canvasHover}/>
 
         { children }
 
