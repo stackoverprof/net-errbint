@@ -1,16 +1,16 @@
 import React from 'react'
 import Link from 'next/link'
 import Styled from '@emotion/styled'
-import FadeTransition from '../components/transition/Fade'
+import Page from '../components/transition'
 
 const About = () => {
     
     return (
-        <FadeTransition>    
+        <Page transition="fade">    
             <Wrapper>
                 <Link href="/"><a className="linktest">home</a></Link>
             </Wrapper>
-        </FadeTransition>
+        </Page>
     )
 }
     

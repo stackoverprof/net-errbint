@@ -6,7 +6,7 @@ import Rainbox from '../components/game/Rainbox'
 import Navbar from '../components/navbar/Navbar'
 import { useSwipeable } from "react-swipeable"
 import useResize from 'use-resizing'
-import FadeTransition from '../components/transition/Fade'
+import Page from '../components/transition'
     
 const Index = ({initialLoad}) => {
     const [_initialLoad, set_initialLoad] = useState(initialLoad)
@@ -69,7 +69,7 @@ const Index = ({initialLoad}) => {
     }, [showDrawer, sleepGame])
 
     return (
-        <FadeTransition>
+        <Page transition="fade">
             <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition} onTouchStart={touchDetected}>
                 <div {...drawerSwipe} className="home">
                     {(!showDrawer || sleepGame < 5) && <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro}/> }
@@ -84,7 +84,7 @@ const Index = ({initialLoad}) => {
                 </div>
                 <HomeScroller elRef={homepageRef} showDrawer={showDrawer} handleDrawer={handleDrawer}/>
             </Wrapper>
-        </FadeTransition>
+        </Page>
     )
 }
 
