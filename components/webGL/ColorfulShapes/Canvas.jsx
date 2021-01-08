@@ -15,7 +15,7 @@ softShadows({
   samples: 27
 })
 
-const Box = ({args, pos, rotate, canvasHover}) => {
+const Box = ({args, pos, rotate, clockwise, canvasHover}) => {
   const mesh = useRef()
   const [hovered, setHover] = useState(false)
   
@@ -25,8 +25,8 @@ const Box = ({args, pos, rotate, canvasHover}) => {
   }, [])
   
   useFrame(() => {
-    mesh.current.rotation.x += 0.002
-    mesh.current.rotation.y += 0.002
+    mesh.current.rotation.x += 0.002 * (clockwise ? -1 : 1)
+    mesh.current.rotation.y += 0.002 * (clockwise ? -1 : 1)
   })
 
   const springs = useSpring({
@@ -114,14 +114,14 @@ const Scene = ({children, mouse, touchDevice, canvasHover}) => {
       <Canvas shadowMap camera={{ position: [0, 0, 10], fov: 25 }}>
         <Scene mouse={mouse} touchDevice={touchDevice} canvasHover={canvasHover}>
           <group>
-            <Box pos={[adjustWide*-5, 1, 0]} rotate={10} args={[1, 1, 1]} canvasHover={canvasHover}/>
+            <Box pos={[adjustWide*-5, 1, 0]} rotate={10} clockwise args={[1, 1, 1]} canvasHover={canvasHover}/>
             <Box pos={[adjustWide*-5.5, -1, -3]} rotate={40} args={[1, 1, 1]} canvasHover={canvasHover}/>
-            <Box pos={[adjustWide*-5, 1, 4]} rotate={110} args={[1, 1, 1]} canvasHover={canvasHover}/>
+            <Box pos={[adjustWide*-5, 1, 4]} rotate={110} clockwise args={[1, 1, 1]} canvasHover={canvasHover}/>
           </group>
           <group>
-            <Box pos={[adjustWide*5, 0, 0]} rotate={30} args={[1, 1, 1]} canvasHover={canvasHover}/>
+            <Box pos={[adjustWide*5, 0, 0]} rotate={30} clockwise args={[1, 1, 1]} canvasHover={canvasHover}/>
             <Box pos={[adjustWide*6, 2, 0]} rotate={60} args={[1, 1, 1]} canvasHover={canvasHover}/>
-            <Box pos={[adjustWide*4, 0, 5]} rotate={110} args={[1, 1, 1]} canvasHover={canvasHover}/>
+            <Box pos={[adjustWide*4, 0, 5]} rotate={110} clockwise args={[1, 1, 1]} canvasHover={canvasHover}/>
           </group>
         </Scene>
       </Canvas>
