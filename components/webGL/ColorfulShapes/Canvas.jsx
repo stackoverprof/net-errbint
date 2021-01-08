@@ -114,14 +114,14 @@ const Scene = ({children, mouse, touchDevice, canvasHover}) => {
       <Canvas shadowMap camera={{ position: [0, 0, 10], fov: 25 }}>
         <Scene mouse={mouse} touchDevice={touchDevice} canvasHover={canvasHover}>
           <group>
-            <Box pos={[adjustWide*-5, 1, 0]} rotate={10} clockwise args={[1, 1, 1]} canvasHover={canvasHover}/>
-            <Box pos={[adjustWide*-5.5, -1, -3]} rotate={40} args={[1, 1, 1]} canvasHover={canvasHover}/>
-            <Box pos={[adjustWide*-5, 1, 4]} rotate={110} clockwise args={[1, 1, 1]} canvasHover={canvasHover}/>
+            <Box args={[1, 1, 1]} pos={[adjustWide*-5, 1, 4]} rotate={110} clockwise canvasHover={canvasHover}/>
+            <Box args={[1, 1, 1]} pos={[adjustWide*-5, 1, 0]} rotate={10} canvasHover={canvasHover}/>
+            <Box args={[1, 1, 1]} pos={[adjustWide*-5.5, -1, -3]} rotate={40} clockwise canvasHover={canvasHover}/>
           </group>
           <group>
-            <Box pos={[adjustWide*5, 0, 0]} rotate={30} clockwise args={[1, 1, 1]} canvasHover={canvasHover}/>
-            <Box pos={[adjustWide*6, 2, 0]} rotate={60} args={[1, 1, 1]} canvasHover={canvasHover}/>
-            <Box pos={[adjustWide*4, 0, 5]} rotate={110} clockwise args={[1, 1, 1]} canvasHover={canvasHover}/>
+            <Box args={[1, 1, 1]} pos={[adjustWide*4, 0, 5]} rotate={110} clockwise canvasHover={canvasHover}/>
+            <Box args={[1, 1, 1]} pos={[adjustWide*5, 0, 0]} rotate={30} canvasHover={canvasHover}/>
+            <Box args={[1, 1, 1]} pos={[adjustWide*6, 2, 0]} rotate={60} clockwise canvasHover={canvasHover}/>
           </group>
         </Scene>
       </Canvas>
