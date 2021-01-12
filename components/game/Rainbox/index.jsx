@@ -27,15 +27,11 @@ const Rainbox = ({_initialLoad, skipIntro = false}) => {
 
     const checkRank = () => {
         let rank = 1
-        // console.log(parseInt(toString(score.time).replace(".","")))
-        // console.log(score.time.replace(".",""))
+        
         Leaderboard.forEach( each => {
             if(score.food < each.score.food || 
             (score.food == each.score.food && score.time > each.score.time))
             rank++
-            // console.log(each.nickname + 'cek' + rank)
-            // console.log((score.food == each.score.food && parseInt(toString(score.time).replace(".","")) > each.score.time))
-            // console.log((parseInt(toString(score.time).replace(".","")) + " > " + each.score.time))
         })
         return rank
     }
