@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Styled from '@emotion/styled'
-import ColorfulShapes from '../components/webGL/ColorfulShapes/'
+import Hero3D from '../components/threeD/Hero3D'
 import HomeScroller from '../components/misc/HomeScroller'
 import Rainbox from '../components/game/Rainbox'
 import Navbar from '../components/navbar/Navbar'
@@ -77,7 +77,7 @@ const Index = ({initialLoad}) => {
                         <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
                         <div className="page-content">
                             {(showDrawer || drawerTransition) && 
-                                <ColorfulShapes drawerTransition={drawerTransition} touchDevice={touchDevice}/>
+                                <Hero3D drawerTransition={drawerTransition} touchDevice={touchDevice}/>
                             }
                         </div>
                     </div>

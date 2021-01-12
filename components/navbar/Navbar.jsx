@@ -14,7 +14,7 @@ const Navbar = ({showDrawer, open, setopen, handleDrawer}) => {
         if(!showDrawer) handleDrawer(e)
     }
     return (
-        <Wrapper screen={screen}>
+        <Wrapper screen={screen} className="disable-select">
             <div className="navbar">
                 <div className="contain-size">
                     <Navmenu showDrawer={showDrawer} open={open} setopen={setopen}/>

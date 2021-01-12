@@ -31,3 +31,9 @@ input{
 input:focus{
   outline: none;
 }
+.disable-select {
+  -webkit-user-select: none;  
+  -moz-user-select: none;    
+  -ms-user-select: none;      
+  user-select: none;
+}
