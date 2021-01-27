@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import Styled from '@emotion/styled'
-import { AnimatePresence ,motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
     
 const Spinkit1 = () => {
     const [loaded, setloaded] = useState(false)
 
     const remover = () => {
         setloaded(true)
+        console.log('fallback triggered');
+    }
+
+    const handleOnLoad = () => {
+        setloaded(true)
+        console.log('onload triggered');
     }
 
     useEffect(() => {
-        window.onload = remover
+        window.onload = handleOnLoad
         const timeout = setTimeout(remover, 2000)
         return () => {
             clearTimeout(timeout)
