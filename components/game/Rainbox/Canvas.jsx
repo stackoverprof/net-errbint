@@ -435,7 +435,7 @@ const Canvas = ({_initialLoad, skipIntro, setanimateValue, setprocessMessage, se
         let shapes = {}
         let food = {}
         let executeGame = false
-        let delay = 0
+        let delay = 1000
         
         const IgniteGame = () => {
             setgameStatus('initial')
