@@ -1,3 +1,20 @@
+/* Bahnschrift */
+
+@font-face {
+	font-family: 'Bahnschrift';
+	src: url('/typefaces/Bahnschrift/all-size.ttf') format('truetype');
+	font-style: normal;
+}
+
+/* Poppkorn */
+
+@font-face {
+	font-family: 'Poppkorn';
+	src: url('/typefaces/Poppkorn/all-size.ttf') format('truetype');
+	font-style: normal;
+}
+
+/* ProximaNova */
 /* Normals */
 
 @font-face {

@@ -18,7 +18,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 				<SEOTags />
 			</Head>
 			<ProgressBar
-				color="#9900CF"
+				color="#FFCB11"
 				startPosition={0.3}
 				stopDelayMs={200}
 				height={3}
