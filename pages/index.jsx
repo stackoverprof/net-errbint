@@ -72,6 +72,7 @@ const Index = ({ initialLoad }) => {
 	return (
 		<Page transition="fade">
 			<Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition} onTouchStart={touchDetected}>
+				TESTTT
 				<div {...drawerSwipe} className="home">
 					{(!showDrawer || sleepGame < 5) && <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro} />}
 					<div className="homepage" ref={homepageRef}>
