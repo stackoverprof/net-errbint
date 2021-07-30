@@ -8,8 +8,9 @@ import Loader from '@components/_shared/Loader';
 
 import '@core/styles/tailwind.css';
 import '@core/styles/typefaces.css';
+import { AnimatePresence } from 'framer-motion';
 
-const App = ({ Component, pageProps }: AppProps): JSX.Element => {
+const App = ({ Component, pageProps, router }: AppProps): JSX.Element => {
 	return (
 		<>
 			<Head>
@@ -27,7 +28,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 			/>
 			<Loader />
 			<ContextProvider>
-				<Component {...pageProps} />
+				<AnimatePresence exitBeforeEnter>
+					<Component {...pageProps} key={router.route} />
+				</AnimatePresence>
 			</ContextProvider>
 		</>
 	);
