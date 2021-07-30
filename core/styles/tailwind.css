@@ -4,7 +4,7 @@
 
 @layer components {
 	.btn-main {
-		@apply cursor-pointer px-6 py-3 text-black font-semibold bg-primary rounded hover:text-secondary;
+		@apply cursor-pointer px-6 py-3 text-black font-semibold bg-primary rounded hover:text-primary;
 	}
 	
 	hr.vertical {
