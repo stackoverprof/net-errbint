@@ -7,93 +7,94 @@ import Navbar from '../components/navbar/Navbar'
 import { useSwipeable } from "react-swipeable"
 import useResize from 'use-resizing'
 import Page from '../components/transition'
-    
-const Index = ({initialLoad}) => {
-    const [_initialLoad, set_initialLoad] = useState(initialLoad)
-    const [touchDevice, settouchDevice] = useState(false)
-    const [showDrawer, setshowDrawer] = useState(false)
-    const [drawerTransition, setdrawerTransition] = useState(false)
-    const [sleepGame, setsleepGame] = useState(0)
-    const [openNavbar, setopenNavbar] = useState(false)
-    const [skipIntro, setskipIntro] = useState(false)
-    const homepageRef = useRef()
-    const screen = useResize().width
 
-    const drawerSwipe = useSwipeable({
-        onSwipedUp: e => handleDrawer(e),
-        onSwipedDown: e => handleDrawer(e)
-    })
+const Index = ({ initialLoad }) => {
+	//say goodbye
+	const [_initialLoad, set_initialLoad] = useState(initialLoad)
+	const [touchDevice, settouchDevice] = useState(false)
+	const [showDrawer, setshowDrawer] = useState(false)
+	const [drawerTransition, setdrawerTransition] = useState(false)
+	const [sleepGame, setsleepGame] = useState(0)
+	const [openNavbar, setopenNavbar] = useState(false)
+	const [skipIntro, setskipIntro] = useState(false)
+	const homepageRef = useRef()
+	const screen = useResize().width
 
-    const handleDrawer = (e) => {
-        const triggerOpen = (e.wheelDelta < 0 || e.dir == 'Up' || e.type == 'click') && !showDrawer
-        const triggerClose = (e.wheelDelta > 0 || e.dir == 'Down') && showDrawer && homepageRef.current.scrollTop <= 0
-        
-        if (triggerOpen || triggerClose){
-            setdrawerTransition(true)
-            setshowDrawer(!showDrawer)
-            setskipIntro(true)
-            
-            setTimeout(() => {
-                setdrawerTransition(false)
-                homepageRef.current.scrollTo(0, 0)
-            }, 600)
-        }
-    }
+	const drawerSwipe = useSwipeable({
+		onSwipedUp: e => handleDrawer(e),
+		onSwipedDown: e => handleDrawer(e)
+	})
 
-    const doneLoaded = () => {
-        set_initialLoad(false)
-    }
+	const handleDrawer = (e) => {
+		const triggerOpen = (e.wheelDelta < 0 || e.dir == 'Up' || e.type == 'click') && !showDrawer
+		const triggerClose = (e.wheelDelta > 0 || e.dir == 'Down') && showDrawer && homepageRef.current.scrollTop <= 0
 
-    const touchDetected = () => {
-        settouchDevice(true)
-    }
+		if (triggerOpen || triggerClose) {
+			setdrawerTransition(true)
+			setshowDrawer(!showDrawer)
+			setskipIntro(true)
 
-    useEffect(() => {
-        document.addEventListener('wheel', handleDrawer)
-        window.addEventListener('load', doneLoaded)
+			setTimeout(() => {
+				setdrawerTransition(false)
+				homepageRef.current.scrollTo(0, 0)
+			}, 600)
+		}
+	}
 
-        const sleepTimer = setInterval(() => {
-            setsleepGame(sleepGame + 1)
-        }, 1000)
-        
-        if (!showDrawer) {
-            clearInterval(sleepTimer)
-            setsleepGame(0)
-        }
+	const doneLoaded = () => {
+		set_initialLoad(false)
+	}
 
-        return () => {
-            document.removeEventListener('wheel', handleDrawer)
-            window.removeEventListener('load', doneLoaded)
-            clearInterval(sleepTimer)
-        }
-    }, [showDrawer, sleepGame])
+	const touchDetected = () => {
+		settouchDevice(true)
+	}
 
-    return (
-        <Page transition="fade">
-            <Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition} onTouchStart={touchDetected}>
-                <div {...drawerSwipe} className="home">
-                    {(!showDrawer || sleepGame < 5) && <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro}/> }
-                    <div className="homepage" ref={homepageRef}>
-                        <Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef}/>
-                        <div className="page-content">
-                            {(showDrawer || drawerTransition) && 
-                                <Hero3D drawerTransition={drawerTransition} touchDevice={touchDevice}/>
-                            }
-                        </div>
-                    </div>
-                </div>
-                <HomeScroller elRef={homepageRef} showDrawer={showDrawer} handleDrawer={handleDrawer}/>
-            </Wrapper>
-        </Page>
-    )
+	useEffect(() => {
+		document.addEventListener('wheel', handleDrawer)
+		window.addEventListener('load', doneLoaded)
+
+		const sleepTimer = setInterval(() => {
+			setsleepGame(sleepGame + 1)
+		}, 1000)
+
+		if (!showDrawer) {
+			clearInterval(sleepTimer)
+			setsleepGame(0)
+		}
+
+		return () => {
+			document.removeEventListener('wheel', handleDrawer)
+			window.removeEventListener('load', doneLoaded)
+			clearInterval(sleepTimer)
+		}
+	}, [showDrawer, sleepGame])
+
+	return (
+		<Page transition="fade">
+			<Wrapper showDrawer={showDrawer} openNavbar={openNavbar} screen={screen} drawerTransition={drawerTransition} onTouchStart={touchDetected}>
+				<div {...drawerSwipe} className="home">
+					{(!showDrawer || sleepGame < 5) && <Rainbox _initialLoad={_initialLoad} skipIntro={skipIntro} />}
+					<div className="homepage" ref={homepageRef}>
+						<Navbar showDrawer={showDrawer} open={openNavbar} setopen={setopenNavbar} handleDrawer={handleDrawer} elRef={homepageRef} />
+						<div className="page-content">
+							{(showDrawer || drawerTransition) &&
+								<Hero3D drawerTransition={drawerTransition} touchDevice={touchDevice} />
+							}
+						</div>
+					</div>
+				</div>
+				<HomeScroller elRef={homepageRef} showDrawer={showDrawer} handleDrawer={handleDrawer} />
+			</Wrapper>
+		</Page>
+	)
 }
 
 Index.getInitialProps = async (ctx) => {
-    if(ctx.req) return {initialLoad : true}
-    return {initialLoad : false}
+	if (ctx.req) return { initialLoad: true }
+	return { initialLoad: false }
 }
 
-const Wrapper = Styled.div(({showDrawer, openNavbar, screen, drawerTransition}) =>`
+const Wrapper = Styled.div(({ showDrawer, openNavbar, screen, drawerTransition }) => `
     position: fixed;
     width: 100%;
     height: 100%;
@@ -178,5 +179,5 @@ const fakeScrollbar = `&::after{
     right: 0;
     background: #E5E5E5;
 }`
-    
+
 export default Index
