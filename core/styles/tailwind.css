@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.btn-main {
+		@apply cursor-pointer px-6 py-3 text-black font-semibold bg-primary rounded hover:text-secondary;
+	}
+	
+	hr.vertical {
+		@apply w-0.5 h-6 bg-gray-200 mx-4;
+	}
+
+	button[value='loading'] {
+		@apply flex-cc;
+	}
+
+	button[value='loading'] i.spinner {
+		@apply inline-flex ml-4;
+	}
+
+	i.spinner {
+		display: none;
+		width: 16px;
+		height: 16px;
+		border: 3px solid;
+		border-color: #000 #0005 #000 #0005;
+		border-radius: 50%;
+		animation: spin 1.2s linear infinite;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+}
+
+@layer utilities {
+	.flex-cc {
+		@apply flex justify-center items-center;
+	}
+	.flex-cs {
+		@apply flex justify-center items-start;
+	}
+	.flex-ce {
+		@apply flex justify-center items-end;
+	}
+
+	.flex-bc {
+		@apply flex justify-between items-center;
+	}
+	.flex-bs {
+		@apply flex justify-between items-start;
+	}
+	.flex-be {
+		@apply flex justify-between items-end;
+	}
+
+	.flex-sc {
+		@apply flex justify-start items-center;
+	}
+	.flex-ss {
+		@apply flex justify-start items-start;
+	}
+	.flex-se {
+		@apply flex justify-start items-end;
+	}
+
+	.flex-ec {
+		@apply flex justify-end items-center;
+	}
+	.flex-es {
+		@apply flex justify-end items-start;
+	}
+	.flex-ee {
+		@apply flex justify-end items-end;
+	}
+
+	.flex-vc {
+		@apply flex justify-evenly items-center;
+	}
+	.flex-vs {
+		@apply flex justify-evenly items-start;
+	}
+	.flex-ve {
+		@apply flex justify-evenly items-end;
+	}
+
+	.col {
+		@apply flex-col;
+	}
+
+	.full {
+		@apply w-full h-full;
+	}
+	.fullscreen {
+		@apply fixed full inset-0;
+	}
+	.stroked {
+		-webkit-text-stroke: 0.4px;
+	}
+}
+
+@layer base {
+	* {
+		@apply box-border;
+	}
+
+	html,
+	body {
+		@apply font-main m-0 p-0 bg-base text-primary;
+		scroll-behavior: smooth;
+	}
+
+	a {
+		color: inherit;
+		@apply no-underline;
+	}
+
+	button {
+		@apply flex-cc cursor-pointer focus:outline-none;
+	}
+
+	input {
+		@apply focus:outline-none bg-white;
+	}
+
+	textarea {
+		@apply focus:outline-none;
+	}
+
+	select {
+		@apply focus:outline-none;
+
+		background: url('/img/icons/dropdownarrow.svg');
+		background-position: right;
+		background-size: contain;
+		background-repeat: no-repeat;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		text-indent: 1px;
+		text-overflow: '';
+	}
+
+	pre {
+		color: #FB5B5B;
+		font-weight: bold;
+	}
+}
