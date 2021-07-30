@@ -17,7 +17,7 @@ const MainLayout = ({children, title, className}: Props): JSX.Element => {
 	return (
 		<>
 			<Head>
-				{title && <title>{title} — Hybrid</title>}
+				{title && <title>{title} — Errbint.NET</title>}
 			</Head>
 
 			<header ref={HeaderRef}>

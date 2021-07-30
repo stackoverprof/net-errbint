@@ -12,7 +12,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 	return (
 		<>
 			<Head>
-				<title>Hybrid — Digital Agency</title>
+				<title>Errbint.NET</title>
 				<link rel="icon" href="/favicon.ico" />
 				<meta name="theme-color" content="#000000" />
 				<SEOTags />
