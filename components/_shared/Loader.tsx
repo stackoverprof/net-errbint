@@ -50,7 +50,7 @@ const Loader = () => {
 					display: flex;
 					justify-content: center;
 					align-items: center;
-					background-color: rgb(245,245,245);
+					background-color: #F5F5F5;
 					transition: 1s;
 					z-index: 50;
 					top: 0;
@@ -58,7 +58,7 @@ const Loader = () => {
 					padding-bottom: 10%;
 				}
 
-				.loading{
+				.loading {
 					position: relative;
 					display: flex;
 					justify-content: center;
