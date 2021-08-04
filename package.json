@@ -11,12 +11,14 @@
 		"format": "prettier -w ."
 	},
 	"dependencies": {
+		"animated-number-react": "^0.1.2",
 		"framer-motion": "^4.1.17",
 		"next": "^11.0.1",
 		"nextjs-progressbar": "^0.0.8",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
-		"react-icons": "^4.2.0"
+		"react-icons": "^4.2.0",
+		"use-resizing": "^2.1.7"
 	},
 	"devDependencies": {
 		"@types/node": "^15.14.4",
