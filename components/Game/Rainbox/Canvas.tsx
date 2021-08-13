@@ -54,6 +54,7 @@ const Canvas = (props: CanvasProps) => {
 		class Player extends PlayerType {
 			constructor (posX: number) {
 				super();
+
 				this.Height = 50;
 				this.Width = 50;
 				this.Shadow = 'orange';
@@ -64,7 +65,6 @@ const Canvas = (props: CanvasProps) => {
 				this.Velocity = 0;
 				this.shine = 0;
 				
-				//Scoring things
 				this.EatCount = 0;
 				this.TimeStart = new Date().getTime();
 				this.TimeEnd = 'initial';
@@ -167,10 +167,12 @@ const Canvas = (props: CanvasProps) => {
 		class Rain extends RainType {
 			constructor (posX) {
 				super();
+
 				this.Height = RainConfig.size;
 				this.Width = RainConfig.size;
 				this.Velocity = Math.random() * RainConfig.additionalSpeed + RainConfig.base;
 				this.Index = shapeIndex;
+
 				this.Position = {
 					X: posX,
 					Y: -this.Height
@@ -225,6 +227,7 @@ const Canvas = (props: CanvasProps) => {
 				let randomPos;
 				do randomPos = Math.random() * (screenWidth - this.Width * 3) + this.Width;
 				while (randomPos >= player.Position.X - (this.Width + this.distance) && randomPos <= player.Position.X + player.Width + this.distance);
+				
 				this.PosX = randomPos;
 			}
 
@@ -249,44 +252,43 @@ const Canvas = (props: CanvasProps) => {
 		/////////GAME OVER HANDLER        
 		const GameOver = () => {
 			if (!isGameOver && isAttempted) {
-
 				player.TimeSpan = new Date().getTime() - player.TimeSpan;
 				player.TimeEnd = new Date().getTime();
 				player.Shadow = 'black';
 				player.Color = 'black';
 
-				setGameStatus('over');
 				isGameOver = true;
 				food = {};
-
+				
 				DialogHandler('over');
+				setGameStatus('over');
 				setAnimateValue(player.TimeSpan);
 			}
 		};
 
 
-		/////////NEW GAME HANDLER
-		const newGameBtn = newGameBtnRef.current;
-
+		/////////NEW GAME HANDLER		
 		const NewGame = () => {
 			setGameStatus('running');
 			setProcessMessage('');
 			GlimpseHandler('regular');
+			
 			isGameOver = false;
-
 			player = new Player(player.Position.X);
 			food = new Food();
-
+			
 			setAnimateValue(0);
 		};
+		
+		const newGameBtn = newGameBtnRef.current;
 		newGameBtn.addEventListener('click', NewGame);
+
 
 		/////////FIRST ATTEMPT TO ENTER THE GAME
 		let isAttempted = false;
 
-		const firstAttempt = () => {
+		const FirstAttempt = () => {
 			if (!isAttempted) {
-
 				isAttempted = true;
 				setGameStatus('running');
 
@@ -311,18 +313,18 @@ const Canvas = (props: CanvasProps) => {
 				//GO LEFT 
 				isLeftPressed = true;
 				player.Velocity = -5;
-				firstAttempt();
+				FirstAttempt();
 			} else if (e.which == 68 || e.which == 39) {
 				//GO RIGHT
 				isRightPressed = true;
 				player.Velocity = 5;
-				firstAttempt();
+				FirstAttempt();
 			} else if (e.which == 13 && isGameOver && document.activeElement !== siderinput) {
 				//PRESSING ENTER
 				NewGame();
 			}
 
-			//Special things
+			//SPECIAL THING
 			else if (e.which == 16) {
 				if (e.location == 1) GlimpseHandler('regular');
 				else if (e.location == 2) GlimpseHandler('special');
@@ -339,6 +341,7 @@ const Canvas = (props: CanvasProps) => {
 			}
 		};
 
+
 		/////////CONTROLLER - TOUCHSCREEN EVENT HANDLER
 		const right: HTMLDivElement = rightTouchRef.current;
 		const left: HTMLDivElement = leftTouchRef.current;
@@ -349,12 +352,12 @@ const Canvas = (props: CanvasProps) => {
 		const controlRight = () => {
 			isRightTouched = true;
 			player.Velocity = 5;
-			firstAttempt();
+			FirstAttempt();
 		};
 		const controlLeft = () => {
 			isLeftTouched = true;
 			player.Velocity = -5;
-			firstAttempt();
+			FirstAttempt();
 		};
 		const uncontrolRight = () => {
 			isRightTouched = false;
@@ -417,6 +420,7 @@ const Canvas = (props: CanvasProps) => {
 			}
 		};
 
+
 		/////////DIALOG HANDLER
 		const avoid = dialogAvoidRef.current;
 		const ohno = dialogOhnoRef.current;
@@ -444,6 +448,7 @@ const Canvas = (props: CanvasProps) => {
 			}
 		};
 
+
 		/////////HANDLE INACTIVE TAB
 		let tabInactive = false;
 		const handleInactive = () => tabInactive = document.hidden ? true : false;
@@ -451,22 +456,24 @@ const Canvas = (props: CanvasProps) => {
 
 		const siderinput = sideRef.current;
 
-		/////////RUNNING THE GAME :: execution delayed within 5.5 seconds (for intro)
-		const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
+
+		/////////RUNNING THE GAME :: execute the game
 		let player: Player | Record<string, never> = {};
 		let food: Food | Record<string, never> = {};
+		const shapes = [];
+
 		let isGameOver = false;
 		let shapeIndex = 0;
-		const shapes = [];
 		let executeGame = false;
-		const delay = 1000;
-
+		
 		const IgniteGame = () => {
+			const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
+			
 			setGameStatus('initial');
 			DialogHandler('init', startingPosition);
 			player = new Player(startingPosition);
 			executeGame = true;
-
+			
 			document.addEventListener('keydown', controlling);
 			document.addEventListener('keyup', uncontrolling);
 			right.addEventListener('touchstart', controlRight, false);
@@ -474,16 +481,22 @@ const Canvas = (props: CanvasProps) => {
 			right.addEventListener('touchend', uncontrolRight, false);
 			left.addEventListener('touchend', uncontrolLeft, false);
 		};
-
-		let timeoutIntro, timeoutInitial, timeoutExecute;
-
+		
+		let timeoutIntro: NodeJS.Timeout;
+		let timeoutInitial: NodeJS.Timeout;
+		let timeoutExecute: NodeJS.Timeout;
+		
 		let executeLoadedRun = false;
+
+
+		/////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
 		const executeLoaded = () => {
 			if (!executeLoadedRun) {
 				executeLoadedRun = true;
-				/////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
+
 				if (skipIntro) IgniteGame();
 				else {
+					const delay = 1000;
 					timeoutIntro = setTimeout(() => GlimpseHandler('intro'), delay);
 					timeoutInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900);
 					timeoutExecute = setTimeout(IgniteGame, delay + 4500);
@@ -495,12 +508,13 @@ const Canvas = (props: CanvasProps) => {
 		else executeLoaded();
 		const executeFallback = setTimeout(executeLoaded, 2000);
 
+		
 		/////////SCREEN UPDATER
 		const Updater = setInterval(() => {
 			if (executeGame) {
 				const calcTiming = () => {
-					return player.TimeEnd != 'initial' ?
-						player.TimeSpan : new Date().getTime() - player.TimeStart;
+					if (player.TimeEnd != 'initial') return player.TimeSpan; 
+					else return new Date().getTime() - player.TimeStart;
 				};
 
 				setScore({
@@ -522,14 +536,16 @@ const Canvas = (props: CanvasProps) => {
 		
 		const GenerateRain = () => {
 			if (!isGameOver && !tabInactive && executeGame) {
-				let randomPos;
+				let randomPos: number;
 				do randomPos = Math.random() * (screenWidth + RainConfig.size * 2) - RainConfig.size;
 				while (!isAttempted && randomPos > player.Position.X - RainConfig.size * 2 && randomPos < player.Position.X + RainConfig.size * 2);
 				new Rain(randomPos);
 			}
 
 			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
-			if (_isMounted) GenerateRainTimeout = setTimeout(GenerateRain, dynamicInterval); //i need the setInterval value to be dynamic, but it can't, so i use a recursive setTimout instead, it's interval value is dynamically changing based on screenWidth
+			if (_isMounted) GenerateRainTimeout = setTimeout(GenerateRain, dynamicInterval); 
+			//i need the setInterval value to be dynamic, but it can't, so i use a recursive setTimout instead
+			//it's interval value is dynamically changing based on screenWidth
 		};
 		GenerateRain();
 
