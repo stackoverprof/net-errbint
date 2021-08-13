@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import Styled from '@emotion/styled';
 
-const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, sideRef, briRef, nrRef, etRef }) => {
+const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, sideRef, briRef, nrRef, etRef }: any) => {
 	const rightTouchRef = useRef();
 	const leftTouchRef = useRef();
 	const canvasRef = useRef();
@@ -10,7 +9,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 		let _isMounted = true;
 
 		/////////CANVAS INITIALIZATION 
-		const canvas = canvasRef.current;
+		const canvas: HTMLCanvasElement = canvasRef.current;
 		const ctx = canvas.getContext('2d');
 		const navbarOffset = 60;
 
@@ -38,31 +37,51 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 		/////////GAMESCRIPT STARTS HERE
 
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
-		function Player(posX) {
-			this.Height = 50;
-			this.Width = 50;
-			this.Shadow = 'orange';
-			this.RGB = { r: 255, g: 74, b: 20 };
-			this.RGBChange = { r: 0, g: 0.5, b: 0 };
-			this.Color = `rgb(255, ${this.RGB.g}, 20)`;
-			this.Blur = 25;
-			this.Velocity = 0;
+		class PlayerProperties {
+			Height: number;
+			Width: number;
+			Shadow: string;
+			RGB: { r: number; g: number; b: number; };
+			RGBChange: { r: number; g: number; b: number; };
+			Color: string;
+			Blur: number;
+			Velocity: number;
+			shine: number;
+			EatCount: number;
+			TimeStart: number;
+			TimeEnd: string;
+			TimeSpan: number;
+			Position: { X: number; Y: number; };
+		}
 
-			this.shine = 0;
+		class Player extends PlayerProperties {
+			constructor (posX: number) {
+				super();
+				this.Height = 50;
+				this.Width = 50;
+				this.Shadow = 'orange';
+				this.RGB = { r: 255, g: 74, b: 20 };
+				this.RGBChange = { r: 0, g: 0.5, b: 0 };
+				this.Color = `rgb(255, ${this.RGB.g}, 20)`;
+				this.Blur = 25;
+				this.Velocity = 0;
+				
+				this.shine = 0;
+				
+				//Scoring things
+				this.EatCount = 0;
+				this.TimeStart = new Date().getTime();
+				this.TimeEnd = 'initial';
+				this.TimeSpan = new Date().getTime();
+				
+				this.Position = {
+					X: posX,
+					Y: screenHeight - this.Height - navbarOffset
+				};
+			}
 
-			//Scoring things
-			this.EatCount = 0;
-			this.TimeStart = new Date().getTime();
-			this.TimeEnd = 'initial';
-			this.TimeSpan = new Date().getTime();
-
-			this.Position = {
-				X: posX,
-				Y: screenHeight - this.Height - navbarOffset
-			};
-
-			this.checkCollisions = () => {
-				for (let i in shapes) {
+			checkCollisions = () => {
+				for (const i in shapes) {
 					if (
 						this.Position.X <= shapes[i].Position.X + shapes[i].Width &&
 						this.Position.X + this.Width >= shapes[i].Position.X &&
@@ -75,7 +94,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				}
 			};
 
-			this.checkEaten = () => {
+			checkEaten = () => {
 				if (player.Position.X <= food.PosX + food.Width && player.Position.X + player.Width >= food.PosX) {
 					this.EatCount++;
 					GlimpseHandler(this.EatCount);
@@ -84,7 +103,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				}
 			};
 
-			this.DrawShine = () => {
+			DrawShine = () => {
 				if (this.shine > 0) {
 					ctx.fillStyle = `rgba(${isGameOver ? '0, 0, 0,' : '255, 90, 20,'} ${-(this.shine * 2 - 1)})`;
 					ctx.beginPath();
@@ -100,12 +119,12 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				}
 			};
 
-			this.dialogAttachment = () => {
+			dialogAttachment = () => {
 				avoid.style.left = `${this.Position.X + 34}px`;
 				ohno.style.left = `${this.Position.X + 34}px`;
 			};
 
-			this.Draw = () => {
+			Draw = () => {
 				if (this.RGB.g == 152) this.RGBChange.g = -0.5;
 				if (this.RGB.g == 74) this.RGBChange.g = 0.5;
 				this.RGB.g += this.RGBChange.g;
@@ -119,7 +138,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				ctx.fill();
 			};
 
-			this.Move = () => {
+			Move = () => {
 				if (!(this.Position.X + this.Velocity < 0 || this.Position.X + this.Velocity > screenWidth - 50)) {
 					this.Position.X += this.Velocity;
 				} else if (this.Position.X > screenWidth - this.Width) {
@@ -127,7 +146,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				}
 			};
 
-			this.Update = () => {
+			Update = () => {
 
 				this.Move();
 				this.dialogAttachment();
@@ -432,13 +451,13 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 
 		/////////RUNNING THE GAME :: execution delayed within 5.5 seconds (for intro)
 		const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
-		let player = {};
+		let player: Player | any = {};
 		let isGameOver = false;
 		let shapeIndex = 0;
-		let shapes = {};
-		let food = {};
+		const shapes = {};
+		let food: Food | any = {};
 		let executeGame = false;
-		let delay = 1000;
+		const delay = 1000;
 
 		const IgniteGame = () => {
 			setgameStatus('initial');
@@ -493,7 +512,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 
 				//Then, redrawing objects
 				if (!isGameOver && isAttempted) food.Update();
-				for (let i in shapes) shapes[i].Update();
+				for (const i in shapes) shapes[i].Update();
 				player.Update();
 			}
 		}, 10);
@@ -506,7 +525,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				new Rain(randomPos);
 			}
 
-			let dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
+			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
 			if (_isMounted) setTimeout(GenerateRain, dynamicInterval); //i need the setInterval value to be dynamic, but it can't, so i use a recursive setTimout instead, it's interval value is dynamically changing based on screenWidth
 		};
 		GenerateRain();
@@ -542,43 +561,14 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 
 
 	return (
-		<Wrapper>
+		<div className="flex-sc col full" style={{ zIndex: -1 }}>
 			<canvas ref={canvasRef} style={{ zIndex: -2 }} />
-			<div className="control">
-				<div className="touch-left" ref={leftTouchRef}></div>
-				<div className="touch-right" ref={rightTouchRef}></div>
+			<div className="absolute full inset-0 flex-bc" style={{ zIndex: 0 }}>
+				<div className="h-full opacity-20 w-1/2" ref={leftTouchRef}></div>
+				<div className="h-full opacity-20 w-1/2" ref={rightTouchRef}></div>
 			</div>
-		</Wrapper>
+		</div>
 	);
 };
-
-const Wrapper = Styled.div(`
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
-    z-index: -1;
-    height: 100%;
-
-    .control {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 0;
-
-        div {
-            height: 100%;
-            opacity: 0.2;
-            width: 50%;
-        }
-        
-    }
-`);
 
 export default Canvas;
