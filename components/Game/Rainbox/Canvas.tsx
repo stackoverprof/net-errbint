@@ -435,7 +435,6 @@ const Canvas = (props: CanvasProps) => {
 					break;
 				case 'over':
 					avoid.style.display = 'none';
-
 					ohno.style.visibility = 'visible';
 					ohno.style.opacity = '1';
 					ohno.style.transition = '0s';
@@ -444,7 +443,6 @@ const Canvas = (props: CanvasProps) => {
 						ohno.style.visibility = 'hidden';
 						ohno.style.opacity = '0';
 						ohno.style.transition = 'opacity 2s, visibility 0s 2s';
-
 					}, 1000);
 					break;
 			}
@@ -462,7 +460,7 @@ const Canvas = (props: CanvasProps) => {
 		/////////RUNNING THE GAME :: execute the game
 		let player: Player | Record<string, never> = {};
 		let food: Food | Record<string, never> = {};
-		const rains = [];
+		const rains: Rain[] = [];
 
 		let isGameOver = false;
 		let rainIndex = 0;
@@ -470,12 +468,13 @@ const Canvas = (props: CanvasProps) => {
 		
 		const IgniteGame = () => {
 			const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
-			
-			setGameStatus('initial');
-			DialogHandler('init', startingPosition);
 			player = new Player(startingPosition);
 			executeGame = true;
+
+			setGameStatus('initial');
+			DialogHandler('init', startingPosition);
 			
+			//Controllers registration
 			document.addEventListener('keydown', controlling);
 			document.addEventListener('keyup', uncontrolling);
 			right.addEventListener('touchstart', controlRight, false);
@@ -488,10 +487,10 @@ const Canvas = (props: CanvasProps) => {
 		let timeoutInitial: NodeJS.Timeout;
 		let timeoutExecute: NodeJS.Timeout;
 		
+		
+		/////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
 		let executeLoadedRun = false;
 
-
-		/////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
 		const executeLoaded = () => {
 			if (!executeLoadedRun) {
 				executeLoadedRun = true;
@@ -580,7 +579,7 @@ const Canvas = (props: CanvasProps) => {
 
 	};
 
-	useEffect(GameScript, []); /////////END USE-EFFECT  
+	useEffect(GameScript, []); /////////HOOK THE SCRIPT TO USE-EFFECT  
 
 
 	return (

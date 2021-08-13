@@ -38,7 +38,7 @@ export class RainType {
 	Width: number;
 	Velocity: number;
 	Index: number;
-	Position: { X: any; Y: number; };
+	Position: { X: number; Y: number; };
 	TrailGradient: CanvasGradient;
 }
 
@@ -49,5 +49,5 @@ export class FoodType {
 	Shadow: string;
 	Blur: number;
 	distance: number;
-	PosX: any;
+	PosX: number;
 }
