@@ -51,7 +51,6 @@ const Canvas = (props: CanvasProps) => {
 		window.addEventListener('resize', reportWindowSize);
 
 
-		/////////GAMESCRIPT STARTS HERE
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
 		class Player extends PlayerType {
 			constructor (posX: number) {
@@ -156,7 +155,7 @@ const Canvas = (props: CanvasProps) => {
 		}
 
 
-		////////THE RAIN OBJECT
+		/////////THE RAIN OBJECT
 		const RainConfig = {
 			colortrail0: 'rgba(220,220,220,1)',
 			colortrail1: 'rgba(220,220,220,0)',
@@ -457,7 +456,7 @@ const Canvas = (props: CanvasProps) => {
 		const siderinput = sideRef.current;
 
 
-		/////////RUNNING THE GAME :: execute the game
+		/////////RUNNING THE GAME :: Execute the game
 		let player: Player | Record<string, never> = {};
 		let food: Food | Record<string, never> = {};
 		const rains: Rain[] = [];
@@ -483,13 +482,12 @@ const Canvas = (props: CanvasProps) => {
 			left.addEventListener('touchend', uncontrolLeft, false);
 		};
 		
-		let timeoutIntro: NodeJS.Timeout;
-		let timeoutInitial: NodeJS.Timeout;
-		let timeoutExecute: NodeJS.Timeout;
-		
 		
 		/////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
 		let executeLoadedRun = false;
+		let timeoutIntro: NodeJS.Timeout;
+		let timeoutInitial: NodeJS.Timeout;
+		let timeoutExecute: NodeJS.Timeout;
 
 		const executeLoaded = () => {
 			if (!executeLoadedRun) {
