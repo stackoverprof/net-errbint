@@ -515,22 +515,24 @@ const Canvas = (props: CanvasProps) => {
 					if (player.TimeEnd != 'initial') return player.TimeSpan; 
 					else return new Date().getTime() - player.TimeStart;
 				};
-
+				
 				setScore({
 					food: player.EatCount,
 					time: parseInt(((isAttempted ? calcTiming() : 0) / 10).toFixed(0))
 				});
-
+				
 				//Reseting canvas
 				ctx.clearRect(0, 0, screenWidth, screenHeight);
-
+				
 				//Then, redrawing objects
 				if (!isGameOver && isAttempted) food.Update();
 				for (const rain of rains) rain.Update();
 				player.Update();
 			}
 		}, 10);
+		
 
+		/////////RAINFALL GENERATOR
 		let GenerateRainTimeout: NodeJS.Timeout;
 		
 		const GenerateRain = () => {
@@ -574,8 +576,8 @@ const Canvas = (props: CanvasProps) => {
 
 			_isMounted = false;
 		};
-
 	};
+
 
 	/////////HOOK THE SCRIPT TO USE-EFFECT  
 	useEffect(GameScript, []); 
