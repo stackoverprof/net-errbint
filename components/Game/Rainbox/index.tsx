@@ -167,7 +167,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 				<p className="orange">#{checkRank()}</p>
 			</div>
 
-			<div className="absolute inset-0 final-score full">
+			<div className="absolute inset-0 final-score full pointer-events-none">
 				{
 					gameStatus == 'over' ?
 						<>
@@ -185,7 +185,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 				}
 			</div>
 
-			<div className="absolute inset-0 dialog-cont full">
+			<div className="absolute inset-0 dialog-cont full pointer-events-none">
 				<div className="dialog-avoid" ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
 				<div className="dialog-ohno" ref={dialogOhnoRef}>OH NO!</div>
 			</div>
