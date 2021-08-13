@@ -18,9 +18,9 @@ const Canvas = (props: CanvasProps) => {
 		dialogOhnoRef
 	} = props;
 	
-	const rightTouchRef = useRef();
-	const leftTouchRef = useRef();
-	const canvasRef = useRef();
+	const rightTouchRef = useRef(null);
+	const leftTouchRef = useRef(null);
+	const canvasRef = useRef(null);
 
 	const GameScript = () => {
 		let _isMounted = true;

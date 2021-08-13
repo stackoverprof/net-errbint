@@ -20,13 +20,13 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 	const [UserData, setUserData] = useState({});
 	const [nickname, setNickname] = useState('');
 	const screen = useResize().width;
-	const dialogAvoidRef = useRef();
-	const dialogOhnoRef = useRef();
-	const newGameBtnRef = useRef();
-	const sideRef = useRef();
-	const briRef = useRef();
-	const etRef = useRef();
-	const nrRef = useRef();
+	const dialogAvoidRef = useRef(null);
+	const dialogOhnoRef = useRef(null);
+	const newGameBtnRef = useRef(null);
+	const sideRef = useRef(null);
+	const briRef = useRef(null);
+	const etRef = useRef(null);
+	const nrRef = useRef(null);
 
 	const formatValue = (value) => `${(Number(value) / 1000).toFixed(2)}`;
 
