@@ -10,7 +10,7 @@ export class PlayerType {
 	shine: number;
 	EatCount: number;
 	TimeStart: number;
-	TimeEnd: string;
+	TimeEnd: number | 'initial';
 	TimeSpan: number;
 	Position: { X: number; Y: number; };
 }

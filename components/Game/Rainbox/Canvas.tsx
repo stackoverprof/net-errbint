@@ -1,7 +1,39 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, MutableRefObject } from 'react';
 import { PlayerType, RainType, FoodType } from './Canvas.types';
 
-const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, sideRef, briRef, nrRef, etRef }: any) => {
+interface CanvasProps  {
+	isInitialLoad: boolean;
+	skipIntro: boolean;
+	setanimateValue(arg0: number): void;
+	setprocessMessage(arg0: string): void;
+	setgameStatus(arg0: string): void;
+	setscore(arg0: { food: number, time: number }): void;
+	sideRef: MutableRefObject<HTMLElement>;
+	briRef: MutableRefObject<HTMLElement>;
+	nrRef: MutableRefObject<HTMLElement>;
+	etRef: MutableRefObject<HTMLElement>;
+	newGameBtnRef: MutableRefObject<HTMLElement>;
+	dialogAvoidRef: MutableRefObject<HTMLElement>;
+	dialogOhnoRef: MutableRefObject<HTMLElement>;
+}
+
+const Canvas = (props: CanvasProps) => {
+	const {
+		isInitialLoad,
+		skipIntro,
+		setanimateValue,
+		setprocessMessage,
+		setgameStatus,
+		setscore,
+		sideRef,
+		briRef,
+		nrRef,
+		etRef,
+		newGameBtnRef,
+		dialogAvoidRef,
+		dialogOhnoRef
+	} = props;
+	
 	const rightTouchRef = useRef();
 	const leftTouchRef = useRef();
 	const canvasRef = useRef();
@@ -198,13 +230,6 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 
 		/////////THE FOOD OBJECT
 		class Food extends FoodType {
-			Width: number;
-			Height: number;
-			Color: string;
-			Shadow: string;
-			Blur: number;
-			distance: number;
-			PosX: any;
 			constructor () {
 				super();
 
@@ -424,12 +449,12 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 					avoid.style.display = 'none';
 
 					ohno.style.visibility = 'visible';
-					ohno.style.opacity = 1;
+					ohno.style.opacity = '1';
 					ohno.style.transition = '0s';
 
 					setTimeout(() => {
 						ohno.style.visibility = 'hidden';
-						ohno.style.opacity = 0;
+						ohno.style.opacity = '0';
 						ohno.style.transition = 'opacity 2s, visibility 0s 2s';
 
 					}, 1000);
@@ -446,11 +471,11 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 
 		/////////RUNNING THE GAME :: execution delayed within 5.5 seconds (for intro)
 		const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
-		let player: Player | any = {};
+		let player: Player | Record<string, never> = {};
+		let food: Food | Record<string, never> = {};
 		let isGameOver = false;
 		let shapeIndex = 0;
-		const shapes = {};
-		let food: Food | any = {};
+		const shapes = [];
 		let executeGame = false;
 		const delay = 1000;
 
@@ -499,7 +524,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 
 				setscore({
 					food: player.EatCount,
-					time: ((isAttempted ? calcTiming() : 0) / 10).toFixed(0)
+					time: parseInt(((isAttempted ? calcTiming() : 0) / 10).toFixed(0))
 				});
 
 				//Reseting canvas
@@ -507,7 +532,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 
 				//Then, redrawing objects
 				if (!isGameOver && isAttempted) food.Update();
-				for (const i in shapes) shapes[i].Update();
+				for (const shape of shapes) shape.Update();
 				player.Update();
 			}
 		}, 10);
