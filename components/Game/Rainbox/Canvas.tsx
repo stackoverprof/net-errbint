@@ -577,8 +577,8 @@ const Canvas = (props: CanvasProps) => {
 
 	};
 
-	useEffect(GameScript, []); /////////HOOK THE SCRIPT TO USE-EFFECT  
-
+	/////////HOOK THE SCRIPT TO USE-EFFECT  
+	useEffect(GameScript, []); 
 
 	return (
 		<div className="flex-sc col full" style={{ zIndex: -1 }}>
