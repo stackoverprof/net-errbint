@@ -1,13 +1,15 @@
 import React from 'react';
 import MainLayout from '@components/_layouts/MainLayout';
 import Link from '@components/_shared/Link';
+import Rainbox from '@components/Game/Rainbox';
  
 const Index = (): JSX.Element => {
 
 	return (
 		<MainLayout title="" className="flex-sc col" transition="fade">
-			<h1 className="font-bold text-3xl font-bahn">Hello World</h1>
-			<Link href="/about" className="px-4 py-2 text-base bg-primary" stroked>about</Link>
+			<div className="relative w-full h-screen bg-red-400">
+				<Rainbox isInitialLoad={true} skipIntro={false}/>
+			</div>
 		</MainLayout>
 	);
 };

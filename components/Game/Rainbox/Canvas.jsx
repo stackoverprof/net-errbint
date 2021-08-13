@@ -552,7 +552,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 	);
 };
 
-const Wrapper = Styled.div(() => `
+const Wrapper = Styled.div(`
     display: flex;
     justify-content: start;
     align-items: center;
@@ -560,7 +560,7 @@ const Wrapper = Styled.div(() => `
     z-index: -1;
     height: 100%;
 
-    .control{
+    .control {
         position: absolute;
         width: 100%;
         height: 100%;
@@ -572,7 +572,7 @@ const Wrapper = Styled.div(() => `
         align-items: center;
         z-index: 0;
 
-        div{
+        div {
             height: 100%;
             opacity: 0.2;
             width: 50%;

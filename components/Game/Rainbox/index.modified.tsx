@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AnimatedNumber from 'animated-number-react';
 import SideLeaderBoard from './SideLeaderBoard';
-import { DB } from '../../../core/services/firebase';
+import { DB } from '@core/services/firebase';
 import useResize from 'use-resizing';
-import Styled from '@emotion/styled';
 import Canvas from './Canvas';
 
 interface Props {
@@ -105,25 +104,25 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 	}, []);
 
 	return (
-		<Wrapper gameStatus={gameStatus} screen={screen} skipIntro={skipIntro}>
-			<div className="container-canvas" id="game-container">
-				<div className="canvas">
-					<div className="fixed inset-0 h1-cont zi-dimm full">
-						<div className="h1-subcont">
-							<div className="h1-dimm supertitle"></div>
-							<div className="subtitle">
-								<p>
-									{
-										gameStatus == 'over' ? <span>&emsp;</span> :
-											gameStatus != 'running' ? <span>&emsp;&emsp;</span> : 'A CREATIVE DEVELOPER'
-									}
+		<div className="absolute inset-0 fullscreen" style={{zIndex: 0}}>
+			<div className="absolute inset-0 flex-ec col fullscreen" style={{zIndex: -6}} id="game-container">
+				<div className="absolute top-0 flex-sc col w-full bg-top bg-cover no-repeat" style={{zIndex: -5, height: 'calc(100% - 60px)', background: 'url("/img/bg3d.webp")'}}>
+					<div className="fixed inset-0 flex-cc pb-64 pointer-events-none full" style={{zIndex: -3}}>
+						<div className="absolute flex-cc col w-full">
+							<div className="bg-center bg-contain no-repeat" style={{background: 'url("/img/title/h1-dimm.svg")', maxWidth: 675, width: '90%', minWidth: 340, height: 200}}></div>
+							<div className="relative flex-cc" style={{zIndex: -4, top: screen > 500 ? '-12px' : '-48px', transition: '1s 2s', opacity: gameStatus == 'intro' ? 0 : 1, minHeight: '38px'}}>
+								<p className="">
+									{{
+										'over': <span>&emsp;</span>,
+										'running': <span>&emsp;&emsp;</span>
+									}[gameStatus] || 'A CREATIVE DEVELOPER' }
 								</p>
 							</div>
 						</div>
 					</div>
-					<div ref={nrRef} className="glimpse nr"></div>
-					<div ref={etRef} className="glimpse et"></div>
-					<div ref={briRef} className="glimpse bri"></div>
+					<div ref={nrRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full no-repeat" style={{background: 'background-image: url("/img/glimpse/nr.webp")'}}></div>
+					<div ref={etRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full no-repeat" style={{background: 'background-image: url("/img/glimpse/et.webp")'}}></div>
+					<div ref={briRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full no-repeat" style={{background: 'background-image: url("/img/glimpse/bri.webp")'}}></div>
 					<Canvas setgameStatus={setgameStatus}
 						skipIntro={skipIntro}
 						newGameBtnRef={newGameBtnRef}
@@ -137,55 +136,71 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 						briRef={briRef}
 						etRef={etRef}
 						nrRef={nrRef} />
-					<div className="fixed inset-0 h1-cont zi-orange full">
-						<div className="h1-subcont">
-							<div className="h1 supertitle"></div>
-							<div className={`subtitle hideable ${gameStatus == 'running' ? 'hide' : ''}`}>
+					<div className="fixed inset-0 z-0 flex-cc pb-64 pointer-events-none full">
+						<div className="absolute flex-cc col w-full">
+							<div 
+								className={'transition-all bg-center bg-contain no-repeat'} 
+								style={{
+									background: 'url("/img/title/h1.svg")', 
+									maxWidth: 675, 
+									width: '90%',
+									minWidth: 340, 
+									height: 200, 
+									transitionDuration: gameStatus === 'sub.intro' ? '2.5s' : '1s', 
+									opacity: {
+										'intro': 0,
+										'sub.intro': 1,
+										'initial': 1,
+										'over': 1,
+										'running': 0
+									}[gameStatus] || 1}}
+							>										
+							</div>
+							<div className={`flex-cc relative ${gameStatus == 'running' ? 'opacity-0' : ''}`} style={{zIndex: -4, top: screen > 500 ? '-12px' : '-48px', transition: gameStatus === 'sub.intro' ? 'all 1s 2s, opacity 0s' : '1s 2s', opacity: gameStatus == 'intro' ? 0 : 1, minHeight: '38px'}}>
 								<p>
-									{
-										gameStatus == 'over' ? 'GAME OVER' :
-											gameStatus == 'recorded' ? 'SCORE SAVED' : 'A CREATIVE DEVELOPER'
-									}
+									{{
+										'over': 'GAME OVER',
+										'recorded': 'SCORE SAVED'
+									}[gameStatus] || 'A CREATIVE DEVELOPER' }
 								</p>
-								<button className="newgame" ref={newGameBtnRef}>PLAY AGAIN</button>
+								<button className="ml-3 pointer-events-auto" ref={newGameBtnRef} style={{display: gameStatus == 'over' || gameStatus == 'recorded' ? 'unset' : 'none', fontSize: screen < 500 ? 16 : ''}}>PLAY AGAIN</button>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className="nav-filler"></div>
+				<div className="w-full bg-black" style={{height: 60}}></div>
 			</div>
 
 
-			<p className="live-score">
-				<span>{score.food}</span>&nbsp;&nbsp;{score.time == 0 ? 0 : score.time / 100}
+			<p className="absolute text-2xl top-4 left-5 font-bahn" style={{transition: '0.25s', opacity: gameStatus == 'initial' ? 0.75 : gameStatus == 'running' ? 1 : 0}}>
+				<span className="text-accent">{score.food}</span>&nbsp;&nbsp;{score.time == 0 ? 0 : score.time / 100}
 			</p>
-			<p className="game-status">
+			<p className="absolute text-xl right-5 font-bahn" style={{zIndex: 1, top: 18, transition: '0.25s', opacity: gameStatus == 'initial' ? 0.25 : gameStatus == 'running' ? 0.50 : gameStatus == 'over' ? 0.50 : 0.15}}>
 				: : {gameStatus}
 			</p>
-			<div className="live-position">
+			<div className="absolute flex-ce col text-gray-400 right-5" style={{top: 54,transition: '0.25s', opacity: gameStatus == 'running' ? 1 : 0}}>
 				<p>CURRENT POSITION</p>
-				<p className="orange">#{checkRank()}</p>
+				<p className="text-accent">#{checkRank()}</p>
 			</div>
 
-			<div className="fixed inset-0 final-score full">
-				{
-					gameStatus == 'over' ?
+			<div className={`fixed inset-0 pointer-events-none ${screen < 600 && gameStatus != 'over' ? 'flex-ee' : 'flex-ce'} full font-bahn text-base`} style={{paddingBottom: 78}}>
+				{{
+					'over' : (
 						<>
-							<p className="score"><span className="orange">Food : {score.food}</span>&nbsp;&nbsp;Time :&nbsp;</p>
+							<p className="score"><span className="text-accent">Food : {score.food}</span>&nbsp;&nbsp;Time :&nbsp;</p>
 							<p className="fixed-size"><AnimatedNumber value={animateValue} formatValue={formatValue} duration={1000} easing={'linear'} /></p>
 						</>
-						:
-						gameStatus == 'initial' ?
-							<p className={`instruction ${screen < 600 && 'instruction-mobile'}`}>Touch the screen <span className="light-gray">/</span> use arrow key to move</p>
-							:
-							gameStatus == 'recorded' ?
-								<p className={`instruction ${screen < 600 && 'instruction-mobile'}`}>Press ENTER <span className="light-gray">/</span> click the button to play again</p>
-								:
-								<p></p>
-				}
+					),
+					'initial': (
+						<p className={`instruction ${screen < 600 && 'instruction-mobile'}`}>Touch the screen <span className="light-gray">/</span> use arrow key to move</p>
+					),
+					'recorded': (
+						<p className={`instruction ${screen < 600 && 'instruction-mobile'}`}>Press ENTER <span className="light-gray">/</span> click the button to play again</p>
+					),
+				}[gameStatus] || <p></p> }
 			</div>
 
-			<div className="fixed inset-0 dialog-cont full">
+			<div className="fixed inset-0 pointer-events-none dialog-cont full">
 				<div className="dialog-avoid" ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
 				<div className="dialog-ohno" ref={dialogOhnoRef}>OH NO!</div>
 			</div>
@@ -203,11 +218,11 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 				score={score}
 			/>
 
-		</Wrapper>
+		</div>
 	);
 };
 
-const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
+const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }) => `
     position: absolute;
     width: 100%;
     height: 100%;
@@ -467,14 +482,17 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
         z-index: 1;
     }
 
-    .h1-cont{
+    .flex-cc pb-64{
+		flex-cc 
         display: flex;
         justify-content: center;
         align-items: center;
         padding-bottom: 252px;
     }    
 
-    .h1-subcont{
+    .absolute flex-cc col w-full{
+		
+
         position: absolute; 
         display: flex;
         justify-content: center;
@@ -482,27 +500,23 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
         flex-direction: column;
         width: 100%;      
 
-        .supertitle{
+        .bg-contain bg-center no-repeat{
+			bg-contain bg-center no-repeat 
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
-            max-width: 675px;
-            width: 90%;
-            min-width: 340px;
-            height: 200px;
+            max-width: 675px; width: 90%; min-width: 340px; height: 200px;
         }
 
-        .subtitle{
+        .flex-cc relative{
+			flex-cc relative
+            
+
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: -4;
             position: relative;
-            top: ${screen > 500 ? '-12px' : '-48px'};
-            transition: 1s 2s;
-            opacity: ${gameStatus == 'intro' ? 0 : 1};
 
-            min-height: 38px;
 
             p{
                 padding-top: 4px;
@@ -516,41 +530,18 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
             
         }
 
-        .h1{
-            background-image: url('/img/title/h1.svg');
-            transition: ${gameStatus == 'sub.intro' ? '2.5s' : '1s'};
-            opacity: ${gameStatus == 'intro' ? 0 :
-		gameStatus == 'sub.intro' ? 1 :
-			gameStatus == 'initial' ? 1 :
-				gameStatus == 'over' ? 1 :
-					gameStatus == 'running' ? 0 : 1};
-        }
+        
         .h1-dimm{
-            background-image: url('/img/title/h1-dimm.svg');
+            
         }
     }
-
-    .container-canvas{
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        flex-direction: column;
-        z-index: -6;
-    }        
+ 
 
     div.canvas{
-        position: absolute;
-        top: 0;
-        width: 100%;
+		absolute top-0 w-full bg-cover bg-top no-repeat flex-sc col
         height: calc(100% - 60px);
-
         background: url('/img/bg3d.webp');
+
         background-size: cover;
         background-position: top;
         background-repeat: no-repeat;
@@ -571,6 +562,7 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
     }
     
     .zi-orange{
+		
         z-index: 0;
         pointer-events: none;
 
@@ -583,6 +575,10 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
         }
     }
     .glimpse{
+		
+        z-index: -4;
+        opacity: ${skipIntro ? 0 : 1};
+
         position: absolute;
         top: 0;
         width: 100%;
@@ -591,13 +587,11 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
         background-size: cover;
         background-position: top;
         background-repeat: no-repeat;
-        z-index: -4;
-        opacity: ${skipIntro ? 0 : 1};
         transition: 0.2s;
     }
 
     .bri{
-        background-image: url('/img/glimpse/bri.webp');
+        background-image: url("/img/glimpse/bri.webp");
     }
     .et{
         background-image: url('/img/glimpse/et.webp');
@@ -612,8 +606,8 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
         background: black;
     }
 
-    button.newgame{
-        display: ${gameStatus == 'over' || gameStatus == 'recorded' ? 'unset' : 'none'};
+    button.pointer-events-auto ml-3{
+        display: ${};
         pointer-events: all;
         margin-left: 12px;
         ${screen < 500 && 'font-size: 16px;'}
