@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
     
 const Loader = () => {
-	const [loaded, setloaded] = useState(false);
+	const [loaded, setLoaded] = useState(false);
 
 	const remover = () => {
-		setloaded(true);
+		setLoaded(true);
 		console.log('fallback triggered');
 	};
 
 	const handleOnLoad = () => {
-		setloaded(true);
+		setLoaded(true);
 		console.log('onload triggered');
 	};
 

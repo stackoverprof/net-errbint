@@ -12,13 +12,13 @@ interface Props {
 }
 
 const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
-	const [processMessage, setprocessMessage] = useState('');
-	const [score, setscore] = useState({ food: 0, time: 0 });
-	const [gameStatus, setgameStatus] = useState('intro');
-	const [animateValue, setanimateValue] = useState(0);
+	const [processMessage, setProcessMessage] = useState('');
+	const [score, setScore] = useState({ food: 0, time: 0 });
+	const [gameStatus, setGameStatus] = useState('intro');
+	const [animateValue, setAnimateValue] = useState(0);
 	const [Leaderboard, setLeaderboard] = useState([]);
 	const [UserData, setUserData] = useState({});
-	const [nickname, setnickname] = useState('');
+	const [nickname, setNickname] = useState('');
 	const screen = useResize().width;
 	const dialogAvoidRef = useRef();
 	const dialogOhnoRef = useRef();
@@ -45,7 +45,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 		e.preventDefault();
 
 		let isUpdate = false;
-		setprocessMessage('');
+		setProcessMessage('');
 
 		const isScoreBigger = (userData) => {
 			if (!userData.exists) return true;
@@ -56,7 +56,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 		};
 
 		if (gameStatus == 'over' && /\S/.test(nickname) && nickname.match(/[0-9a-z]/i)) {
-			setprocessMessage('SAVING...');
+			setProcessMessage('SAVING...');
 
 			const userData = await DB.collection('Leaderboard').doc(nickname.trim()).get();
 
@@ -69,18 +69,18 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 					},
 					timestamp: new Date().toDateString()
 				}).then(() => {
-					setprocessMessage(isUpdate ? 'UPDATED!' : 'ALL OK!');
-					setscore({ food: 0, time: 0 });
-					setgameStatus('recorded');
+					setProcessMessage(isUpdate ? 'UPDATED!' : 'ALL OK!');
+					setScore({ food: 0, time: 0 });
+					setGameStatus('recorded');
 				}).catch(() => {
-					setprocessMessage('ERROR!');
+					setProcessMessage('ERROR!');
 				});
 			} else {
-				setprocessMessage(' ');
+				setProcessMessage(' ');
 				setUserData(userData.data());
 			}
 		} else {
-			setprocessMessage('INVALID');
+			setProcessMessage('INVALID');
 		}
 	};
 
@@ -124,15 +124,15 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 					<div ref={nrRef} className="glimpse nr"></div>
 					<div ref={etRef} className="glimpse et"></div>
 					<div ref={briRef} className="glimpse bri"></div>
-					<Canvas setgameStatus={setgameStatus}
+					<Canvas setGameStatus={setGameStatus}
 						skipIntro={skipIntro}
 						newGameBtnRef={newGameBtnRef}
-						setanimateValue={setanimateValue}
-						setprocessMessage={setprocessMessage}
+						setAnimateValue={setAnimateValue}
+						setProcessMessage={setProcessMessage}
 						dialogAvoidRef={dialogAvoidRef}
 						dialogOhnoRef={dialogOhnoRef}
 						isInitialLoad={isInitialLoad}
-						setscore={setscore}
+						setScore={setScore}
 						sideRef={sideRef}
 						briRef={briRef}
 						etRef={etRef}
@@ -194,7 +194,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 				processMessage={processMessage}
 				handleSubmit={handleSubmit}
 				Leaderboard={Leaderboard}
-				setnickname={setnickname}
+				setNickname={setNickname}
 				gameStatus={gameStatus}
 				checkRank={checkRank}
 				UserData={UserData}

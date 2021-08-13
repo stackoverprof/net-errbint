@@ -2,7 +2,7 @@ import React from 'react';
 import Styled from '@emotion/styled';
 import useResize from 'use-resizing';
 
-const SideLeaderBoard = ({ Leaderboard, UserData, checkRank, processMessage, score, gameStatus, sideRef, nickname, setnickname, handleSubmit }: any) => {
+const SideLeaderBoard = ({ Leaderboard, UserData, checkRank, processMessage, score, gameStatus, sideRef, nickname, setNickname, handleSubmit }: any) => {
 	const screen = useResize().width;
 
 	return (
@@ -72,7 +72,7 @@ const SideLeaderBoard = ({ Leaderboard, UserData, checkRank, processMessage, sco
 					<div className="lower">
 						<form onSubmit={handleSubmit}>
 							<div className="input">
-								<input type="text" onChange={(e) => setnickname(e.target.value.toUpperCase())} value={nickname} ref={sideRef} placeholder="Enter a Nickname" maxLength={10} />
+								<input type="text" onChange={(e) => setNickname(e.target.value.toUpperCase())} value={nickname} ref={sideRef} placeholder="Enter a Nickname" maxLength={10} />
 								<p><span className="orange">{score.food}</span>&ensp;{parseInt(score.time) / 100}</p>
 							</div>
 							<div>

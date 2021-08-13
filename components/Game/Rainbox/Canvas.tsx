@@ -5,10 +5,10 @@ const Canvas = (props: CanvasProps) => {
 	const {
 		isInitialLoad,
 		skipIntro,
-		setanimateValue,
-		setprocessMessage,
-		setgameStatus,
-		setscore,
+		setAnimateValue,
+		setProcessMessage,
+		setGameStatus,
+		setScore,
 		sideRef,
 		briRef,
 		nrRef,
@@ -50,7 +50,6 @@ const Canvas = (props: CanvasProps) => {
 
 
 		/////////GAMESCRIPT STARTS HERE
-
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
 		class Player extends PlayerType {
 			constructor (posX: number) {
@@ -63,7 +62,6 @@ const Canvas = (props: CanvasProps) => {
 				this.Color = `rgb(255, ${this.RGB.g}, 20)`;
 				this.Blur = 25;
 				this.Velocity = 0;
-				
 				this.shine = 0;
 				
 				//Scoring things
@@ -257,12 +255,12 @@ const Canvas = (props: CanvasProps) => {
 				player.Shadow = 'black';
 				player.Color = 'black';
 
-				setgameStatus('over');
+				setGameStatus('over');
 				isGameOver = true;
 				food = {};
 
 				DialogHandler('over');
-				setanimateValue(player.TimeSpan);
+				setAnimateValue(player.TimeSpan);
 			}
 		};
 
@@ -271,15 +269,15 @@ const Canvas = (props: CanvasProps) => {
 		const newGameBtn = newGameBtnRef.current;
 
 		const NewGame = () => {
-			setgameStatus('running');
-			setprocessMessage('');
+			setGameStatus('running');
+			setProcessMessage('');
 			GlimpseHandler('regular');
 			isGameOver = false;
 
 			player = new Player(player.Position.X);
 			food = new Food();
 
-			setanimateValue(0);
+			setAnimateValue(0);
 		};
 		newGameBtn.addEventListener('click', NewGame);
 
@@ -290,7 +288,7 @@ const Canvas = (props: CanvasProps) => {
 			if (!isAttempted) {
 
 				isAttempted = true;
-				setgameStatus('running');
+				setGameStatus('running');
 
 				RainConfig.colorbox = '#888888';
 				RainConfig.colortrail0 = 'rgba(200,200,200,1)';
@@ -412,7 +410,7 @@ const Canvas = (props: CanvasProps) => {
 				setTimeout(() => animate(nr), 150);
 				setTimeout(() => animate(bri), 400);
 			} else if (score == 'intro') {
-				setgameStatus('sub.intro');
+				setGameStatus('sub.intro');
 				animateIntro(et);
 				setTimeout(() => animateIntro(bri), 500);
 				setTimeout(() => animateIntro(nr), 1000);
@@ -464,7 +462,7 @@ const Canvas = (props: CanvasProps) => {
 		const delay = 1000;
 
 		const IgniteGame = () => {
-			setgameStatus('initial');
+			setGameStatus('initial');
 			DialogHandler('init', startingPosition);
 			player = new Player(startingPosition);
 			executeGame = true;
@@ -505,7 +503,7 @@ const Canvas = (props: CanvasProps) => {
 						player.TimeSpan : new Date().getTime() - player.TimeStart;
 				};
 
-				setscore({
+				setScore({
 					food: player.EatCount,
 					time: parseInt(((isAttempted ? calcTiming() : 0) / 10).toFixed(0))
 				});
