@@ -1,16 +1,17 @@
 import React, { useRef, useEffect } from 'react';
+import { PlayerType, RainType, FoodType } from './Canvas.types';
 
 const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, setgameStatus, setscore, newGameBtnRef, dialogAvoidRef, dialogOhnoRef, sideRef, briRef, nrRef, etRef }: any) => {
 	const rightTouchRef = useRef();
 	const leftTouchRef = useRef();
 	const canvasRef = useRef();
 
-	useEffect(() => {
+	const GameScript = () => {
 		let _isMounted = true;
 
 		/////////CANVAS INITIALIZATION 
 		const canvas: HTMLCanvasElement = canvasRef.current;
-		const ctx = canvas.getContext('2d');
+		const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 		const navbarOffset = 60;
 
 		let screenHeight = window.innerHeight;
@@ -27,9 +28,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 			canvas.width = screenWidth;
 			canvas.height = screenHeight - navbarOffset;
 
-			if (executeGame) {
-				player.Position.Y = screenHeight - player.Height - navbarOffset;
-			}
+			if (executeGame) player.Position.Y = screenHeight - player.Height - navbarOffset;
 		};
 		window.addEventListener('resize', reportWindowSize);
 
@@ -37,23 +36,6 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 		/////////GAMESCRIPT STARTS HERE
 
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
-		class PlayerType {
-			Height: number;
-			Width: number;
-			Shadow: string;
-			RGB: { r: number; g: number; b: number; };
-			RGBChange: { r: number; g: number; b: number; };
-			Color: string;
-			Blur: number;
-			Velocity: number;
-			shine: number;
-			EatCount: number;
-			TimeStart: number;
-			TimeEnd: string;
-			TimeSpan: number;
-			Position: { X: number; Y: number; };
-		}
-
 		class Player extends PlayerType {
 			constructor (posX: number) {
 				super();
@@ -80,7 +62,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				};
 			}
 
-			checkCollisions = () => {
+			CheckCollisions = () => {
 				for (const i in shapes) {
 					if (
 						this.Position.X <= shapes[i].Position.X + shapes[i].Width &&
@@ -94,7 +76,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				}
 			};
 
-			checkEaten = () => {
+			CheckEaten = () => {
 				if (player.Position.X <= food.PosX + food.Width && player.Position.X + player.Width >= food.PosX) {
 					this.EatCount++;
 					GlimpseHandler(this.EatCount);
@@ -111,7 +93,8 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 						this.Position.X - (this.Width * (1 + this.shine) - this.Width) / 2,
 						this.Position.Y - (this.Width * (1 + this.shine) - this.Width) / 2,
 						this.Width * (1 + this.shine),
-						this.Height * (1 + this.shine));
+						this.Height * (1 + this.shine)
+					);
 					ctx.fill();
 
 					this.shine += 0.025;
@@ -119,7 +102,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				}
 			};
 
-			dialogAttachment = () => {
+			DialogAttachment = () => {
 				avoid.style.left = `${this.Position.X + 34}px`;
 				ohno.style.left = `${this.Position.X + 34}px`;
 			};
@@ -139,7 +122,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 			};
 
 			Move = () => {
-				if (!(this.Position.X + this.Velocity < 0 || this.Position.X + this.Velocity > screenWidth - 50)) {
+				if (!(this.Position.X + this.Velocity < 0) && !(this.Position.X + this.Velocity > screenWidth - 50)) {
 					this.Position.X += this.Velocity;
 				} else if (this.Position.X > screenWidth - this.Width) {
 					this.Position.X = screenWidth - (this.Width + 2);
@@ -147,11 +130,10 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 			};
 
 			Update = () => {
-
 				this.Move();
-				this.dialogAttachment();
-				this.checkCollisions();
-				this.checkEaten();
+				this.DialogAttachment();
+				this.CheckCollisions();
+				this.CheckEaten();
 				this.Draw();
 				this.DrawShine();
 			};
@@ -167,15 +149,6 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 			base: 5,
 			size: 30
 		};
-
-		class RainType {
-			Height: number;
-			Width: number;
-			Velocity: number;
-			Index: number;
-			Position: { X: any; Y: number; };
-			TrailGradient: CanvasGradient;
-		}
 
 		class Rain extends RainType {
 			constructor (posX) {
@@ -224,16 +197,6 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 
 
 		/////////THE FOOD OBJECT
-		class FoodType {	
-			Width: number;
-			Height: number;
-			Color: string;
-			Shadow: string;
-			Blur: number;
-			distance: number;
-			PosX: any;
-		}
-		
 		class Food extends FoodType {
 			Width: number;
 			Height: number;
@@ -591,7 +554,9 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 			_isMounted = false;
 		};
 
-	}, []); /////////END USE-EFFECT  
+	};
+
+	useEffect(GameScript, []); /////////END USE-EFFECT  
 
 
 	return (
