@@ -95,12 +95,12 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			CheckCollisions = () => {
-				for (const i in shapes) {
+				for (const shape of shapes) {
 					if (
-						this.Position.X <= shapes[i].Position.X + shapes[i].Width &&
-						this.Position.X + this.Width >= shapes[i].Position.X &&
-						this.Position.Y + this.Height >= shapes[i].Position.Y &&
-						this.Position.Y <= shapes[i].Position.Y + shapes[i].Height
+						this.Position.X <= shape.Position.X + shape.Width &&
+						this.Position.X + this.Width >= shape.Position.X &&
+						this.Position.Y + this.Height >= shape.Position.Y &&
+						this.Position.Y <= shape.Position.Y + shape.Height
 					) {
 						GameOver();
 						this.shine = 0.025;
@@ -515,7 +515,6 @@ const Canvas = (props: CanvasProps) => {
 
 		/////////SCREEN UPDATER
 		const Updater = setInterval(() => {
-			// canvas.style.backdropFilter =  player.EatCount % 5 == 0 && player.EatCount > 0? 'invert(100%) blur(4px)' : ''
 			if (executeGame) {
 				const calcTiming = () => {
 					return player.TimeEnd != 'initial' ?
