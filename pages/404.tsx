@@ -1,5 +1,5 @@
+import Link from '@components/_shared/Link';
 import React from 'react';
-import Link from 'next/link';
 
 const error404 = (): JSX.Element => {
 
