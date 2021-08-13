@@ -453,7 +453,7 @@ const Canvas = (props: CanvasProps) => {
 		const handleInactive = () => tabInactive = document.hidden ? true : false;
 		document.addEventListener('visibilitychange', handleInactive);
 
-		const siderinput = sideRef.current;
+		const siderinput: HTMLInputElement = sideRef.current;
 
 
 		/////////RUNNING THE GAME :: Execute the game
