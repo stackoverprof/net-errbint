@@ -168,19 +168,31 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 			size: 30
 		};
 
-		function Rain(posX) {
-			this.Height = RainConfig.size;
-			this.Width = RainConfig.size;
-			this.Velocity = Math.random() * RainConfig.additionalSpeed + RainConfig.base;
-			this.Index = shapeIndex;
-			this.Position = {
-				X: posX,
-				Y: -this.Height
-			};
+		class RainType {
+			Height: number;
+			Width: number;
+			Velocity: number;
+			Index: number;
+			Position: { X: any; Y: number; };
+			TrailGradient: CanvasGradient;
+		}
 
-			shapes[shapeIndex++] = this;
+		class Rain extends RainType {
+			constructor (posX) {
+				super();
+				this.Height = RainConfig.size;
+				this.Width = RainConfig.size;
+				this.Velocity = Math.random() * RainConfig.additionalSpeed + RainConfig.base;
+				this.Index = shapeIndex;
+				this.Position = {
+					X: posX,
+					Y: -this.Height
+				};
+				
+				shapes[shapeIndex++] = this;
+			}
 
-			this.DrawHead = () => {
+			DrawHead = () => {
 				ctx.beginPath();
 				ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
 				ctx.fillStyle = RainConfig.colorbox;
@@ -189,7 +201,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				ctx.fill();
 			};
 
-			this.DrawTrail = () => {
+			DrawTrail = () => {
 				ctx.beginPath();
 				ctx.rect(this.Position.X, this.Position.Y - 120, this.Width, this.Height * 4);
 				this.TrailGradient = ctx.createLinearGradient(screenHeight / 2, this.Position.Y, screenHeight / 2, this.Position.Y - 120);
@@ -201,12 +213,11 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 				ctx.fill();
 			};
 
-			this.Update = () => {
+			Update = () => {
 				if (this.Position.Y < screenHeight - navbarOffset + this.Height * 5) {
 					this.Position.Y += this.Velocity;
 					this.DrawHead();
 					this.DrawTrail();
-					// if(player.EatCount % 5 != 0 || player.EatCount == 0) 
 				}
 			};
 		}
@@ -224,6 +235,13 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 		}
 		
 		class Food extends FoodType {
+			Width: number;
+			Height: number;
+			Color: string;
+			Shadow: string;
+			Blur: number;
+			distance: number;
+			PosX: any;
 			constructor () {
 				super();
 
