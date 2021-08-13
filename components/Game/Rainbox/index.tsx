@@ -108,7 +108,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 		<Wrapper gameStatus={gameStatus} screen={screen} skipIntro={skipIntro}>
 			<div className="container-canvas" id="game-container">
 				<div className="canvas">
-					<div className="fixed inset-0 h1-cont zi-dimm full">
+					<div className="absolute inset-0 h1-cont zi-dimm full">
 						<div className="h1-subcont">
 							<div className="h1-dimm supertitle"></div>
 							<div className="subtitle">
@@ -137,7 +137,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 						briRef={briRef}
 						etRef={etRef}
 						nrRef={nrRef} />
-					<div className="fixed inset-0 h1-cont zi-orange full">
+					<div className="absolute inset-0 h1-cont zi-orange full">
 						<div className="h1-subcont">
 							<div className="h1 supertitle"></div>
 							<div className={`subtitle hideable ${gameStatus == 'running' ? 'hide' : ''}`}>
@@ -167,7 +167,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 				<p className="orange">#{checkRank()}</p>
 			</div>
 
-			<div className="fixed inset-0 final-score full">
+			<div className="absolute inset-0 final-score full">
 				{
 					gameStatus == 'over' ?
 						<>
@@ -185,7 +185,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 				}
 			</div>
 
-			<div className="fixed inset-0 dialog-cont full">
+			<div className="absolute inset-0 dialog-cont full">
 				<div className="dialog-avoid" ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
 				<div className="dialog-ohno" ref={dialogOhnoRef}>OH NO!</div>
 			</div>

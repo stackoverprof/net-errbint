@@ -1,13 +1,13 @@
-import React from 'react'
-import Styled from '@emotion/styled'
-import useResize from 'use-resizing'
+import React from 'react';
+import Styled from '@emotion/styled';
+import useResize from 'use-resizing';
 
 const SideLeaderBoard = ({ Leaderboard, UserData, checkRank, processMessage, score, gameStatus, sideRef, nickname, setnickname, handleSubmit }) => {
-	const screen = useResize().width
+	const screen = useResize().width;
 
 	return (
 		<Wrapper gameStatus={gameStatus} screen={screen}>
-			<div className="side-leaderboard-cont pointer-events-none fixed full inset-0">
+			<div className="side-leaderboard-cont pointer-events-none absolute full inset-0">
 
 				<div className="side-leaderboard">
 					<div className="upper">
@@ -76,7 +76,7 @@ const SideLeaderBoard = ({ Leaderboard, UserData, checkRank, processMessage, sco
 								<p><span className="orange">{score.food}</span>&ensp;{parseInt(score.time) / 100}</p>
 							</div>
 							<div>
-								<button type="submit" className={`${gameStatus == "recorded" ? 'disabled' : ''}`} disabled={gameStatus == 'recorded'}>{gameStatus != 'recorded' ? 'SAVE SCORE' : 'SCORE SAVED'}</button>
+								<button type="submit" className={`${gameStatus == 'recorded' ? 'disabled' : ''}`} disabled={gameStatus == 'recorded'}>{gameStatus != 'recorded' ? 'SAVE SCORE' : 'SCORE SAVED'}</button>
 								<p className="process">
 									{processMessage == '' ? `RANK #${checkRank()}` : processMessage}
 								</p>
@@ -90,8 +90,8 @@ const SideLeaderBoard = ({ Leaderboard, UserData, checkRank, processMessage, sco
 				</div>
 			</div>
 		</Wrapper>
-	)
-}
+	);
+};
 
 const Wrapper = Styled.div(({ gameStatus, screen }) => `
 
@@ -178,6 +178,6 @@ const Wrapper = Styled.div(({ gameStatus, screen }) => `
 
     }
     
-`)
+`);
 
-export default SideLeaderBoard
+export default SideLeaderBoard;

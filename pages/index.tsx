@@ -7,8 +7,11 @@ const Index = (): JSX.Element => {
 
 	return (
 		<MainLayout title="" className="flex-sc col" transition="fade">
-			<div className="relative w-full h-screen bg-red-400">
+			<div className="relative w-full h-screen">
 				<Rainbox isInitialLoad={true} skipIntro={false}/>
+			</div>
+			<div className="w-full h-96 bg-red-400">
+
 			</div>
 		</MainLayout>
 	);
