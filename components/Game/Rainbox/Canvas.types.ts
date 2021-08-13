@@ -7,13 +7,13 @@ export interface CanvasProps {
 	setProcessMessage(arg0: string): void;
 	setGameStatus(arg0: string): void;
 	setScore(arg0: { food: number, time: number }): void;
-	sideRef: MutableRefObject<HTMLElement>;
-	briRef: MutableRefObject<HTMLElement>;
-	nrRef: MutableRefObject<HTMLElement>;
-	etRef: MutableRefObject<HTMLElement>;
-	newGameBtnRef: MutableRefObject<HTMLElement>;
-	dialogAvoidRef: MutableRefObject<HTMLElement>;
-	dialogOhnoRef: MutableRefObject<HTMLElement>;
+	sideRef: MutableRefObject<HTMLInputElement>;
+	briRef: MutableRefObject<HTMLDivElement>;
+	nrRef: MutableRefObject<HTMLDivElement>;
+	etRef: MutableRefObject<HTMLDivElement>;
+	newGameBtnRef: MutableRefObject<HTMLButtonElement>;
+	dialogAvoidRef: MutableRefObject<HTMLDivElement>;
+	dialogOhnoRef: MutableRefObject<HTMLDivElement>;
 }
 
 export class PlayerType {

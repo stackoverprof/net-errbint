@@ -18,9 +18,9 @@ const Canvas = (props: CanvasProps) => {
 		dialogOhnoRef
 	} = props;
 	
-	const rightTouchRef = useRef(null);
-	const leftTouchRef = useRef(null);
-	const canvasRef = useRef(null);
+	const rightTouchRef = useRef<HTMLDivElement>(null);
+	const leftTouchRef = useRef<HTMLDivElement>(null);
+	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	const GameScript = () => {
 		let _isMounted = true;
@@ -340,8 +340,8 @@ const Canvas = (props: CanvasProps) => {
 		};
 
 		/////////CONTROLLER - TOUCHSCREEN EVENT HANDLER
-		const right: HTMLElement = rightTouchRef.current;
-		const left: HTMLElement = leftTouchRef.current;
+		const right: HTMLDivElement = rightTouchRef.current;
+		const left: HTMLDivElement = leftTouchRef.current;
 
 		let isRightTouched = false;
 		let isLeftTouched = false;
