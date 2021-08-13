@@ -37,7 +37,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 		/////////GAMESCRIPT STARTS HERE
 
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
-		class PlayerProperties {
+		class PlayerType {
 			Height: number;
 			Width: number;
 			Shadow: string;
@@ -54,7 +54,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 			Position: { X: number; Y: number; };
 		}
 
-		class Player extends PlayerProperties {
+		class Player extends PlayerType {
 			constructor (posX: number) {
 				super();
 				this.Height = 50;
@@ -213,32 +213,46 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 
 
 		/////////THE FOOD OBJECT
-		function Food() {
-			this.Width = 20;
-			this.Height = 20;
-			this.Color = '#FF5B14';
-			this.Shadow = 'orange';
-			this.Blur = 25;
-			this.distance = 50;
+		class FoodType {	
+			Width: number;
+			Height: number;
+			Color: string;
+			Shadow: string;
+			Blur: number;
+			distance: number;
+			PosX: any;
+		}
+		
+		class Food extends FoodType {
+			constructor () {
+				super();
 
-			let randomPos;
-			do randomPos = Math.random() * (screenWidth - this.Width * 3) + this.Width;
-			while (randomPos >= player.Position.X - (this.Width + this.distance) && randomPos <= player.Position.X + player.Width + this.distance);
+				this.Width = 20;
+				this.Height = 20;
+				this.Color = '#FF5B14';
+				this.Shadow = 'orange';
+				this.Blur = 25;
+				this.distance = 50;
 
-			this.PosX = randomPos;
+				let randomPos;
+				do randomPos = Math.random() * (screenWidth - this.Width * 3) + this.Width;
+				while (randomPos >= player.Position.X - (this.Width + this.distance) && randomPos <= player.Position.X + player.Width + this.distance);
+				this.PosX = randomPos;
+			}
 
-			this.Draw = () => {
+
+			Draw = () => {
 				if (this.PosX > screenWidth - this.Width * 2) this.PosX = screenWidth - this.Width * 2;
 
 				ctx.beginPath();
 				ctx.rect(this.PosX, screenHeight - navbarOffset - this.Height * 2, this.Width, this.Width);
-				ctx.shadowColor = this.shadow;
+				ctx.shadowColor = this.Shadow;
 				ctx.shadowBlur = this.Blur;
 				ctx.fillStyle = this.Color;
 				ctx.fill();
 			};
 
-			this.Update = () => {
+			Update = () => {
 				this.Draw();
 			};
 		}
@@ -338,8 +352,8 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 		};
 
 		/////////CONTROLLER - TOUCHSCREEN EVENT HANDLER
-		const right = rightTouchRef.current;
-		const left = leftTouchRef.current;
+		const right: HTMLElement = rightTouchRef.current;
+		const left: HTMLElement = leftTouchRef.current;
 
 		let isRightTouched = false;
 		let isLeftTouched = false;
@@ -419,7 +433,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 		const avoid = dialogAvoidRef.current;
 		const ohno = dialogOhnoRef.current;
 
-		const DialogHandler = (action, startingPosition) => {
+		const DialogHandler = (action: string, startingPosition?: number) => {
 			switch (action) {
 				case 'init':
 					avoid.style.display = 'flex';
@@ -517,6 +531,8 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 			}
 		}, 10);
 
+		let GenerateRainTimeout: NodeJS.Timeout;
+		
 		const GenerateRain = () => {
 			if (!isGameOver && !tabInactive && executeGame) {
 				let randomPos;
@@ -526,7 +542,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 			}
 
 			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
-			if (_isMounted) setTimeout(GenerateRain, dynamicInterval); //i need the setInterval value to be dynamic, but it can't, so i use a recursive setTimout instead, it's interval value is dynamically changing based on screenWidth
+			if (_isMounted) GenerateRainTimeout = setTimeout(GenerateRain, dynamicInterval); //i need the setInterval value to be dynamic, but it can't, so i use a recursive setTimout instead, it's interval value is dynamically changing based on screenWidth
 		};
 		GenerateRain();
 
@@ -552,7 +568,7 @@ const Canvas = ({ isInitialLoad, skipIntro, setanimateValue, setprocessMessage, 
 			clearTimeout(executeFallback);
 
 			clearInterval(Updater);
-			clearTimeout(GenerateRain);
+			clearTimeout(GenerateRainTimeout);
 
 			_isMounted = false;
 		};
