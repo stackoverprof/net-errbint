@@ -1,21 +1,5 @@
-import React, { useRef, useEffect, MutableRefObject } from 'react';
-import { PlayerType, RainType, FoodType } from './Canvas.types';
-
-interface CanvasProps  {
-	isInitialLoad: boolean;
-	skipIntro: boolean;
-	setanimateValue(arg0: number): void;
-	setprocessMessage(arg0: string): void;
-	setgameStatus(arg0: string): void;
-	setscore(arg0: { food: number, time: number }): void;
-	sideRef: MutableRefObject<HTMLElement>;
-	briRef: MutableRefObject<HTMLElement>;
-	nrRef: MutableRefObject<HTMLElement>;
-	etRef: MutableRefObject<HTMLElement>;
-	newGameBtnRef: MutableRefObject<HTMLElement>;
-	dialogAvoidRef: MutableRefObject<HTMLElement>;
-	dialogOhnoRef: MutableRefObject<HTMLElement>;
-}
+import React, { useRef, useEffect } from 'react';
+import { PlayerType, RainType, FoodType, CanvasProps } from './Canvas.types';
 
 const Canvas = (props: CanvasProps) => {
 	const {

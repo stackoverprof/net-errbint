@@ -1,3 +1,21 @@
+import { MutableRefObject } from 'react';
+
+export interface CanvasProps {
+	isInitialLoad: boolean;
+	skipIntro: boolean;
+	setanimateValue(arg0: number): void;
+	setprocessMessage(arg0: string): void;
+	setgameStatus(arg0: string): void;
+	setscore(arg0: { food: number, time: number }): void;
+	sideRef: MutableRefObject<HTMLElement>;
+	briRef: MutableRefObject<HTMLElement>;
+	nrRef: MutableRefObject<HTMLElement>;
+	etRef: MutableRefObject<HTMLElement>;
+	newGameBtnRef: MutableRefObject<HTMLElement>;
+	dialogAvoidRef: MutableRefObject<HTMLElement>;
+	dialogOhnoRef: MutableRefObject<HTMLElement>;
+}
+
 export class PlayerType {
 	Height: number;
 	Width: number;
