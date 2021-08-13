@@ -1,6 +1,5 @@
 import React from 'react';
 import MainLayout from '@components/_layouts/MainLayout';
-import Link from '@components/_shared/Link';
 import Rainbox from '@components/Game/Rainbox';
  
 const Index = (): JSX.Element => {

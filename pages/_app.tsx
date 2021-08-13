@@ -1,14 +1,14 @@
 import React from 'react';
 import Head from 'next/head';
-import { AppProps } from 'next/dist/next-server/lib/router/router';
+import { AppProps } from 'next/dist/shared/lib/router/router';
 import ProgressBar from 'nextjs-progressbar';
+import { AnimatePresence } from 'framer-motion';
 import ContextProvider from '@core/contexts';
 import SEOTags from '@components/_shared/SEOTags';
 import Loader from '@components/_shared/Loader';
 
 import '@core/styles/tailwind.css';
 import '@core/styles/typefaces.css';
-import { AnimatePresence } from 'framer-motion';
 
 const App = ({ Component, pageProps, router }: AppProps): JSX.Element => {
 	return (
