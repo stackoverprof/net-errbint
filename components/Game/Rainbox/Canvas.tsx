@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { PlayerType, RainType, FoodType, CanvasProps } from './Canvas.types';
 
+// [TODO] : key up/down make not trigger page scroll
+
 const Canvas = (props: CanvasProps) => {
 	const {
 		isInitialLoad,
@@ -77,12 +79,12 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			CheckCollisions = () => {
-				for (const shape of shapes) {
+				for (const rain of rains) {
 					if (
-						this.Position.X <= shape.Position.X + shape.Width &&
-						this.Position.X + this.Width >= shape.Position.X &&
-						this.Position.Y + this.Height >= shape.Position.Y &&
-						this.Position.Y <= shape.Position.Y + shape.Height
+						this.Position.X <= rain.Position.X + rain.Width &&
+						this.Position.X + this.Width >= rain.Position.X &&
+						this.Position.Y + this.Height >= rain.Position.Y &&
+						this.Position.Y <= rain.Position.Y + rain.Height
 					) {
 						GameOver();
 						this.shine = 0.025;
@@ -171,14 +173,14 @@ const Canvas = (props: CanvasProps) => {
 				this.Height = RainConfig.size;
 				this.Width = RainConfig.size;
 				this.Velocity = Math.random() * RainConfig.additionalSpeed + RainConfig.base;
-				this.Index = shapeIndex;
+				this.Index = rainIndex;
 
 				this.Position = {
 					X: posX,
 					Y: -this.Height
 				};
 				
-				shapes[shapeIndex++] = this;
+				rains[rainIndex++] = this;
 			}
 
 			DrawHead = () => {
@@ -460,10 +462,10 @@ const Canvas = (props: CanvasProps) => {
 		/////////RUNNING THE GAME :: execute the game
 		let player: Player | Record<string, never> = {};
 		let food: Food | Record<string, never> = {};
-		const shapes = [];
+		const rains = [];
 
 		let isGameOver = false;
-		let shapeIndex = 0;
+		let rainIndex = 0;
 		let executeGame = false;
 		
 		const IgniteGame = () => {
@@ -527,7 +529,7 @@ const Canvas = (props: CanvasProps) => {
 
 				//Then, redrawing objects
 				if (!isGameOver && isAttempted) food.Update();
-				for (const shape of shapes) shape.Update();
+				for (const rain of rains) rain.Update();
 				player.Update();
 			}
 		}, 10);
