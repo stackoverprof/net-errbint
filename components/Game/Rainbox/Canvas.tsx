@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { PlayerType, RainType, FoodType, CanvasProps } from './Canvas.types';
+import React, { useRef, useEffect, useMemo } from 'react';
+import { PlayerType, RainType, FoodType, CanvasProps} from './Canvas.types';
 import { useLayout } from '@core/contexts/index';
 
 // [TODO] : di hape masi ga nyaman, secara responsivitas
@@ -27,9 +27,11 @@ const Canvas = (props: CanvasProps) => {
 	const leftTouchRef = useRef<HTMLDivElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
+	const rains_memo = useMemo(() => [], []);
+
 	const GameScript = () => {
 		let _isMounted = true;	
-		
+
 		const FPS = 50;
 		const REALTIME = 100/FPS;
 
@@ -491,7 +493,7 @@ const Canvas = (props: CanvasProps) => {
 		/////////RUNNING THE GAME :: Execute the game
 		let player: Player | Record<string, never> = {};
 		let food: Food | Record<string, never> = {};
-		const rains: Rain[] = [];
+		const rains: Rain[] = rains_memo;
 		
 		let executeGame = false;
 		let isGameOver = false;
