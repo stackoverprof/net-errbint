@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { PlayerType, RainType, FoodType, CanvasProps } from './Canvas.types';
 
-// [TODO] : key up/down make not trigger page scroll
+// [TODO] : di hape masi ga nyaman, secara responsivitas
 
 const Canvas = (props: CanvasProps) => {
 	const {
@@ -591,11 +591,11 @@ const Canvas = (props: CanvasProps) => {
 	useEffect(GameScript, []); 
 
 	return (
-		<div className="flex-sc col full" style={{ zIndex: -1 }}>
+		<div className="flex-sc col full pointer-events-none" style={{ zIndex: -1 }}>
 			<canvas ref={canvasRef} style={{ zIndex: -2 }} />
-			<div className="absolute full inset-0 flex-bc" style={{ zIndex: 0 }}>
-				<div className="h-full opacity-20 w-1/2" ref={leftTouchRef}></div>
-				<div className="h-full opacity-20 w-1/2" ref={rightTouchRef}></div>
+			<div className="absolute full inset-0 flex-bc pointer-events-none" style={{ zIndex: 0 }}>
+				<div className="h-full opacity-20 w-1/2 pointer-events-auto select-none" ref={leftTouchRef}></div>
+				<div className="h-full opacity-20 w-1/2 pointer-events-auto select-none" ref={rightTouchRef}></div>
 			</div>
 		</div>
 	);
