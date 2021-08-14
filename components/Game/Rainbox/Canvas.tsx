@@ -64,6 +64,7 @@ const Canvas = (props: CanvasProps) => {
 				this.Color = `rgb(255, ${this.RGB.g}, 20)`;
 				this.Blur = 25;
 				this.Velocity = 0;
+				this.Acceleration = 5*FPS_ADAPTOR;
 				this.shine = 0;
 				
 				this.EatCount = 0;
@@ -139,6 +140,8 @@ const Canvas = (props: CanvasProps) => {
 			Move = () => {
 				if (!(this.Position.X + this.Velocity < 0) && !(this.Position.X + this.Velocity > screenWidth - 50)) {
 					this.Position.X += this.Velocity;
+					console.log(this.Velocity);
+					
 				} else if (this.Position.X > screenWidth - this.Width) {
 					this.Position.X = screenWidth - (this.Width + 2);
 				}
@@ -281,7 +284,7 @@ const Canvas = (props: CanvasProps) => {
 			setAnimateValue(0);
 		};
 		
-		const newGameBtn = newGameBtnRef.current;
+		const newGameBtn: HTMLButtonElement = newGameBtnRef.current;
 		newGameBtn.addEventListener('click', NewGame);
 
 
@@ -315,12 +318,12 @@ const Canvas = (props: CanvasProps) => {
 			if (e.which === 65 || e.which === 37) {
 				//GO LEFT 
 				isLeftPressed = true;
-				player.Velocity = -5;
+				player.Velocity = -player.Acceleration;
 				FirstAttempt();
 			} else if (e.which === 68 || e.which === 39) {
 				//GO RIGHT
 				isRightPressed = true;
-				player.Velocity = 5;
+				player.Velocity = player.Acceleration;
 				FirstAttempt();
 			} else if (e.which === 13 && isGameOver && document.activeElement !== siderinput) {
 				//PRESSING ENTER
@@ -337,10 +340,10 @@ const Canvas = (props: CanvasProps) => {
 		const uncontrolling = (e) => {
 			if (e.which === 65 || e.which === 37) {
 				isLeftPressed = false;
-				player.Velocity = isRightPressed ? 5 : 0;
+				player.Velocity = isRightPressed ? player.Acceleration : 0;
 			} else if (e.which === 68 || e.which === 39) {
 				isRightPressed = false;
-				player.Velocity = isLeftPressed ? -5 : 0;
+				player.Velocity = isLeftPressed ? -player.Acceleration : 0;
 			}
 		};
 
@@ -354,21 +357,21 @@ const Canvas = (props: CanvasProps) => {
 
 		const controlRight = () => {
 			isRightTouched = true;
-			player.Velocity = 5;
+			player.Velocity = player.Acceleration;
 			FirstAttempt();
 		};
 		const controlLeft = () => {
 			isLeftTouched = true;
-			player.Velocity = -5;
+			player.Velocity = -player.Acceleration;
 			FirstAttempt();
 		};
 		const uncontrolRight = () => {
 			isRightTouched = false;
-			player.Velocity = isLeftTouched ? -5 : 0;
+			player.Velocity = isLeftTouched ? -player.Acceleration : 0;
 		};
 		const uncontrolLeft = () => {
 			isLeftTouched = false;
-			player.Velocity = isRightTouched ? 5 : 0;
+			player.Velocity = isRightTouched ? player.Acceleration : 0;
 		};
 
 
@@ -511,6 +514,9 @@ const Canvas = (props: CanvasProps) => {
 
 		
 		/////////SCREEN UPDATER
+		const FPS = 50;
+		const FPS_ADAPTOR = (1000/FPS)/10;
+
 		const Updater = setInterval(() => {
 			if (executeGame) {
 				const calcTiming = () => {
@@ -531,7 +537,7 @@ const Canvas = (props: CanvasProps) => {
 				for (const rain of rains) rain.Update();
 				player.Update();
 			}
-		}, 10);
+		}, 1000/FPS);
 		
 
 		/////////RAINFALL GENERATOR

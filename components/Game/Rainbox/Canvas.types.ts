@@ -25,6 +25,7 @@ export class PlayerType {
 	Color: string;
 	Blur: number;
 	Velocity: number;
+	Acceleration: number;
 	shine: number;
 	EatCount: number;
 	TimeStart: number;
