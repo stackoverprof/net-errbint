@@ -35,6 +35,12 @@ export class PlayerType {
 }
 
 export class RainType {
+	Colortrail0: any;
+	Colortrail1: string;
+	Colorbox: string;
+	AdditionalSpeed: number;
+	Base: number;
+	Size: number;
 	Height: number;
 	Width: number;
 	Velocity: number;

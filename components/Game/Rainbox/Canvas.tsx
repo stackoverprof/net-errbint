@@ -158,34 +158,38 @@ const Canvas = (props: CanvasProps) => {
 
 
 		/////////THE RAIN OBJECT
-		const RainConfig = {
-			colortrail0: 'rgba(220,220,220,1)',
-			colortrail1: 'rgba(220,220,220,0)',
-			colorbox: 'rgb(210,210,210)',
-			additionalSpeed: 4,
-			base: 5,
-			size: 30
-		};
-
 		class Rain extends RainType {
-			constructor (posX: number, index: number) {
+			constructor (index: number) {
 				super();
+				this.Colortrail0 = 'rgba(220,220,220,1)';
+				this.Colortrail1 = 'rgba(220,220,220,0)';
+				this.Colorbox = 'rgb(210,210,210)';
+				this.AdditionalSpeed = 4;
+				this.Base = 5;
+				this.Size = 30;
 
-				this.Height = RainConfig.size;
-				this.Width = RainConfig.size;
-				this.Velocity = (Math.random() * RainConfig.additionalSpeed + RainConfig.base) * FPS_ADAPTOR;
+				this.Height = this.Size;
+				this.Width = this.Size;
+				this.Velocity = (Math.random() * this.AdditionalSpeed + this.Base) * FPS_ADAPTOR;
 				this.Index = index;
 
 				this.Position = {
-					X: posX,
+					X: this.RandomPosition(),
 					Y: -this.Height
 				};
+			}
+
+			RandomPosition = () => {
+				let randomPos: number;
+				do randomPos = Math.random() * (screenWidth + this.Size * 2) - this.Size;
+				while (!isAttempted && randomPos > player.Position.X - this.Size * 2 && randomPos < player.Position.X + this.Size * 2);
+				return randomPos;
 			}
 
 			DrawHead = () => {
 				ctx.beginPath();
 				ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
-				ctx.fillStyle = RainConfig.colorbox;
+				ctx.fillStyle = this.Colorbox;
 				ctx.shadowColor = 'gray';
 				ctx.shadowBlur = 3;
 				ctx.fill();
@@ -195,8 +199,8 @@ const Canvas = (props: CanvasProps) => {
 				ctx.beginPath();
 				ctx.rect(this.Position.X, this.Position.Y - 120, this.Width, this.Height * 4);
 				this.TrailGradient = ctx.createLinearGradient(screenHeight / 2, this.Position.Y, screenHeight / 2, this.Position.Y - 120);
-				this.TrailGradient.addColorStop(0, RainConfig.colortrail0);
-				this.TrailGradient.addColorStop(1, RainConfig.colortrail1);
+				this.TrailGradient.addColorStop(0, this.Colortrail0);
+				this.TrailGradient.addColorStop(1, this.Colortrail1);
 				ctx.fillStyle = this.TrailGradient;
 				ctx.shadowColor = 'rgba(0,0,0,0)';
 				ctx.shadowBlur = 0;
@@ -230,14 +234,15 @@ const Canvas = (props: CanvasProps) => {
 				this.Shadow = 'orange';
 				this.Blur = 25;
 				this.distance = 50;
-
+				this.PosX = this.RandomPosition();
+			}
+			
+			RandomPosition = () => {
 				let randomPos;
 				do randomPos = Math.random() * (screenWidth - this.Width * 3) + this.Width;
 				while (randomPos >= player.Position.X - (this.Width + this.distance) && randomPos <= player.Position.X + player.Width + this.distance);
-				
-				this.PosX = randomPos;
+				return randomPos;
 			}
- 
 
 			Draw = () => {
 				if (this.PosX > screenWidth - this.Width * 2) this.PosX = screenWidth - this.Width * 2;
@@ -299,9 +304,13 @@ const Canvas = (props: CanvasProps) => {
 				isAttempted = true;
 				setGameStatus('running');
 
-				RainConfig.colorbox = '#888888';
-				RainConfig.colortrail0 = 'rgba(200,200,200,1)';
-				RainConfig.colortrail1 = 'rgba(200,200,200,0)';
+				for (const rain of rains) {
+					if (rain){
+						rain.Colorbox = '#888888';
+						rain.Colortrail0 = 'rgba(200,200,200,1)';
+						rain.Colortrail1 = 'rgba(200,200,200,0)';
+					}
+				}
 
 				food = new Food();
 				player.TimeStart = new Date().getTime();
@@ -550,10 +559,7 @@ const Canvas = (props: CanvasProps) => {
 		
 		const GenerateRain = () => {
 			if (!isGameOver && !tabInactive && executeGame) {
-				let randomPos: number;
-				do randomPos = Math.random() * (screenWidth + RainConfig.size * 2) - RainConfig.size;
-				while (!isAttempted && randomPos > player.Position.X - RainConfig.size * 2 && randomPos < player.Position.X + RainConfig.size * 2);
-				rains.push(new Rain(randomPos, rainIndex++));
+				rains.push(new Rain(rainIndex++));
 			}
 
 			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
