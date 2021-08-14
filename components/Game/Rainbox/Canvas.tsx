@@ -64,7 +64,7 @@ const Canvas = (props: CanvasProps) => {
 				this.Color = `rgb(255, ${this.RGB.g}, 20)`;
 				this.Blur = 25;
 				this.Velocity = 0;
-				this.Acceleration = 5*FPS_ADAPTOR;
+				this.Acceleration = 5 * FPS_ADAPTOR;
 				this.shine = 0;
 				
 				this.EatCount = 0;
@@ -174,7 +174,7 @@ const Canvas = (props: CanvasProps) => {
 
 				this.Height = RainConfig.size;
 				this.Width = RainConfig.size;
-				this.Velocity = Math.random() * RainConfig.additionalSpeed + RainConfig.base;
+				this.Velocity = (Math.random() * RainConfig.additionalSpeed + RainConfig.base) * FPS_ADAPTOR;
 				this.Index = rainIndex;
 
 				this.Position = {
