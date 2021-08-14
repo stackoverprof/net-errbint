@@ -310,7 +310,7 @@ const Canvas = (props: CanvasProps) => {
 		let isLeftPressed = false;
 
 		const controlling = (e) => {
-			if (e.which === 40) e.preventDefault();
+			if (e.which === 40 && window.scrollY === 0) e.preventDefault();
 			
 			if (e.which === 65 || e.which === 37) {
 				//GO LEFT 
