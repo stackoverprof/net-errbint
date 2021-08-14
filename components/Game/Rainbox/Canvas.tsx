@@ -281,15 +281,14 @@ const Canvas = (props: CanvasProps) => {
 
 		/////////NEW GAME HANDLER		
 		const NewGame = () => {
-			setGameStatus('running');
-			setProcessMessage('');
-			GlimpseHandler('regular');
-			
 			isGameOver = false;
 			player = new Player(player.Position.X);
 			food = new Food();
 			
+			setGameStatus('running');
+			setProcessMessage('');
 			setAnimateValue(0);
+			GlimpseHandler('regular');
 		};
 		
 		const newGameBtn: HTMLButtonElement = newGameBtnRef.current;
@@ -303,7 +302,12 @@ const Canvas = (props: CanvasProps) => {
 			if (!isAttempted) {
 				isAttempted = true;
 				setGameStatus('running');
-
+				
+				food = new Food();
+				player.TimeStart = new Date().getTime();
+				player.TimeEnd = 'initial';
+				player.TimeSpan = new Date().getTime();
+			
 				for (const rain of rains) {
 					if (rain){
 						rain.Colorbox = '#888888';
@@ -311,11 +315,6 @@ const Canvas = (props: CanvasProps) => {
 						rain.Colortrail1 = 'rgba(200,200,200,0)';
 					}
 				}
-
-				food = new Food();
-				player.TimeStart = new Date().getTime();
-				player.TimeEnd = 'initial';
-				player.TimeSpan = new Date().getTime();
 			}
 		};
 
@@ -323,10 +322,8 @@ const Canvas = (props: CanvasProps) => {
 		/////////CONTROLLER - KEYBOARD EVENT HANDLER
 		let isRightPressed = false;
 		let isLeftPressed = false;
-
+		
 		const controlling = (e) => {
-			if (e.which === 40 && window.scrollY === 0) e.preventDefault();
-			
 			if (e.which === 65 || e.which === 37) {
 				//GO LEFT 
 				isLeftPressed = true;
@@ -337,10 +334,16 @@ const Canvas = (props: CanvasProps) => {
 				isRightPressed = true;
 				player.Velocity = player.Acceleration;
 				FirstAttempt();
-			} else if (e.which === 13 && isGameOver && document.activeElement !== siderinput) {
-				//PRESSING ENTER
+			}
+
+			//PRESSING ENTER
+			const siderinput: HTMLInputElement = sideRef.current;
+			if (e.which === 13 && isGameOver && document.activeElement !== siderinput) {
 				NewGame();
 			}
+			
+			//AVOID UNEXPECTED SCROLLDOWN
+			if (e.which === 40 && window.scrollY === 0) e.preventDefault();
 
 			//SPECIAL THING
 			else if (e.which === 16) {
@@ -470,8 +473,6 @@ const Canvas = (props: CanvasProps) => {
 		const handleInactive = () => tabInactive = document.hidden ? true : false;
 		document.addEventListener('visibilitychange', handleInactive);
 
-		const siderinput: HTMLInputElement = sideRef.current;
-
 
 		/////////RUNNING THE GAME :: Execute the game
 		let player: Player | Record<string, never> = {};
@@ -509,7 +510,7 @@ const Canvas = (props: CanvasProps) => {
 		const executeLoaded = () => {
 			if (!executeLoadedRun) {
 				executeLoadedRun = true;
-
+				
 				if (skipIntro) IgniteGame();
 				else {
 					const delay = 1000;
@@ -531,14 +532,11 @@ const Canvas = (props: CanvasProps) => {
 
 		const Updater = setInterval(() => {
 			if (executeGame) {
-				const calcTiming = () => {
-					if (player.TimeEnd != 'initial') return player.TimeSpan; 
-					else return new Date().getTime() - player.TimeStart;
-				};
-				
+				const livespan = player.TimeEnd != 'initial' ? player.TimeSpan : new Date().getTime() - player.TimeStart;
+
 				setScore({
 					food: player.EatCount,
-					time: parseInt(((isAttempted ? calcTiming() : 0) / 10).toFixed(0))
+					time: parseInt(((isAttempted ? livespan : 0) / 10).toFixed(0))
 				});
 				
 				//Reseting canvas
@@ -548,26 +546,19 @@ const Canvas = (props: CanvasProps) => {
 				if (!isGameOver && isAttempted) food.Update();
 				for (const rain of rains) if (rain) rain.Update();
 				player.Update();
-				
-				console.log(rains);
 			}
 		}, 1000/FPS);
 		
 
 		/////////RAINFALL GENERATOR
-		let GenerateRainTimeout: NodeJS.Timeout;
 		
 		const GenerateRain = () => {
-			if (!isGameOver && !tabInactive && executeGame) {
-				rains.push(new Rain(rainIndex++));
-			}
-
+			if (!isGameOver && !tabInactive && executeGame) rains.push(new Rain(rainIndex++));
+			
 			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
-			if (_isMounted) GenerateRainTimeout = setTimeout(GenerateRain, dynamicInterval); 
-			//i need the setInterval value to be dynamic, but it can't, so i use a recursive setTimout instead
-			//it's interval value is dynamically changing based on screenWidth
+			if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
 		};
-		GenerateRain();
+		const GenerateRainTimeout: NodeJS.Timeout = GenerateRain();
 
 
 		/////////USE-EFFECT CLEAN-UP
@@ -576,9 +567,7 @@ const Canvas = (props: CanvasProps) => {
 			document.removeEventListener('keydown', controlling);
 			document.removeEventListener('keyup', uncontrolling);
 			window.removeEventListener('resize', reportWindowSize);
-
 			window.removeEventListener('load', executeLoaded);
-
 			right.removeEventListener('touchstart', controlRight, false);
 			left.removeEventListener('touchstart', controlLeft, false);
 			right.removeEventListener('touchend', uncontrolRight, false);
@@ -587,11 +576,9 @@ const Canvas = (props: CanvasProps) => {
 			clearTimeout(timeoutIntro);
 			clearTimeout(timeoutInitial);
 			clearTimeout(timeoutExecute);
-
 			clearTimeout(executeFallback);
-
-			clearInterval(Updater);
 			clearTimeout(GenerateRainTimeout);
+			clearInterval(Updater);
 
 			_isMounted = false;
 		};
