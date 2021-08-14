@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { PlayerType, RainType, FoodType, CanvasProps } from './Canvas.types';
+import { useLayout } from '@core/contexts/index';
 
 // [TODO] : di hape masi ga nyaman, secara responsivitas
 
@@ -19,6 +20,8 @@ const Canvas = (props: CanvasProps) => {
 		dialogAvoidRef,
 		dialogOhnoRef
 	} = props;
+
+	const { selectedTheme } = useLayout();
 	
 	const rightTouchRef = useRef<HTMLDivElement>(null);
 	const leftTouchRef = useRef<HTMLDivElement>(null);
@@ -51,6 +54,14 @@ const Canvas = (props: CanvasProps) => {
 		window.addEventListener('resize', reportWindowSize);
 
 
+		/////////PICK THEME
+		const GameTheme = {
+			orange: 'rgb(255, 74, 20)',
+			purple: 'rgb(120, 16, 255)',
+			green: 'rgb(16, 255, 28)',
+			blue: 'rgb(16, 187, 255)',
+		}[selectedTheme];
+
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
 		class Player extends PlayerType {
 			constructor (posX: number) {
@@ -61,7 +72,7 @@ const Canvas = (props: CanvasProps) => {
 				this.Shadow = 'orange';
 				this.RGB = { r: 255, g: 74, b: 20 };
 				this.RGBChange = { r: 0, g: 0.5, b: 0 };
-				this.Color = `rgb(255, ${this.RGB.g}, 20)`;
+				this.Color = GameTheme;
 				this.Blur = 25;
 				this.Velocity = 0;
 				this.Acceleration = 5 * FPS_ADAPTOR;
@@ -128,7 +139,7 @@ const Canvas = (props: CanvasProps) => {
 				if (this.RGB.g === 152) this.RGBChange.g = -0.5;
 				if (this.RGB.g === 74) this.RGBChange.g = 0.5;
 				this.RGB.g += this.RGBChange.g;
-				if (!isGameOver) this.Color = `rgb(255, ${this.RGB.g}, 20)`;
+				// if (!isGameOver) this.Color = `rgb(255, ${this.RGB.g}, 20)`;
 
 				ctx.shadowColor = this.Shadow;
 				ctx.shadowBlur = this.Blur;
@@ -291,10 +302,7 @@ const Canvas = (props: CanvasProps) => {
 			GlimpseHandler('regular');
 		};
 		
-		const newGameBtn: HTMLButtonElement = newGameBtnRef.current;
-		newGameBtn.addEventListener('click', NewGame);
-
-
+		
 		/////////FIRST ATTEMPT TO ENTER THE GAME
 		let isAttempted = false;
 
@@ -317,85 +325,88 @@ const Canvas = (props: CanvasProps) => {
 				}
 			}
 		};
-
+		
 
 		/////////CONTROLLER - KEYBOARD EVENT HANDLER
 		let isRightPressed = false;
 		let isLeftPressed = false;
-		
-		const controlling = (e) => {
-			if (e.which === 65 || e.which === 37) {
-				//GO LEFT 
-				isLeftPressed = true;
-				player.Velocity = -player.Acceleration;
-				FirstAttempt();
-			} else if (e.which === 68 || e.which === 39) {
-				//GO RIGHT
-				isRightPressed = true;
-				player.Velocity = player.Acceleration;
-				FirstAttempt();
-			}
 
-			//PRESSING ENTER
-			const siderinput: HTMLInputElement = sideRef.current;
-			if (e.which === 13 && isGameOver && document.activeElement !== siderinput) {
-				NewGame();
+		const ControlKeyboard = {
+			controlling: (e) => {
+				if (e.which === 65 || e.which === 37) {
+					//GO LEFT 
+					isLeftPressed = true;
+					player.Velocity = -player.Acceleration;
+					FirstAttempt();
+				} else if (e.which === 68 || e.which === 39) {
+					//GO RIGHT
+					isRightPressed = true;
+					player.Velocity = player.Acceleration;
+					FirstAttempt();
+				}
+
+				//PRESSING ENTER
+				const siderinput: HTMLInputElement = sideRef.current;
+				if (e.which === 13 && isGameOver && document.activeElement !== siderinput) {
+					NewGame();
+				}
+				
+				//AVOID UNEXPECTED SCROLLDOWN
+				if (e.which === 40 && window.scrollY === 0) e.preventDefault();
+
+				//SPECIAL THING
+				else if (e.which === 16) {
+					if (e.location === 1) GlimpseHandler('regular');
+					else if (e.location === 2) GlimpseHandler('special');
+				}
+			},			
+			uncontrolling: (e) => {
+				if (e.which === 65 || e.which === 37) {
+					isLeftPressed = false;
+					player.Velocity = isRightPressed ? player.Acceleration : 0;
+				} else if (e.which === 68 || e.which === 39) {
+					isRightPressed = false;
+					player.Velocity = isLeftPressed ? -player.Acceleration : 0;
+				}
 			}
 			
-			//AVOID UNEXPECTED SCROLLDOWN
-			if (e.which === 40 && window.scrollY === 0) e.preventDefault();
-
-			//SPECIAL THING
-			else if (e.which === 16) {
-				if (e.location === 1) GlimpseHandler('regular');
-				else if (e.location === 2) GlimpseHandler('special');
-			}
 		};
-
-		const uncontrolling = (e) => {
-			if (e.which === 65 || e.which === 37) {
-				isLeftPressed = false;
-				player.Velocity = isRightPressed ? player.Acceleration : 0;
-			} else if (e.which === 68 || e.which === 39) {
-				isRightPressed = false;
-				player.Velocity = isLeftPressed ? -player.Acceleration : 0;
-			}
-		};
-
 
 		/////////CONTROLLER - TOUCHSCREEN EVENT HANDLER
+		const newGameBtn: HTMLButtonElement = newGameBtnRef.current;
 		const right: HTMLDivElement = rightTouchRef.current;
 		const left: HTMLDivElement = leftTouchRef.current;
-
+		
 		let isRightTouched = false;
 		let isLeftTouched = false;
 
-		const controlRight = () => {
-			isRightTouched = true;
-			player.Velocity = player.Acceleration;
-			FirstAttempt();
+		const ControlTouch = {
+			controlRight: () => {
+				isRightTouched = true;
+				player.Velocity = player.Acceleration;
+				FirstAttempt();
+			},
+			controlLeft: () => {
+				isLeftTouched = true;
+				player.Velocity = -player.Acceleration;
+				FirstAttempt();
+			},
+			uncontrolRight: () => {
+				isRightTouched = false;
+				player.Velocity = isLeftTouched ? -player.Acceleration : 0;
+			},
+			uncontrolLeft: () => {
+				isLeftTouched = false;
+				player.Velocity = isRightTouched ? player.Acceleration : 0;
+			},
 		};
-		const controlLeft = () => {
-			isLeftTouched = true;
-			player.Velocity = -player.Acceleration;
-			FirstAttempt();
-		};
-		const uncontrolRight = () => {
-			isRightTouched = false;
-			player.Velocity = isLeftTouched ? -player.Acceleration : 0;
-		};
-		const uncontrolLeft = () => {
-			isLeftTouched = false;
-			player.Velocity = isRightTouched ? player.Acceleration : 0;
-		};
-
 
 		/////////GLIMPSE HANDLER
 		const GlimpseHandler = (score) => {
 			const bri = briRef.current;
 			const nr = nrRef.current;
 			const et = etRef.current;
-
+			
 			const animate = (element) => {
 				element.style.opacity = 1;
 
@@ -403,7 +414,7 @@ const Canvas = (props: CanvasProps) => {
 					element.style.opacity = 0;
 				}, 200);
 			};
-
+			
 			const animateIntro = (element) => {
 				element.style.transition = '1s';
 				element.style.opacity = 0;
@@ -417,14 +428,14 @@ const Canvas = (props: CanvasProps) => {
 				et.style.opacity = 1;
 				nr.style.opacity = 1;
 				bri.style.opacity = 1;
-
+				
 				setTimeout(() => {
 					et.style.opacity = 0;
 					nr.style.opacity = 0;
 					bri.style.opacity = 0;
 				}, 350);
 			};
-
+			
 			if (score % 10 === 0 || score === 'special') {
 				animateSpecial(et, nr, bri);
 				setTimeout(() => animateSpecial(et, nr, bri), 700);
@@ -441,11 +452,11 @@ const Canvas = (props: CanvasProps) => {
 			}
 		};
 
-
+		
 		/////////DIALOG HANDLER
 		const avoid = dialogAvoidRef.current;
 		const ohno = dialogOhnoRef.current;
-
+		
 		const DialogHandler = (action: string, startingPosition?: number) => {
 			switch (action) {
 				case 'init':
@@ -478,7 +489,7 @@ const Canvas = (props: CanvasProps) => {
 		let player: Player | Record<string, never> = {};
 		let food: Food | Record<string, never> = {};
 		const rains: Rain[] = [];
-
+		
 		let executeGame = false;
 		let isGameOver = false;
 		let rainIndex = 0;
@@ -492,12 +503,13 @@ const Canvas = (props: CanvasProps) => {
 			DialogHandler('init', startingPosition);
 			
 			//Controllers registration
-			document.addEventListener('keydown', controlling);
-			document.addEventListener('keyup', uncontrolling);
-			right.addEventListener('touchstart', controlRight, false);
-			left.addEventListener('touchstart', controlLeft, false);
-			right.addEventListener('touchend', uncontrolRight, false);
-			left.addEventListener('touchend', uncontrolLeft, false);
+			newGameBtn.addEventListener('click', NewGame);
+			document.addEventListener('keydown', ControlKeyboard.controlling);
+			document.addEventListener('keyup', ControlKeyboard.uncontrolling);
+			right.addEventListener('touchstart', ControlTouch.controlRight, false);
+			left.addEventListener('touchstart', ControlTouch.controlLeft, false);
+			right.addEventListener('touchend', ControlTouch.uncontrolRight, false);
+			left.addEventListener('touchend', ControlTouch.uncontrolLeft, false);
 		};
 		
 		
@@ -564,14 +576,14 @@ const Canvas = (props: CanvasProps) => {
 		/////////USE-EFFECT CLEAN-UP
 		return () => {
 			document.removeEventListener('visibilitychange', handleInactive);
-			document.removeEventListener('keydown', controlling);
-			document.removeEventListener('keyup', uncontrolling);
+			document.removeEventListener('keydown', ControlKeyboard.controlling);
+			document.removeEventListener('keyup', ControlKeyboard.uncontrolling);
 			window.removeEventListener('resize', reportWindowSize);
 			window.removeEventListener('load', executeLoaded);
-			right.removeEventListener('touchstart', controlRight, false);
-			left.removeEventListener('touchstart', controlLeft, false);
-			right.removeEventListener('touchend', uncontrolRight, false);
-			left.removeEventListener('touchend', uncontrolLeft, false);
+			right.removeEventListener('touchstart', ControlTouch.controlRight, false);
+			left.removeEventListener('touchstart', ControlTouch.controlLeft, false);
+			right.removeEventListener('touchend', ControlTouch.uncontrolRight, false);
+			left.removeEventListener('touchend', ControlTouch.uncontrolLeft, false);
 
 			clearTimeout(timeoutIntro);
 			clearTimeout(timeoutInitial);
@@ -586,7 +598,7 @@ const Canvas = (props: CanvasProps) => {
 
 
 	/////////HOOK THE SCRIPT TO USE-EFFECT  
-	useEffect(GameScript, []); 
+	useEffect(GameScript, [selectedTheme]); 
 
 	return (
 		<div className="flex-sc col full pointer-events-none" style={{ zIndex: -1 }}>
