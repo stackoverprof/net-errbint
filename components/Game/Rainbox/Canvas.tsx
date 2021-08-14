@@ -113,8 +113,8 @@ const Canvas = (props: CanvasProps) => {
 					);
 					ctx.fill();
 
-					this.shine += 0.025;
-					if (this.shine >= 0.75) this.shine = 0;
+					this.shine += 0.025 * FPS_ADAPTOR;
+					if (this.shine >= 1) this.shine = 0;
 				}
 			};
 
