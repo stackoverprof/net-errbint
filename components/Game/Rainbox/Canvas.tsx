@@ -81,6 +81,7 @@ const Canvas = (props: CanvasProps) => {
 			CheckCollisions = () => {
 				for (const rain of rains) {
 					if (
+						rain &&
 						this.Position.X <= rain.Position.X + rain.Width &&
 						this.Position.X + this.Width >= rain.Position.X &&
 						this.Position.Y + this.Height >= rain.Position.Y &&
@@ -140,8 +141,6 @@ const Canvas = (props: CanvasProps) => {
 			Move = () => {
 				if (!(this.Position.X + this.Velocity < 0) && !(this.Position.X + this.Velocity > screenWidth - 50)) {
 					this.Position.X += this.Velocity;
-					console.log(this.Velocity);
-					
 				} else if (this.Position.X > screenWidth - this.Width) {
 					this.Position.X = screenWidth - (this.Width + 2);
 				}
@@ -169,13 +168,13 @@ const Canvas = (props: CanvasProps) => {
 		};
 
 		class Rain extends RainType {
-			constructor (posX) {
+			constructor (posX: number, index: number) {
 				super();
 
 				this.Height = RainConfig.size;
 				this.Width = RainConfig.size;
 				this.Velocity = (Math.random() * RainConfig.additionalSpeed + RainConfig.base) * FPS_ADAPTOR;
-				this.Index = rainIndex;
+				this.Index = index;
 
 				this.Position = {
 					X: posX,
@@ -204,11 +203,17 @@ const Canvas = (props: CanvasProps) => {
 				ctx.fill();
 			};
 
+			Remove = () => {
+				rains[this.Index] = null;
+			}
+
 			Update = () => {
 				if (this.Position.Y < screenHeight - navbarOffset + this.Height * 5) {
 					this.Position.Y += this.Velocity;
 					this.DrawHead();
 					this.DrawTrail();
+				} else {
+					this.Remove();
 				}
 			};
 		}
@@ -466,7 +471,7 @@ const Canvas = (props: CanvasProps) => {
 
 		let executeGame = false;
 		let isGameOver = false;
-		const rainIndex = 0;
+		let rainIndex = 0;
 		
 		const IgniteGame = () => {
 			const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
@@ -532,8 +537,10 @@ const Canvas = (props: CanvasProps) => {
 				
 				//Then, redrawing objects
 				if (!isGameOver && isAttempted) food.Update();
-				for (const rain of rains) rain.Update();
+				for (const rain of rains) if (rain) rain.Update();
 				player.Update();
+				
+				console.log(rains);
 			}
 		}, 1000/FPS);
 		
@@ -546,7 +553,7 @@ const Canvas = (props: CanvasProps) => {
 				let randomPos: number;
 				do randomPos = Math.random() * (screenWidth + RainConfig.size * 2) - RainConfig.size;
 				while (!isAttempted && randomPos > player.Position.X - RainConfig.size * 2 && randomPos < player.Position.X + RainConfig.size * 2);
-				rains.push(new Rain(randomPos));
+				rains.push(new Rain(randomPos, rainIndex++));
 			}
 
 			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
