@@ -123,8 +123,8 @@ const Canvas = (props: CanvasProps) => {
 			};
 
 			Draw = () => {
-				if (this.RGB.g == 152) this.RGBChange.g = -0.5;
-				if (this.RGB.g == 74) this.RGBChange.g = 0.5;
+				if (this.RGB.g === 152) this.RGBChange.g = -0.5;
+				if (this.RGB.g === 74) this.RGBChange.g = 0.5;
 				this.RGB.g += this.RGBChange.g;
 				if (!isGameOver) this.Color = `rgb(255, ${this.RGB.g}, 20)`;
 
@@ -231,7 +231,7 @@ const Canvas = (props: CanvasProps) => {
 				
 				this.PosX = randomPos;
 			}
-
+ 
 
 			Draw = () => {
 				if (this.PosX > screenWidth - this.Width * 2) this.PosX = screenWidth - this.Width * 2;
@@ -310,33 +310,35 @@ const Canvas = (props: CanvasProps) => {
 		let isLeftPressed = false;
 
 		const controlling = (e) => {
-			if (e.which == 65 || e.which == 37) {
+			if (e.which === 40) e.preventDefault();
+			
+			if (e.which === 65 || e.which === 37) {
 				//GO LEFT 
 				isLeftPressed = true;
 				player.Velocity = -5;
 				FirstAttempt();
-			} else if (e.which == 68 || e.which == 39) {
+			} else if (e.which === 68 || e.which === 39) {
 				//GO RIGHT
 				isRightPressed = true;
 				player.Velocity = 5;
 				FirstAttempt();
-			} else if (e.which == 13 && isGameOver && document.activeElement !== siderinput) {
+			} else if (e.which === 13 && isGameOver && document.activeElement !== siderinput) {
 				//PRESSING ENTER
 				NewGame();
 			}
 
 			//SPECIAL THING
-			else if (e.which == 16) {
-				if (e.location == 1) GlimpseHandler('regular');
-				else if (e.location == 2) GlimpseHandler('special');
+			else if (e.which === 16) {
+				if (e.location === 1) GlimpseHandler('regular');
+				else if (e.location === 2) GlimpseHandler('special');
 			}
 		};
 
 		const uncontrolling = (e) => {
-			if (e.which == 65 || e.which == 37) {
+			if (e.which === 65 || e.which === 37) {
 				isLeftPressed = false;
 				player.Velocity = isRightPressed ? 5 : 0;
-			} else if (e.which == 68 || e.which == 39) {
+			} else if (e.which === 68 || e.which === 39) {
 				isRightPressed = false;
 				player.Velocity = isLeftPressed ? -5 : 0;
 			}
@@ -405,15 +407,15 @@ const Canvas = (props: CanvasProps) => {
 				}, 350);
 			};
 
-			if (score % 10 == 0 || score == 'special') {
+			if (score % 10 === 0 || score === 'special') {
 				animateSpecial(et, nr, bri);
 				setTimeout(() => animateSpecial(et, nr, bri), 700);
 				setTimeout(() => animateSpecial(et, nr, bri), 1400);
-			} else if (score % 5 == 0 || score == 'regular') {
+			} else if (score % 5 === 0 || score === 'regular') {
 				animate(et);
 				setTimeout(() => animate(nr), 150);
 				setTimeout(() => animate(bri), 400);
-			} else if (score == 'intro') {
+			} else if (score === 'intro') {
 				setGameStatus('sub.intro');
 				animateIntro(et);
 				setTimeout(() => animateIntro(bri), 500);
@@ -461,9 +463,9 @@ const Canvas = (props: CanvasProps) => {
 		let food: Food | Record<string, never> = {};
 		const rains: Rain[] = [];
 
+		let executeGame = false;
 		let isGameOver = false;
 		let rainIndex = 0;
-		let executeGame = false;
 		
 		const IgniteGame = () => {
 			const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
