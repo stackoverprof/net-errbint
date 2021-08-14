@@ -161,9 +161,9 @@ const Canvas = (props: CanvasProps) => {
 		class Rain extends RainType {
 			constructor (index: number) {
 				super();
-				this.Colortrail0 = 'rgba(220,220,220,1)';
-				this.Colortrail1 = 'rgba(220,220,220,0)';
-				this.Colorbox = 'rgb(210,210,210)';
+				this.Colorbox = isAttempted ? '#888888' : 'rgb(210,210,210)';
+				this.Colortrail0 = isAttempted ? 'rgba(200,200,200,1)' : 'rgba(220,220,220,1)';
+				this.Colortrail1 = 'rgba(200,200,200,0)';
 				this.AdditionalSpeed = 4;
 				this.Base = 5;
 				this.Size = 30;
