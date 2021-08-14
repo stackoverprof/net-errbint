@@ -28,7 +28,10 @@ const Canvas = (props: CanvasProps) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	const GameScript = () => {
-		let _isMounted = true;
+		let _isMounted = true;	
+		
+		const FPS = 50;
+		const REALTIME = 100/FPS;
 
 		/////////CANVAS INITIALIZATION 
 		const canvas: HTMLCanvasElement = canvasRef.current;
@@ -75,7 +78,7 @@ const Canvas = (props: CanvasProps) => {
 				this.Color = GameTheme;
 				this.Blur = 25;
 				this.Velocity = 0;
-				this.Acceleration = 5 * FPS_ADAPTOR;
+				this.Acceleration = 5 * REALTIME;
 				this.shine = 0;
 				
 				this.EatCount = 0;
@@ -125,7 +128,7 @@ const Canvas = (props: CanvasProps) => {
 					);
 					ctx.fill();
 
-					this.shine += 0.025 * FPS_ADAPTOR;
+					this.shine += 0.025 * REALTIME;
 					if (this.shine >= 1) this.shine = 0;
 				}
 			};
@@ -181,7 +184,7 @@ const Canvas = (props: CanvasProps) => {
 
 				this.Height = this.Size;
 				this.Width = this.Size;
-				this.Velocity = (Math.random() * this.AdditionalSpeed + this.Base) * FPS_ADAPTOR;
+				this.Velocity = (Math.random() * this.AdditionalSpeed + this.Base) * REALTIME;
 				this.Index = index;
 
 				this.Position = {
@@ -497,6 +500,8 @@ const Canvas = (props: CanvasProps) => {
 		const IgniteGame = () => {
 			const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
 			player = new Player(startingPosition);
+			console.log(player);
+			
 			executeGame = true;
 
 			setGameStatus('initial');
@@ -535,13 +540,9 @@ const Canvas = (props: CanvasProps) => {
 
 		if (isInitialLoad) window.addEventListener('load', executeLoaded);
 		else executeLoaded();
-		const executeFallback = setTimeout(executeLoaded, 2000);
 
 		
 		/////////SCREEN UPDATER
-		const FPS = 50;
-		const FPS_ADAPTOR = (1000/FPS)/10;
-
 		const Updater = setInterval(() => {
 			if (executeGame) {
 				const livespan = player.TimeEnd != 'initial' ? player.TimeSpan : new Date().getTime() - player.TimeStart;
@@ -588,7 +589,6 @@ const Canvas = (props: CanvasProps) => {
 			clearTimeout(timeoutIntro);
 			clearTimeout(timeoutInitial);
 			clearTimeout(timeoutExecute);
-			clearTimeout(executeFallback);
 			clearTimeout(GenerateRainTimeout);
 			clearInterval(Updater);
 
