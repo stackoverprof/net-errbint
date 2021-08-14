@@ -469,8 +469,8 @@ const Canvas = (props: CanvasProps) => {
 
 
 		/////////HANDLE INACTIVE TAB
-		let tabInactive = false;
-		const handleInactive = () => tabInactive = document.hidden ? true : false;
+		let isTabInactive = false;
+		const handleInactive = () => isTabInactive = document.hidden ? true : false;
 		document.addEventListener('visibilitychange', handleInactive);
 
 
@@ -553,7 +553,7 @@ const Canvas = (props: CanvasProps) => {
 		/////////RAINFALL GENERATOR
 		
 		const GenerateRain = () => {
-			if (!isGameOver && !tabInactive && executeGame) rains.push(new Rain(rainIndex++));
+			if (!isGameOver && !isTabInactive && executeGame) rains.push(new Rain(rainIndex++));
 			
 			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
 			if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
