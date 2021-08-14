@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { PlayerType, RainType, FoodType, CanvasProps} from './Canvas.types';
 import { useLayout } from '@core/contexts/index';
+import { GameTheme } from './theme';
 
 // [TODO] : di hape masi ga nyaman, secara responsivitas
 
@@ -60,13 +61,8 @@ const Canvas = (props: CanvasProps) => {
 
 
 		/////////PICK THEME
-		const GameTheme = {
-			orange: 'rgb(255, 74, 20)',
-			purple: 'rgb(120, 16, 255)',
-			green: 'rgb(16, 255, 28)',
-			blue: 'rgb(16, 187, 255)',
-		}[selectedTheme];
-
+		const THEME = GameTheme[selectedTheme];
+		
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
 		class Player extends PlayerType {
 			constructor (posX: number) {
@@ -74,14 +70,13 @@ const Canvas = (props: CanvasProps) => {
 
 				this.Height = 50;
 				this.Width = 50;
-				this.Shadow = 'orange';
-				this.RGB = { r: 255, g: 74, b: 20 };
-				this.RGBChange = { r: 0, g: 0.5, b: 0 };
-				this.Color = GameTheme;
+				this.Shadow = THEME.shadow;
+				this.Color = THEME.dark;
 				this.Blur = 25;
 				this.Velocity = 0;
 				this.Acceleration = 5 * REALTIME;
-				this.shine = 0;
+				this.Emphasis = { alpha: 0.0, direction: 'up'};
+				this.Shine = 0;
 				
 				this.EatCount = 0;
 				this.TimeStart = new Date().getTime();
@@ -104,7 +99,7 @@ const Canvas = (props: CanvasProps) => {
 						this.Position.Y <= rain.Position.Y + rain.Height
 					) {
 						GameOver();
-						this.shine = 0.025;
+						this.Shine = 0.025;
 					}
 				}
 			};
@@ -114,44 +109,52 @@ const Canvas = (props: CanvasProps) => {
 					this.EatCount++;
 					GlimpseHandler(this.EatCount);
 					food = new Food();
-					this.shine = 0.025;
+					this.Shine = 0.025;
 				}
 			};
 
 			DrawShine = () => {
-				if (this.shine > 0) {
-					ctx.fillStyle = `rgba(${isGameOver ? '0, 0, 0,' : '255, 90, 20,'} ${-(this.shine * 2 - 1)})`;
+				if (this.Shine > 0) {
+					ctx.fillStyle = `rgba(${isGameOver ? '0, 0, 0,' : '255, 90, 20,'} ${-(this.Shine * 2 - 1)})`;
 					ctx.beginPath();
 					ctx.rect(
-						this.Position.X - (this.Width * (1 + this.shine) - this.Width) / 2,
-						this.Position.Y - (this.Width * (1 + this.shine) - this.Width) / 2,
-						this.Width * (1 + this.shine),
-						this.Height * (1 + this.shine)
+						this.Position.X - (this.Width * (1 + this.Shine) - this.Width) / 2,
+						this.Position.Y - (this.Width * (1 + this.Shine) - this.Width) / 2,
+						this.Width * (1 + this.Shine),
+						this.Height * (1 + this.Shine)
 					);
 					ctx.fill();
 
-					this.shine += 0.025 * REALTIME;
-					if (this.shine >= 1) this.shine = 0;
+					this.Shine += 0.025 * REALTIME;
+					if (this.Shine >= 1) this.Shine = 0;
 				}
 			};
-
-			DialogAttachment = () => {
-				avoid.style.left = `${this.Position.X + 34}px`;
-				ohno.style.left = `${this.Position.X + 34}px`;
+			
+			DrawEmphasis = () => {
+				if (this.Emphasis.alpha >= 1.0) this.Emphasis.direction = 'down';
+				if (this.Emphasis.alpha <= 0.0) this.Emphasis.direction = 'up';
+				this.Emphasis.alpha += this.Emphasis.direction === 'up' ? 0.01 : -0.01;
+				
+				ctx.shadowColor = '#0000';
+				ctx.shadowBlur = 0;
+				ctx.fillStyle = THEME.light + (this.Emphasis.alpha * 255).toString(16).split('.')[0];
+				ctx.beginPath();
+				ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
+				ctx.fill();
 			};
-
+			
 			Draw = () => {
-				if (this.RGB.g === 152) this.RGBChange.g = -0.5;
-				if (this.RGB.g === 74) this.RGBChange.g = 0.5;
-				this.RGB.g += this.RGBChange.g;
-				// if (!isGameOver) this.Color = `rgb(255, ${this.RGB.g}, 20)`;
-
 				ctx.shadowColor = this.Shadow;
 				ctx.shadowBlur = this.Blur;
 				ctx.fillStyle = this.Color;
 				ctx.beginPath();
 				ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
 				ctx.fill();
+			};
+			
+			DialogAttachment = () => {
+				avoid.style.left = `${this.Position.X + 34}px`;
+				ohno.style.left = `${this.Position.X + 34}px`;
 			};
 
 			Move = () => {
@@ -169,6 +172,7 @@ const Canvas = (props: CanvasProps) => {
 				this.CheckEaten();
 				this.Draw();
 				this.DrawShine();
+				this.DrawEmphasis();
 			};
 		}
 
