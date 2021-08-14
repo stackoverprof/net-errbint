@@ -20,13 +20,12 @@ export class PlayerType {
 	Height: number;
 	Width: number;
 	Shadow: string;
-	RGB: { r: number; g: number; b: number; };
-	RGBChange: { r: number; g: number; b: number; };
 	Color: string;
 	Blur: number;
 	Velocity: number;
 	Acceleration: number;
-	shine: number;
+	Emphasis: { alpha: number, direction: 'up' | 'down' };
+	Shine: number;
 	EatCount: number;
 	TimeStart: number;
 	TimeEnd: number | 'initial';
