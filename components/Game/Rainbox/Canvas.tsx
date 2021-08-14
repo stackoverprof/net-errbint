@@ -181,8 +181,6 @@ const Canvas = (props: CanvasProps) => {
 					X: posX,
 					Y: -this.Height
 				};
-				
-				rains[rainIndex++] = this;
 			}
 
 			DrawHead = () => {
@@ -468,7 +466,7 @@ const Canvas = (props: CanvasProps) => {
 
 		let executeGame = false;
 		let isGameOver = false;
-		let rainIndex = 0;
+		const rainIndex = 0;
 		
 		const IgniteGame = () => {
 			const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
@@ -548,7 +546,7 @@ const Canvas = (props: CanvasProps) => {
 				let randomPos: number;
 				do randomPos = Math.random() * (screenWidth + RainConfig.size * 2) - RainConfig.size;
 				while (!isAttempted && randomPos > player.Position.X - RainConfig.size * 2 && randomPos < player.Position.X + RainConfig.size * 2);
-				new Rain(randomPos);
+				rains.push(new Rain(randomPos));
 			}
 
 			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
