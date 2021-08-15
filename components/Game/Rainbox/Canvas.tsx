@@ -78,6 +78,7 @@ const Canvas = (props: CanvasProps) => {
 				this.Velocity = 5 * REALTIME;
 				this.Emphasis = { alpha: 0.0, direction: 'up'};
 				this.Shine = 0;
+				this.IsAlive = true;
 								
 				this.EatCount = 0;
 				this.TimeStart = new Date().getTime();
@@ -120,7 +121,7 @@ const Canvas = (props: CanvasProps) => {
 				if (this.Shine > 0.4) {
 					ctx.shadowColor = '#0000';
 					ctx.shadowBlur = 0;
-					ctx.fillStyle = (isGameOver ? '#000000' : THEME.light) + (this.Shine * 255/2).toString(16).split('.')[0];
+					ctx.fillStyle = (!this.IsAlive ? '#000000' : THEME.light) + (this.Shine * 255/2).toString(16).split('.')[0];
 					ctx.beginPath();
 					ctx.rect(
 						this.Position.X - (this.Width * (1 - (this.Shine - 1)) - this.Width) / 2,
@@ -135,7 +136,7 @@ const Canvas = (props: CanvasProps) => {
 			};
 			
 			DrawEmphasis = () => {
-				if (!isGameOver) {
+				if (this.IsAlive) {
 					if (this.Emphasis.alpha >= 1.0) this.Emphasis.direction = 'down';
 					if (this.Emphasis.alpha <= 0.0) this.Emphasis.direction = 'up';
 					const speed = 0.005 * REALTIME;
@@ -165,6 +166,7 @@ const Canvas = (props: CanvasProps) => {
 			};
 
 			Dead = () => {
+				this.IsAlive = false;
 				this.TimeEnd = new Date().getTime();
 				this.Shadow = '#000';
 				this.Color = '#000';
@@ -175,7 +177,7 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			UpdateScoring = () => {
-				if (!isGameOver){
+				if (this.IsAlive){
 					setScore({
 						food: player.EatCount,
 						time: parseInt(((isAttempted ? player.TimeSpan : 0) / 10).toFixed(0))
@@ -319,8 +321,7 @@ const Canvas = (props: CanvasProps) => {
 
 		/////////GAME OVER HANDLER        
 		const GameOver = () => {
-			if (!isGameOver && isAttempted) {
-				isGameOver = true;
+			if (player.IsAlive && isAttempted) {
 				food = {};
 				
 				DialogHandler('over');
@@ -332,7 +333,6 @@ const Canvas = (props: CanvasProps) => {
 
 		/////////NEW GAME HANDLER		
 		const NewGame = () => {
-			isGameOver = false;
 			player = new Player(player.Position.X);
 			food = new Food();
 			
@@ -385,7 +385,7 @@ const Canvas = (props: CanvasProps) => {
 
 				//PRESSING ENTER
 				const siderinput: HTMLInputElement = sideRef.current;
-				if (e.which === 13 && isGameOver && document.activeElement !== siderinput) {
+				if (e.which === 13 && !player.IsAlive && document.activeElement !== siderinput) {
 					NewGame();
 				}
 				
@@ -529,7 +529,6 @@ const Canvas = (props: CanvasProps) => {
 		const rains: Rain[] = memoized.rains;
 		
 		let executeGame = false;
-		let isGameOver = false;
 		let rainIndex = 0;
 		
 		const IgniteGame = () => {
@@ -583,7 +582,7 @@ const Canvas = (props: CanvasProps) => {
 				ctx.clearRect(0, 0, screenWidth, screenHeight);
 				
 				//Then, redrawing objects
-				if (!isGameOver && isAttempted) food.Update();
+				if (player.IsAlive && isAttempted) food.Update();
 				for (const rain of rains) if (rain) rain.Update();
 				player.Update();
 			}
@@ -593,7 +592,7 @@ const Canvas = (props: CanvasProps) => {
 		/////////RAINFALL GENERATOR
 		
 		const GenerateRain = () => {
-			if (!isGameOver && !isTabInactive && executeGame) rains.push(new Rain(rainIndex++));
+			if (player.IsAlive && !isTabInactive && executeGame) rains.push(new Rain(rainIndex++));
 			
 			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
 			if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 

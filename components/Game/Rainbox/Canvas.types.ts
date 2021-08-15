@@ -25,6 +25,7 @@ export class PlayerType {
 	Color: string;
 	Blur: number;
 	Velocity: number;
+	IsAlive: boolean;
 	Acceleration: number;
 	Emphasis: { alpha: number, direction: 'up' | 'down' };
 	Shine: number;
