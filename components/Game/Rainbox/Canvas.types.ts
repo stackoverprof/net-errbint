@@ -18,6 +18,26 @@ export interface CanvasProps {
 
 export type EnumDirection = 'idle' | 'left' | 'right';
 
+export class EnvironmentType {
+	FPS: number;
+	REALTIME: number;
+	canvas: HTMLCanvasElement;
+	ctx: CanvasRenderingContext2D;
+	screenWidth: number;
+	screenHeight: number;
+	isTabInactive: boolean;
+	THEME: any;
+}
+export class ControlType {
+	CONTROL_DIRECTION: EnumDirection;
+	isRightPressed: boolean;
+	isLeftPressed: boolean;
+	newGameBtn: HTMLButtonElement;
+	right: HTMLDivElement;
+	left: HTMLDivElement;
+	isRightTouched: boolean;
+	isLeftTouched: boolean;
+}
 export class PlayerType {
 	Height: number;
 	Width: number;

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useMemo } from 'react';
-import { PlayerType, RainType, FoodType, CanvasProps, EnumDirection} from './Canvas.types';
+import { PlayerType, RainType, FoodType, CanvasProps, EnumDirection, ControlType, EnvironmentType} from './Canvas.types';
 import { useLayout } from '@core/contexts/index';
 import { GameTheme } from './theme';
 
@@ -33,42 +33,63 @@ const Canvas = (props: CanvasProps) => {
 		rains: useMemo(() => [], []),
 	};
 
+			
+	/////////GLIMPSE HANDLER
+	const GlimpseHandler = (score) => {
+		const bri = briRef.current;
+		const nr = nrRef.current;
+		const et = etRef.current;
+			
+		const animate = (element) => {
+			element.style.opacity = 1;
+
+			setTimeout(() => {
+				element.style.opacity = 0;
+			}, 200);
+		};
+			
+		const animateIntro = (element) => {
+			element.style.transition = '1s';
+			element.style.opacity = 0;
+
+			setTimeout(() => {
+				element.style.transition = '0.2s';
+			}, 1000);
+		};
+
+		const animateSpecial = (et, nr, bri) => {
+			et.style.opacity = 1;
+			nr.style.opacity = 1;
+			bri.style.opacity = 1;
+				
+			setTimeout(() => {
+				et.style.opacity = 0;
+				nr.style.opacity = 0;
+				bri.style.opacity = 0;
+			}, 350);
+		};
+			
+		if (score % 10 === 0 || score === 'special') {
+			animateSpecial(et, nr, bri);
+			setTimeout(() => animateSpecial(et, nr, bri), 700);
+			setTimeout(() => animateSpecial(et, nr, bri), 1400);
+		} else if (score % 5 === 0 || score === 'regular') {
+			animate(et);
+			setTimeout(() => animate(nr), 150);
+			setTimeout(() => animate(bri), 400);
+		} else if (score === 'intro') {
+			setGameStatus('sub.intro');
+			animateIntro(et);
+			setTimeout(() => animateIntro(bri), 500);
+			setTimeout(() => animateIntro(nr), 1000);
+		}
+	};
+
+		
+
 	const GameScript = () => {
 		let _isMounted = true;	
-
-		const FPS = 50;
-		const REALTIME = 100/FPS;
-
-		/////////CANVAS INITIALIZATION 
-		const canvas: HTMLCanvasElement = canvasRef.current;
-		const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 		
-		let screenWidth = window.innerWidth;
-		let screenHeight = window.innerHeight;
-		canvas.width = screenWidth;
-		canvas.height = screenHeight;
-
-		
-		/////////HANDLE INACTIVE TAB
-		let isTabInactive = false;
-		const handleInactive = () => isTabInactive = document.hidden ? true : false;
-		document.addEventListener('visibilitychange', handleInactive);
-
-
-		/////////SCREEN RESIZE HANDLER
-		const reportWindowSize = () => {
-			screenWidth = window.innerWidth;
-			screenHeight = window.innerHeight;
-			canvas.width = screenWidth;
-			canvas.height = screenHeight;
-
-			if (IS_EXECUTED) player.Position.Y = screenHeight - player.Height;
-		};
-		window.addEventListener('resize', reportWindowSize);
-
-
-		/////////PICK THEME
-		const THEME = GameTheme[selectedTheme];
 		
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
 		class Player extends PlayerType {
@@ -78,10 +99,10 @@ const Canvas = (props: CanvasProps) => {
 				this.IsAppearing = false;
 				this.Height = 50;
 				this.Width = 50;
-				this.Shadow = THEME.shadow;
-				this.Color = THEME.dark;
+				this.Shadow = ENV.THEME.shadow;
+				this.Color = ENV.THEME.dark;
 				this.Blur = 25;
-				this.Velocity = 5 * REALTIME;
+				this.Velocity = 5 * ENV.REALTIME;
 				this.Emphasis = { alpha: 0.0, direction: 'up'};
 				this.Shine = 0;
 				
@@ -92,8 +113,8 @@ const Canvas = (props: CanvasProps) => {
 				this.TimeSpan = 0;
 				
 				this.Position = {
-					X: screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306,
-					Y: screenHeight - this.Height
+					X: ENV.screenWidth < 744 ? ENV.screenWidth * 10 / 100 : ENV.screenWidth / 2 - 306,
+					Y: ENV.screenHeight - this.Height
 				};
 			}
 			
@@ -103,8 +124,8 @@ const Canvas = (props: CanvasProps) => {
 				this.TimeStart = new Date().getTime();
 				this.TimeEnd = 'initial';
 				this.TimeSpan = 0;
-				this.Shadow = THEME.shadow;
-				this.Color = THEME.dark;
+				this.Shadow = ENV.THEME.shadow;
+				this.Color = ENV.THEME.dark;
 				
 				food.Spawn();
 				
@@ -159,19 +180,19 @@ const Canvas = (props: CanvasProps) => {
 			DrawShine = (action?: string) => {
 				if (action === 'init') this.Shine = 1;
 				if (this.Shine > 0.4) {
-					ctx.shadowColor = '#0000';
-					ctx.shadowBlur = 0;
-					ctx.fillStyle = (!this.IsAlive ? '#000000' : THEME.light) + (this.Shine * 255/2).toString(16).split('.')[0];
-					ctx.beginPath();
-					ctx.rect(
+					ENV.ctx.shadowColor = '#0000';
+					ENV.ctx.shadowBlur = 0;
+					ENV.ctx.fillStyle = (!this.IsAlive ? '#000000' : ENV.THEME.light) + (this.Shine * 255/2).toString(16).split('.')[0];
+					ENV.ctx.beginPath();
+					ENV.ctx.rect(
 						this.Position.X - (this.Width * (1 - (this.Shine - 1)) - this.Width) / 2,
 						this.Position.Y - (this.Width * (1 - (this.Shine - 1)) - this.Width) / 2,
 						this.Width * (1 - (this.Shine - 1)),
 						this.Height * (1 - (this.Shine - 1))
 					);
-					ctx.fill();
+					ENV.ctx.fill();
 
-					this.Shine -= 0.03 * REALTIME;
+					this.Shine -= 0.03 * ENV.REALTIME;
 				}
 			};
 			
@@ -179,25 +200,25 @@ const Canvas = (props: CanvasProps) => {
 				if (this.IsAlive) {
 					if (this.Emphasis.alpha >= 1.0) this.Emphasis.direction = 'down';
 					if (this.Emphasis.alpha <= 0.0) this.Emphasis.direction = 'up';
-					const speed = 0.005 * REALTIME;
+					const speed = 0.005 * ENV.REALTIME;
 					this.Emphasis.alpha += this.Emphasis.direction === 'up' ? speed : -speed;
 					
-					ctx.shadowColor = '#0000';
-					ctx.shadowBlur = 0;
-					ctx.fillStyle = THEME.light + (this.Emphasis.alpha * 255).toString(16).split('.')[0];
-					ctx.beginPath();
-					ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
-					ctx.fill();
+					ENV.ctx.shadowColor = '#0000';
+					ENV.ctx.shadowBlur = 0;
+					ENV.ctx.fillStyle = ENV.THEME.light + (this.Emphasis.alpha * 255).toString(16).split('.')[0];
+					ENV.ctx.beginPath();
+					ENV.ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
+					ENV.ctx.fill();
 				}
 			};
 			
 			Draw = () => {
-				ctx.shadowColor = this.Shadow;
-				ctx.shadowBlur = this.Blur;
-				ctx.fillStyle = this.Color;
-				ctx.beginPath();
-				ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
-				ctx.fill();
+				ENV.ctx.shadowColor = this.Shadow;
+				ENV.ctx.shadowBlur = this.Blur;
+				ENV.ctx.fillStyle = this.Color;
+				ENV.ctx.beginPath();
+				ENV.ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
+				ENV.ctx.fill();
 			};
 			
 			DrawDialog = () => {
@@ -261,10 +282,10 @@ const Canvas = (props: CanvasProps) => {
 			Move = (direction: EnumDirection) => {
 				const vector = this.Velocity * {left: -1, right: 1, idle: 0}[direction];
 				
-				if (!(this.Position.X + vector < 0 || this.Position.X + vector > screenWidth - this.Width)) {
+				if (!(this.Position.X + vector < 0 || this.Position.X + vector > ENV.screenWidth - this.Width)) {
 					this.Position.X += vector;
-				} else if (this.Position.X > screenWidth - this.Width) {
-					this.Position.X = screenWidth - (this.Width + 2);
+				} else if (this.Position.X > ENV.screenWidth - this.Width) {
+					this.Position.X = ENV.screenWidth - (this.Width + 2);
 				} else if (this.Position.X < 0) {
 					this.Position.X = 0 + 2;
 				}
@@ -297,7 +318,7 @@ const Canvas = (props: CanvasProps) => {
 
 				this.Height = this.Size;
 				this.Width = this.Size;
-				this.Velocity = (Math.random() * this.AdditionalSpeed + this.Base) * REALTIME;
+				this.Velocity = (Math.random() * this.AdditionalSpeed + this.Base) * ENV.REALTIME;
 				this.Index = index;
 
 				this.Position = {
@@ -308,30 +329,30 @@ const Canvas = (props: CanvasProps) => {
 
 			RandomPosition = () => {
 				let randomPos: number;
-				do randomPos = Math.random() * (screenWidth + this.Size * 2) - this.Size;
+				do randomPos = Math.random() * (ENV.screenWidth + this.Size * 2) - this.Size;
 				while (!player.IsAppearing && randomPos > player.Position.X - this.Size * 2 && randomPos < player.Position.X + this.Size * 2);
 				return randomPos;
 			}
 
 			DrawHead = () => {
-				ctx.beginPath();
-				ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
-				ctx.fillStyle = this.Colorbox;
-				ctx.shadowColor = 'gray';
-				ctx.shadowBlur = 3;
-				ctx.fill();
+				ENV.ctx.beginPath();
+				ENV.ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
+				ENV.ctx.fillStyle = this.Colorbox;
+				ENV.ctx.shadowColor = 'gray';
+				ENV.ctx.shadowBlur = 3;
+				ENV.ctx.fill();
 			};
 
 			DrawTrail = () => {
-				ctx.beginPath();
-				ctx.rect(this.Position.X, this.Position.Y - 120, this.Width, this.Height * 4);
-				this.TrailGradient = ctx.createLinearGradient(screenHeight / 2, this.Position.Y, screenHeight / 2, this.Position.Y - 120);
+				ENV.ctx.beginPath();
+				ENV.ctx.rect(this.Position.X, this.Position.Y - 120, this.Width, this.Height * 4);
+				this.TrailGradient = ENV.ctx.createLinearGradient(ENV.screenHeight / 2, this.Position.Y, ENV.screenHeight / 2, this.Position.Y - 120);
 				this.TrailGradient.addColorStop(0, this.Colortrail0);
 				this.TrailGradient.addColorStop(1, this.Colortrail1);
-				ctx.fillStyle = this.TrailGradient;
-				ctx.shadowColor = '#000';
-				ctx.shadowBlur = 0;
-				ctx.fill();
+				ENV.ctx.fillStyle = this.TrailGradient;
+				ENV.ctx.shadowColor = '#000';
+				ENV.ctx.shadowBlur = 0;
+				ENV.ctx.fill();
 			};
 
 			Move = () => {
@@ -343,7 +364,7 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			Update = () => {
-				if (this.Position.Y < screenHeight + this.Height * 5) {
+				if (this.Position.Y < ENV.screenHeight + this.Height * 5) {
 					this.Move();
 					this.DrawHead();
 					this.DrawTrail();
@@ -362,8 +383,8 @@ const Canvas = (props: CanvasProps) => {
 				this.IsAppearing = false; 
 				this.Width = 20;
 				this.Height = 20;
-				this.Color = THEME.dark;
-				this.Shadow = THEME.shadow;
+				this.Color = ENV.THEME.dark;
+				this.Shadow = ENV.THEME.shadow;
 				this.Blur = 25;
 				this.distance = 50;
 				this.PosX = null;
@@ -371,7 +392,7 @@ const Canvas = (props: CanvasProps) => {
 			
 			RandomPosition = () => {
 				let randomPos;
-				do randomPos = Math.random() * (screenWidth - this.Width * 3) + this.Width;
+				do randomPos = Math.random() * (ENV.screenWidth - this.Width * 3) + this.Width;
 				while (randomPos >= player.Position.X - (this.Width + this.distance) && randomPos <= player.Position.X + player.Width + this.distance);
 				return randomPos;
 			}
@@ -386,14 +407,14 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			Draw = () => {
-				if (this.PosX > screenWidth - this.Width * 2) this.PosX = screenWidth - this.Width * 2;
+				if (this.PosX > ENV.screenWidth - this.Width * 2) this.PosX = ENV.screenWidth - this.Width * 2;
 
-				ctx.beginPath();
-				ctx.rect(this.PosX, screenHeight - this.Height * 2, this.Width, this.Width);
-				ctx.shadowColor = this.Shadow;
-				ctx.shadowBlur = this.Blur;
-				ctx.fillStyle = this.Color;
-				ctx.fill();
+				ENV.ctx.beginPath();
+				ENV.ctx.rect(this.PosX, ENV.screenHeight - this.Height * 2, this.Width, this.Width);
+				ENV.ctx.shadowColor = this.Shadow;
+				ENV.ctx.shadowBlur = this.Blur;
+				ENV.ctx.fillStyle = this.Color;
+				ENV.ctx.fill();
 			};
 
 			Update = () => {
@@ -402,17 +423,10 @@ const Canvas = (props: CanvasProps) => {
 		}
 
 
-		class Control {
-			CONTROL_DIRECTION: EnumDirection;
-			isRightPressed: boolean;
-			isLeftPressed: boolean;
-			newGameBtn: HTMLButtonElement;
-			right: HTMLDivElement;
-			left: HTMLDivElement;
-			isRightTouched: boolean;
-			isLeftTouched: boolean;
-
+		/////////THE CONTROLLER INPUT
+		class Control extends ControlType {
 			constructor() {
+				super();
 				this.CONTROL_DIRECTION = 'idle';
 				
 				this.isRightPressed = false;
@@ -486,69 +500,57 @@ const Canvas = (props: CanvasProps) => {
 				},
 			}
 		}
+
+
+		/////////THE CONTROLLER INPUT
+		class Environment extends EnvironmentType {
+			constructor () {
+				super();
+
+				this.FPS = 50;
+				this.REALTIME = 100/this.FPS;
 		
-		/////////GLIMPSE HANDLER
-		const GlimpseHandler = (score) => {
-			const bri = briRef.current;
-			const nr = nrRef.current;
-			const et = etRef.current;
-			
-			const animate = (element) => {
-				element.style.opacity = 1;
-
-				setTimeout(() => {
-					element.style.opacity = 0;
-				}, 200);
-			};
-			
-			const animateIntro = (element) => {
-				element.style.transition = '1s';
-				element.style.opacity = 0;
-
-				setTimeout(() => {
-					element.style.transition = '0.2s';
-				}, 1000);
-			};
-
-			const animateSpecial = (et, nr, bri) => {
-				et.style.opacity = 1;
-				nr.style.opacity = 1;
-				bri.style.opacity = 1;
+				/////////CANVAS INITIALIZATION 
+				this.canvas = canvasRef.current;
+				this.ctx = this.canvas.getContext('2d');
 				
-				setTimeout(() => {
-					et.style.opacity = 0;
-					nr.style.opacity = 0;
-					bri.style.opacity = 0;
-				}, 350);
-			};
-			
-			if (score % 10 === 0 || score === 'special') {
-				animateSpecial(et, nr, bri);
-				setTimeout(() => animateSpecial(et, nr, bri), 700);
-				setTimeout(() => animateSpecial(et, nr, bri), 1400);
-			} else if (score % 5 === 0 || score === 'regular') {
-				animate(et);
-				setTimeout(() => animate(nr), 150);
-				setTimeout(() => animate(bri), 400);
-			} else if (score === 'intro') {
-				setGameStatus('sub.intro');
-				animateIntro(et);
-				setTimeout(() => animateIntro(bri), 500);
-				setTimeout(() => animateIntro(nr), 1000);
-			}
-		};
-
+				this.screenWidth = window.innerWidth;
+				this.screenHeight = window.innerHeight;
+				this.canvas.width = this.screenWidth;
+				this.canvas.height = this.screenHeight;
 		
+				
+				/////////HANDLE INACTIVE TAB
+				this.isTabInactive = false;
+				
+				
+				/////////PICK THEME
+				this.THEME = GameTheme[selectedTheme];
+			}
+			
+			ReportWindowSize = () => {
+				this.screenWidth = window.innerWidth;
+				this.screenHeight = window.innerHeight;
+				this.canvas.width = this.screenWidth;
+				this.canvas.height = this.screenHeight;
+	
+				if (IS_EXECUTED) player.Position.Y = this.screenHeight - player.Height;
+			};
+			HandleInactive = () => this.isTabInactive = document.hidden ? true : false;
+		}
+
+
 		/////////RUNNING THE GAME :: Execute the game
+		const ENV: Environment = new Environment();
+		const control: Control = new Control();
 		const player: Player = new Player();
 		const food: Food = new Food();
 		const rains: Rain[] = memoized.rains;
-		const control: Control = new Control();
 		
 		let IS_EXECUTED = false;
 		const EXECUTE = () => {
 			const IgniteGame = () => {
-				const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
+				const startingPosition = ENV.screenWidth < 744 ? ENV.screenWidth * 10 / 100 : ENV.screenWidth / 2 - 306;
 				player.NewGame('no-glimpse');
 				IS_EXECUTED = true;
 	
@@ -583,9 +585,9 @@ const Canvas = (props: CanvasProps) => {
 		
 		/////////RAINFALL GENERATOR
 		const GenerateRain = () => {
-			if (player.IsAlive && !isTabInactive && IS_EXECUTED) rains.push(new Rain(rains.length));
+			if (player.IsAlive && !ENV.isTabInactive && IS_EXECUTED) rains.push(new Rain(rains.length));
 			
-			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
+			const dynamicInterval = ENV.screenWidth > 540 ? 100 * (1366 / ENV.screenWidth) : 100 * (1366 / ENV.screenWidth) * 3 / 4;
 			if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
 		};
 		const GenerateRainTimeout: NodeJS.Timeout = GenerateRain();
@@ -595,22 +597,25 @@ const Canvas = (props: CanvasProps) => {
 		const Updater = setInterval(() => {
 			if (IS_EXECUTED) {
 				//Reseting canvas
-				ctx.clearRect(0, 0, screenWidth, screenHeight);
+				ENV.ctx.clearRect(0, 0, ENV.screenWidth, ENV.screenHeight);
 
 				//Then, redrawing objects
 				if (player.IsAlive && player.IsAppearing && food.IsAppearing) food.Update();
 				for (const rain of rains) if (rain) rain.Update();
 				player.Update();
 			}
-		}, 1000/FPS);
+		}, 1000/ENV.FPS);
 		
+
+		document.addEventListener('visibilitychange', ENV.HandleInactive);
+		window.addEventListener('resize', ENV.ReportWindowSize);
 
 		/////////USE-EFFECT CLEAN-UP
 		return () => {
-			document.removeEventListener('visibilitychange', handleInactive);
+			document.removeEventListener('visibilitychange', ENV.HandleInactive);
 			document.removeEventListener('keydown', control.Keyboard.controlling);
 			document.removeEventListener('keyup', control.Keyboard.uncontrolling);
-			window.removeEventListener('resize', reportWindowSize);
+			window.removeEventListener('resize', ENV.ReportWindowSize);
 			control.right.removeEventListener('touchstart', control.Touch.controlRight, false);
 			control.left.removeEventListener('touchstart', control.Touch.controlLeft, false);
 			control.right.removeEventListener('touchend', control.Touch.uncontrolRight, false);
