@@ -131,7 +131,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 						setProcessMessage={setProcessMessage}
 						dialogAvoidRef={dialogAvoidRef}
 						dialogOhnoRef={dialogOhnoRef}
-						isInitialLoad={isInitialLoad}
+						isInitialLoad={gameStatus === 'intro' ? isInitialLoad : false }
 						setScore={setScore}
 						sideRef={sideRef}
 						briRef={briRef}

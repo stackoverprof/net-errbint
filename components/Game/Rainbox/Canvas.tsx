@@ -28,7 +28,11 @@ const Canvas = (props: CanvasProps) => {
 	const leftTouchRef = useRef<HTMLDivElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
-	const rains_memo = useMemo(() => [], []);
+	const memoized = {
+		player: useMemo(() => ({}), []),
+		food: useMemo(() => ({}), []),
+		rains: useMemo(() => [], []),
+	};
 
 	const GameScript = () => {
 		let _isMounted = true;	
@@ -160,7 +164,6 @@ const Canvas = (props: CanvasProps) => {
 			};
 
 			Move = (direction: EnumDirection) => {
-				console.log(direction);
 				const vector = this.Velocity * {left: -1, right: 1, idle: 0}[direction];
 				
 				if (!(this.Position.X + vector < 0 || this.Position.X + vector > screenWidth - this.Width)) {
@@ -503,9 +506,9 @@ const Canvas = (props: CanvasProps) => {
 
 
 		/////////RUNNING THE GAME :: Execute the game
-		let player: Player | Record<string, never> = {};
-		let food: Food | Record<string, never> = {};
-		const rains: Rain[] = rains_memo;
+		let player: Player | Record<string, never> = memoized.player;
+		let food: Food | Record<string, never> = memoized.food;
+		const rains: Rain[] = memoized.rains;
 		
 		let executeGame = false;
 		let isGameOver = false;
