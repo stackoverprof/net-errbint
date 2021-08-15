@@ -323,21 +323,19 @@ const Canvas = (props: CanvasProps) => {
 		let isAttempted = false;
 
 		const FirstAttempt = () => {
-			if (!isAttempted) {
-				isAttempted = true;
-				setGameStatus('running');
+			isAttempted = true;
+			setGameStatus('running');
 				
-				food = new Food();
-				player.TimeStart = new Date().getTime();
-				player.TimeEnd = 'initial';
-				player.TimeSpan = new Date().getTime();
+			food = new Food();
+			player.TimeStart = new Date().getTime();
+			player.TimeEnd = 'initial';
+			player.TimeSpan = new Date().getTime();
 			
-				for (const rain of rains) {
-					if (rain){
-						rain.Colorbox = '#888888';
-						rain.Colortrail0 = 'rgba(200,200,200,1)';
-						rain.Colortrail1 = 'rgba(200,200,200,0)';
-					}
+			for (const rain of rains) {
+				if (rain){
+					rain.Colorbox = '#888888';
+					rain.Colortrail0 = 'rgba(200,200,200,1)';
+					rain.Colortrail1 = 'rgba(200,200,200,0)';
 				}
 			}
 		};
@@ -356,12 +354,12 @@ const Canvas = (props: CanvasProps) => {
 					//GO LEFT 
 					isLeftPressed = true;
 					CONTROL_DIRECTION = 'left';
-					FirstAttempt();
+					if (!isAttempted) FirstAttempt();
 				} else if (e.which === 68 || e.which === 39) {
 					//GO RIGHT
 					isRightPressed = true;
 					CONTROL_DIRECTION = 'right';
-					FirstAttempt();
+					if (!isAttempted) FirstAttempt();
 				}
 
 				//PRESSING ENTER
@@ -402,21 +400,21 @@ const Canvas = (props: CanvasProps) => {
 		const ControlTouch = {
 			controlRight: () => {
 				isRightTouched = true;
-				player.Velocity = player.Acceleration;
-				FirstAttempt();
+				CONTROL_DIRECTION = 'right';
+				if (!isAttempted) FirstAttempt();
 			},
 			controlLeft: () => {
 				isLeftTouched = true;
-				player.Velocity = -player.Acceleration;
-				FirstAttempt();
+				CONTROL_DIRECTION = 'left';
+				if (!isAttempted) FirstAttempt();
 			},
 			uncontrolRight: () => {
 				isRightTouched = false;
-				player.Velocity = isLeftTouched ? -player.Acceleration : 0;
+				CONTROL_DIRECTION = isLeftTouched ? 'left' : 'idle';
 			},
 			uncontrolLeft: () => {
 				isLeftTouched = false;
-				player.Velocity = isRightTouched ? player.Acceleration : 0;
+				CONTROL_DIRECTION = isRightTouched ? 'right' : 'idle';
 			},
 		};
 
