@@ -24,13 +24,14 @@ export class PlayerType {
 	Shadow: string;
 	Color: string;
 	Blur: number;
+	IsAppearing: boolean;
 	Velocity: number;
 	IsAlive: boolean;
 	Acceleration: number;
 	Emphasis: { alpha: number, direction: 'up' | 'down' };
 	Shine: number;
 	EatCount: number;
-	TimeStart: number;
+	TimeStart: number | 'initial';
 	TimeEnd: number | 'initial';
 	TimeSpan: number;
 	Position: { X: number; Y: number; };
@@ -56,6 +57,7 @@ export class FoodType {
 	Height: number;
 	Color: string;
 	Shadow: string;
+	IsAppearing: boolean;
 	Blur: number;
 	distance: number;
 	PosX: number;

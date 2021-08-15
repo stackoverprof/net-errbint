@@ -67,9 +67,10 @@ const Canvas = (props: CanvasProps) => {
 		
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
 		class Player extends PlayerType {
-			constructor (posX: number) {
+			constructor () {
 				super();
 
+				this.IsAppearing = false;
 				this.Height = 50;
 				this.Width = 50;
 				this.Shadow = THEME.shadow;
@@ -78,17 +79,28 @@ const Canvas = (props: CanvasProps) => {
 				this.Velocity = 5 * REALTIME;
 				this.Emphasis = { alpha: 0.0, direction: 'up'};
 				this.Shine = 0;
+				
 				this.IsAlive = true;
-								
 				this.EatCount = 0;
-				this.TimeStart = new Date().getTime();
+				this.TimeStart = 'initial';
 				this.TimeEnd = 'initial';
 				this.TimeSpan = 0;
 				
 				this.Position = {
-					X: posX,
+					X: screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306,
 					Y: screenHeight - this.Height
 				};
+			}
+			
+			Spawn = () => {
+				this.IsAppearing = true;
+				this.IsAlive = true;
+				this.EatCount = 0;
+				this.TimeStart = new Date().getTime();
+				this.TimeEnd = 'initial';
+				this.TimeSpan = 0;
+				this.Shadow = THEME.shadow;
+				this.Color = THEME.dark;
 			}
 
 			CheckCollisions = () => {
@@ -108,10 +120,10 @@ const Canvas = (props: CanvasProps) => {
 			};
 
 			CheckEaten = () => {
-				if (player.Position.X <= food.PosX + food.Width && player.Position.X + player.Width >= food.PosX) {
+				if (food.IsAppearing && player.Position.X <= food.PosX + food.Width && player.Position.X + player.Width >= food.PosX) {
 					this.EatCount++;
 					GlimpseHandler(this.EatCount);
-					food = new Food();
+					food.Spawn();
 					this.DrawShine('init');
 				}
 			};			
@@ -173,7 +185,7 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			UpdateTimeSpan = () => {
-				this.TimeSpan = new Date().getTime() - player.TimeStart;
+				this.TimeSpan = this.TimeStart !== 'initial' ? new Date().getTime() - this.TimeStart : 0;
 			}
 
 			UpdateScoring = () => {
@@ -285,14 +297,15 @@ const Canvas = (props: CanvasProps) => {
 		class Food extends FoodType {
 			constructor () {
 				super();
-
+				
+				this.IsAppearing = false; 
 				this.Width = 20;
 				this.Height = 20;
 				this.Color = THEME.dark;
 				this.Shadow = THEME.shadow;
 				this.Blur = 25;
 				this.distance = 50;
-				this.PosX = this.RandomPosition();
+				this.PosX = null;
 			}
 			
 			RandomPosition = () => {
@@ -300,6 +313,15 @@ const Canvas = (props: CanvasProps) => {
 				do randomPos = Math.random() * (screenWidth - this.Width * 3) + this.Width;
 				while (randomPos >= player.Position.X - (this.Width + this.distance) && randomPos <= player.Position.X + player.Width + this.distance);
 				return randomPos;
+			}
+
+			Spawn = () => {
+				this.IsAppearing = true;
+				this.PosX = this.RandomPosition();
+			}
+
+			Remove = () => {
+				this.IsAppearing = false;
 			}
 
 			Draw = () => {
@@ -322,7 +344,7 @@ const Canvas = (props: CanvasProps) => {
 		/////////GAME OVER HANDLER        
 		const GameOver = () => {
 			if (player.IsAlive && isAttempted) {
-				food = {};
+				food.Remove();
 				
 				DialogHandler('over');
 				setGameStatus('over');
@@ -333,8 +355,8 @@ const Canvas = (props: CanvasProps) => {
 
 		/////////NEW GAME HANDLER		
 		const NewGame = () => {
-			player = new Player(player.Position.X);
-			food = new Food();
+			player.Spawn();
+			food.Spawn();
 			
 			setGameStatus('running');
 			setProcessMessage('');
@@ -350,7 +372,7 @@ const Canvas = (props: CanvasProps) => {
 			isAttempted = true;
 			setGameStatus('running');
 				
-			food = new Food();
+			food.Spawn();
 			
 			for (const rain of rains) {
 				if (rain){
@@ -524,8 +546,8 @@ const Canvas = (props: CanvasProps) => {
 
 
 		/////////RUNNING THE GAME :: Execute the game
-		let player: Player | Record<string, never> = memoized.player;
-		let food: Food | Record<string, never> = memoized.food;
+		const player: Player = new Player();
+		const food: Food = new Food();
 		const rains: Rain[] = memoized.rains;
 		
 		let executeGame = false;
@@ -533,7 +555,7 @@ const Canvas = (props: CanvasProps) => {
 		
 		const IgniteGame = () => {
 			const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
-			player = new Player(startingPosition);
+			player.Spawn();
 			executeGame = true;
 
 			setGameStatus('ready');
@@ -582,9 +604,9 @@ const Canvas = (props: CanvasProps) => {
 				ctx.clearRect(0, 0, screenWidth, screenHeight);
 				
 				//Then, redrawing objects
-				if (player.IsAlive && isAttempted) food.Update();
+				if (player.IsAlive && isAttempted && food.IsAppearing) food.Update();
 				for (const rain of rains) if (rain) rain.Update();
-				player.Update();
+				if (player.IsAppearing) player.Update();
 			}
 		}, 1000/FPS);
 		
