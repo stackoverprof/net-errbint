@@ -99,7 +99,7 @@ const Canvas = (props: CanvasProps) => {
 						this.Position.Y <= rain.Position.Y + rain.Height
 					) {
 						GameOver();
-						this.Shine = 1;
+						this.DrawShine('init');
 					}
 				}
 			};
@@ -109,17 +109,16 @@ const Canvas = (props: CanvasProps) => {
 					this.EatCount++;
 					GlimpseHandler(this.EatCount);
 					food = new Food();
-					this.Shine = 1;
+					this.DrawShine('init');
 				}
 			};			
 
-			DrawShine = () => {
-				if (this.Shine > 0) {
-					console.log(this.Shine.toFixed(2), (isGameOver ? '#000000' : THEME.light) + (this.Shine * 255).toString(16).split('.')[0]);
-					
+			DrawShine = (action?: string) => {
+				if (action === 'init') this.Shine = 1;
+				if (this.Shine > 0.4) {
 					ctx.shadowColor = '#0000';
 					ctx.shadowBlur = 0;
-					ctx.fillStyle = (isGameOver ? '#000000' : THEME.light) + (this.Shine * 255).toString(16).split('.')[0];
+					ctx.fillStyle = (isGameOver ? '#000000' : THEME.light) + (this.Shine * 255/2).toString(16).split('.')[0];
 					ctx.beginPath();
 					ctx.rect(
 						this.Position.X - (this.Width * (1 - (this.Shine - 1)) - this.Width) / 2,
@@ -129,7 +128,7 @@ const Canvas = (props: CanvasProps) => {
 					);
 					ctx.fill();
 
-					this.Shine -= 0.05 * REALTIME;
+					this.Shine -= 0.03 * REALTIME;
 				}
 			};
 			
