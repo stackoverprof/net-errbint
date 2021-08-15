@@ -125,7 +125,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 					
 					<Canvas
 						setGameStatus={setGameStatus}
-						skipIntro={skipIntro && gameStatus === 'intro'}
+						skipIntro={gameStatus === 'intro' ? skipIntro : true }
 						newGameBtnRef={newGameBtnRef}
 						setAnimateValue={setAnimateValue}
 						setProcessMessage={setProcessMessage}

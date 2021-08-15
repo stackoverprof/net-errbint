@@ -33,7 +33,7 @@ const Canvas = (props: CanvasProps) => {
 	const GameScript = () => {
 		let _isMounted = true;	
 
-		const FPS = 100;
+		const FPS = 50;
 		const REALTIME = 100/FPS;
 
 		/////////CANVAS INITIALIZATION 
@@ -71,8 +71,7 @@ const Canvas = (props: CanvasProps) => {
 				this.Shadow = THEME.shadow;
 				this.Color = THEME.dark;
 				this.Blur = 25;
-				this.Velocity = 0;
-				this.Acceleration = 5 * REALTIME;
+				this.Velocity = 5 * REALTIME;
 				this.Emphasis = { alpha: 0.0, direction: 'up'};
 				this.Shine = 0;
 				
@@ -162,9 +161,10 @@ const Canvas = (props: CanvasProps) => {
 
 			Move = (direction: EnumDirection) => {
 				console.log(direction);
+				const vector = this.Velocity * {left: -1, right: 1, idle: 0}[direction];
 				
-				if (!(this.Position.X + this.Velocity < 0 || this.Position.X + this.Velocity > screenWidth - this.Width)) {
-					this.Position.X += this.Acceleration * {left: -1, right: 1, idle: 0}[direction];
+				if (!(this.Position.X + vector < 0 || this.Position.X + vector > screenWidth - this.Width)) {
+					this.Position.X += vector;
 				} else if (this.Position.X > screenWidth - this.Width) {
 					this.Position.X = screenWidth - (this.Width + 2);
 				} else if (this.Position.X < 0) {
@@ -177,9 +177,9 @@ const Canvas = (props: CanvasProps) => {
 				this.DialogAttachment();
 				this.CheckCollisions();
 				this.CheckEaten();
-				this.Draw();
-				this.DrawShine();
 				this.DrawEmphasis();
+				this.DrawShine();
+				this.Draw();
 			};
 		}
 
