@@ -39,13 +39,11 @@ const Canvas = (props: CanvasProps) => {
 		/////////CANVAS INITIALIZATION 
 		const canvas: HTMLCanvasElement = canvasRef.current;
 		const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-		const navbarOffset = 0;
-
-		let screenHeight = window.innerHeight;
+		
 		let screenWidth = window.innerWidth;
-
+		let screenHeight = window.innerHeight;
 		canvas.width = screenWidth;
-		canvas.height = screenHeight - navbarOffset;
+		canvas.height = screenHeight;
 
 
 		/////////SCREEN RESIZE HANDLER
@@ -53,9 +51,9 @@ const Canvas = (props: CanvasProps) => {
 			screenWidth = window.innerWidth;
 			screenHeight = window.innerHeight;
 			canvas.width = screenWidth;
-			canvas.height = screenHeight - navbarOffset;
+			canvas.height = screenHeight;
 
-			if (executeGame) player.Position.Y = screenHeight - player.Height - navbarOffset;
+			if (executeGame) player.Position.Y = screenHeight - player.Height;
 		};
 		window.addEventListener('resize', reportWindowSize);
 
@@ -85,7 +83,7 @@ const Canvas = (props: CanvasProps) => {
 				
 				this.Position = {
 					X: posX,
-					Y: screenHeight - this.Height - navbarOffset
+					Y: screenHeight - this.Height
 				};
 			}
 
@@ -158,8 +156,8 @@ const Canvas = (props: CanvasProps) => {
 			};
 			
 			DialogAttachment = () => {
-				avoid.style.left = `${this.Position.X + 34}px`;
-				ohno.style.left = `${this.Position.X + 34}px`;
+				avoid.style.left = `${this.Position.X + this.Width - 24}px`;
+				ohno.style.left = `${this.Position.X + this.Width - 24}px`;
 			};
 
 			Move = () => {
@@ -237,7 +235,7 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			Update = () => {
-				if (this.Position.Y < screenHeight - navbarOffset + this.Height * 5) {
+				if (this.Position.Y < screenHeight + this.Height * 5) {
 					this.Position.Y += this.Velocity;
 					this.DrawHead();
 					this.DrawTrail();
@@ -273,7 +271,7 @@ const Canvas = (props: CanvasProps) => {
 				if (this.PosX > screenWidth - this.Width * 2) this.PosX = screenWidth - this.Width * 2;
 
 				ctx.beginPath();
-				ctx.rect(this.PosX, screenHeight - navbarOffset - this.Height * 2, this.Width, this.Width);
+				ctx.rect(this.PosX, screenHeight - this.Height * 2, this.Width, this.Width);
 				ctx.shadowColor = this.Shadow;
 				ctx.shadowBlur = this.Blur;
 				ctx.fillStyle = this.Color;
@@ -511,8 +509,6 @@ const Canvas = (props: CanvasProps) => {
 		const IgniteGame = () => {
 			const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
 			player = new Player(startingPosition);
-			console.log(player);
-			
 			executeGame = true;
 
 			setGameStatus('ready');
@@ -614,11 +610,11 @@ const Canvas = (props: CanvasProps) => {
 	useEffect(GameScript, [selectedTheme]); 
 
 	return (
-		<div className="flex-sc col full pointer-events-none" style={{ zIndex: -1 }}>
-			<canvas ref={canvasRef} style={{height: 'calc(100vh - 60px)', zIndex: -2 }} />
-			<div className="absolute w-full inset-0 flex-bc pointer-events-none" style={{height: 'calc(100vh - 60px)', zIndex: 0 }}>
-				<div className="h-full opacity-20 w-1/2 pointer-events-auto select-none" ref={leftTouchRef}></div>
-				<div className="h-full opacity-20 w-1/2 pointer-events-auto select-none" ref={rightTouchRef}></div>
+		<div className="flex-sc col w-full pointer-events-none" style={{height: 'calc(100vh - 60px)', zIndex: -1 }}>
+			<canvas ref={canvasRef} className="absolute inset-0 full" style={{ zIndex: -2 }} />
+			<div className="absolute inset-0 flex-bc full pointer-events-none" style={{ zIndex: 0 }}>
+				<div className="w-1/2 h-full pointer-events-auto select-none opacity-20" ref={leftTouchRef}></div>
+				<div className="w-1/2 h-full pointer-events-auto select-none opacity-20" ref={rightTouchRef}></div>
 			</div>
 		</div>
 	);

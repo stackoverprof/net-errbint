@@ -106,13 +106,13 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 
 	return (
 		<div className="relative full z-0">
-			<div className="relative flex-ec col full" style={{zIndex: -6}} id="game-container">
-				<div className="relative flex-sc col w-full bg-top bg-cover bg-no-repeat" style={{zIndex: -5, height: 'calc(100% - 60px)', backgroundImage: 'url("/img/bg3d.webp")'}}>
-					<div className="absolute inset-0 flex-cc pb-40 pointer-events-none full" style={{zIndex: -3}}>
+			<div className="relative flex-ec col full" style={{ zIndex: -6 }} id="game-container">
+				<div className="relative flex-sc col w-full bg-top bg-cover bg-no-repeat" style={{ zIndex: -5, backgroundImage: 'url("/img/bg3d.webp")'}}>
+					<div className="absolute inset-0 flex-cc pb-40 pointer-events-none full" style={{ zIndex: -3 }}>
 						<div className="absolute flex-cc col w-full">
-							<div className="bg-center bg-contain bg-no-repeat" style={{backgroundImage: 'url("/img/title/h1-dimm.svg")', maxWidth: 675, width: '90%', minWidth: 340, height: 200}}></div>
-							<div className="relative flex-cc-container" style={{zIndex: -4, top: screen > 500 ? '-12px' : '-48px', minHeight: '38px'}}>
-								<p className="pt-1 text-center transition-all font-bahn" style={{fontSize: screen > 500 ? 32 : 24, color: {'running': '#BBBBBB'}[gameStatus] || '#0000'}}>
+							<div className="bg-center bg-contain bg-no-repeat" style={{ backgroundImage: 'url("/img/title/h1-dimm.svg")', maxWidth: 675, width: '90%', minWidth: 340, height: 200}}></div>
+							<div className="relative flex-cc-container" style={{ zIndex: -4, top: screen > 500 ? '-12px' : '-48px', minHeight: '38px'}}>
+								<p className="pt-1 text-center transition-all font-bahn" style={{ fontSize: screen > 500 ? 32 : 24, color: {'running': '#BBBBBB'}[gameStatus] || '#0000'}}>
 									A CREATIVE DEVELOPER
 								</p>
 							</div>
