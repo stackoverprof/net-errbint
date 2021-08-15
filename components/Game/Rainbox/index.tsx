@@ -119,9 +119,11 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 						</div>
 					</div>
 
-					<div ref={nrRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full bg-no-repeat" style={{backgroundImage: 'url("/img/glimpse/nr.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
-					<div ref={etRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full bg-no-repeat" style={{backgroundImage: 'url("/img/glimpse/et.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
-					<div ref={briRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full bg-no-repeat" style={{backgroundImage: 'url("/img/glimpse/bri.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
+					<div className="absolute inset-0 full">
+						<div ref={nrRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full bg-no-repeat" style={{backgroundImage: 'url("/img/glimpse/nr.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
+						<div ref={etRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full bg-no-repeat" style={{backgroundImage: 'url("/img/glimpse/et.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
+						<div ref={briRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full bg-no-repeat" style={{backgroundImage: 'url("/img/glimpse/bri.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
+					</div>
 					
 					<Canvas setGameStatus={setGameStatus}
 						skipIntro={skipIntro && gameStatus === 'intro'}

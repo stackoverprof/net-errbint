@@ -156,8 +156,8 @@ const Canvas = (props: CanvasProps) => {
 			};
 			
 			DialogAttachment = () => {
-				avoid.style.left = `${this.Position.X + this.Width - 24}px`;
-				ohno.style.left = `${this.Position.X + this.Width - 24}px`;
+				avoid.style.left = `${this.Position.X + this.Width - 20}px`;
+				ohno.style.left = `${this.Position.X + this.Width - 20}px`;
 			};
 
 			Move = () => {
