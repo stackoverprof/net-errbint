@@ -180,9 +180,9 @@ const Canvas = (props: CanvasProps) => {
 				this.DialogAttachment();
 				this.CheckCollisions();
 				this.CheckEaten();
-				this.DrawEmphasis();
 				this.DrawShine();
 				this.Draw();
+				this.DrawEmphasis();
 			};
 		}
 
@@ -237,13 +237,17 @@ const Canvas = (props: CanvasProps) => {
 				ctx.fill();
 			};
 
+			Move = () => {
+				this.Position.Y += this.Velocity;
+			}
+
 			Remove = () => {
 				rains[this.Index] = null;
 			}
 
 			Update = () => {
 				if (this.Position.Y < screenHeight + this.Height * 5) {
-					this.Position.Y += this.Velocity;
+					this.Move();
 					this.DrawHead();
 					this.DrawTrail();
 				} else {
