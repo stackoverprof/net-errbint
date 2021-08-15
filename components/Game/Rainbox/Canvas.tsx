@@ -92,8 +92,7 @@ const Canvas = (props: CanvasProps) => {
 				};
 			}
 			
-			Spawn = () => {
-				this.IsAppearing = true;
+			NewGame = (option?: string) => {
 				this.IsAlive = true;
 				this.EatCount = 0;
 				this.TimeStart = new Date().getTime();
@@ -101,6 +100,31 @@ const Canvas = (props: CanvasProps) => {
 				this.TimeSpan = 0;
 				this.Shadow = THEME.shadow;
 				this.Color = THEME.dark;
+				
+				food.Spawn();
+				
+				setGameStatus('running');
+				setProcessMessage('');
+				setAnimateValue(0);
+				if(option !== 'no-glimpse') GlimpseHandler('regular');
+			}
+			
+			DiscoverShield = () => {
+				this.IsAppearing = true;
+
+				this.NewGame('no-glimpse');
+
+				setGameStatus('running');
+				
+				food.Spawn();
+				
+				for (const rain of rains) {
+					if (rain){
+						rain.Colorbox = '#888888';
+						rain.Colortrail0 = 'rgba(200,200,200,1)';
+						rain.Colortrail1 = 'rgba(200,200,200,0)';
+					}
+				}
 			}
 
 			CheckCollisions = () => {
@@ -112,8 +136,7 @@ const Canvas = (props: CanvasProps) => {
 						this.Position.Y + this.Height >= rain.Position.Y &&
 						this.Position.Y <= rain.Position.Y + rain.Height
 					) {
-						GameOver();
-						this.Dead();
+						this.GameOver();
 						this.DrawShine('init');
 					}
 				}
@@ -177,11 +200,17 @@ const Canvas = (props: CanvasProps) => {
 				ohno.style.left = `${this.Position.X + this.Width - 20}px`;
 			};
 
-			Dead = () => {
+			GameOver = () => {
+				if (this.IsAlive) setAnimateValue(this.TimeSpan);
+
 				this.IsAlive = false;
 				this.TimeEnd = new Date().getTime();
 				this.Shadow = '#000';
 				this.Color = '#000';
+				
+				food.Remove();
+				DialogHandler('over');
+				setGameStatus('over');
 			}
 
 			UpdateTimeSpan = () => {
@@ -192,7 +221,7 @@ const Canvas = (props: CanvasProps) => {
 				if (this.IsAlive){
 					setScore({
 						food: player.EatCount,
-						time: parseInt(((isAttempted ? player.TimeSpan : 0) / 10).toFixed(0))
+						time: parseInt(((player.IsAppearing ? player.TimeSpan : 0) / 10).toFixed(0))
 					});
 				}
 			}
@@ -227,8 +256,8 @@ const Canvas = (props: CanvasProps) => {
 		class Rain extends RainType {
 			constructor (index: number) {
 				super();
-				this.Colorbox = isAttempted ? '#888888' : 'rgb(210,210,210)';
-				this.Colortrail0 = isAttempted ? 'rgba(200,200,200,1)' : 'rgba(220,220,220,1)';
+				this.Colorbox = player.IsAppearing ? '#888888' : 'rgb(210,210,210)';
+				this.Colortrail0 = player.IsAppearing ? 'rgba(200,200,200,1)' : 'rgba(220,220,220,1)';
 				this.Colortrail1 = 'rgba(200,200,200,0)';
 				this.AdditionalSpeed = 4;
 				this.Base = 5;
@@ -248,7 +277,7 @@ const Canvas = (props: CanvasProps) => {
 			RandomPosition = () => {
 				let randomPos: number;
 				do randomPos = Math.random() * (screenWidth + this.Size * 2) - this.Size;
-				while (!isAttempted && randomPos > player.Position.X - this.Size * 2 && randomPos < player.Position.X + this.Size * 2);
+				while (!player.IsAppearing && randomPos > player.Position.X - this.Size * 2 && randomPos < player.Position.X + this.Size * 2);
 				return randomPos;
 			}
 
@@ -340,48 +369,6 @@ const Canvas = (props: CanvasProps) => {
 			};
 		}
 
-
-		/////////GAME OVER HANDLER        
-		const GameOver = () => {
-			if (player.IsAlive && isAttempted) {
-				food.Remove();
-				
-				DialogHandler('over');
-				setGameStatus('over');
-				setAnimateValue(player.TimeSpan);
-			}
-		};
-
-
-		/////////NEW GAME HANDLER		
-		const NewGame = () => {
-			player.Spawn();
-			food.Spawn();
-			
-			setGameStatus('running');
-			setProcessMessage('');
-			setAnimateValue(0);
-			GlimpseHandler('regular');
-		};
-		
-		
-		/////////FIRST ATTEMPT TO ENTER THE GAME
-		let isAttempted = false;
-
-		const FirstAttempt = () => {
-			isAttempted = true;
-			setGameStatus('running');
-				
-			food.Spawn();
-			
-			for (const rain of rains) {
-				if (rain){
-					rain.Colorbox = '#888888';
-					rain.Colortrail0 = 'rgba(200,200,200,1)';
-					rain.Colortrail1 = 'rgba(200,200,200,0)';
-				}
-			}
-		};
 		
 
 		/////////CONTROLLER
@@ -397,18 +384,18 @@ const Canvas = (props: CanvasProps) => {
 					//GO LEFT 
 					isLeftPressed = true;
 					CONTROL_DIRECTION = 'left';
-					if (!isAttempted) FirstAttempt();
+					if (!player.IsAppearing) player.DiscoverShield();
 				} else if (e.which === 68 || e.which === 39) {
 					//GO RIGHT
 					isRightPressed = true;
 					CONTROL_DIRECTION = 'right';
-					if (!isAttempted) FirstAttempt();
+					if (!player.IsAppearing) player.DiscoverShield();
 				}
 
 				//PRESSING ENTER
 				const siderinput: HTMLInputElement = sideRef.current;
 				if (e.which === 13 && !player.IsAlive && document.activeElement !== siderinput) {
-					NewGame();
+					player.NewGame();
 				}
 				
 				//AVOID UNEXPECTED SCROLLDOWN
@@ -444,12 +431,12 @@ const Canvas = (props: CanvasProps) => {
 			controlRight: () => {
 				isRightTouched = true;
 				CONTROL_DIRECTION = 'right';
-				if (!isAttempted) FirstAttempt();
+				if (!player.IsAppearing) player.DiscoverShield();
 			},
 			controlLeft: () => {
 				isLeftTouched = true;
 				CONTROL_DIRECTION = 'left';
-				if (!isAttempted) FirstAttempt();
+				if (!player.IsAppearing) player.DiscoverShield();
 			},
 			uncontrolRight: () => {
 				isRightTouched = false;
@@ -552,17 +539,29 @@ const Canvas = (props: CanvasProps) => {
 		
 		let executeGame = false;
 		let rainIndex = 0;
+
+		
+		/////////RAINFALL GENERATOR
+		
+		const GenerateRain = () => {
+			if (player.IsAlive && !isTabInactive && executeGame) rains.push(new Rain(rainIndex++));
+			
+			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
+			if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
+		};
+		const GenerateRainTimeout: NodeJS.Timeout = GenerateRain();
+
 		
 		const IgniteGame = () => {
 			const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
-			player.Spawn();
+			player.NewGame();
 			executeGame = true;
 
 			setGameStatus('ready');
 			DialogHandler('init', startingPosition);
 			
 			//Controllers registration
-			newGameBtn.addEventListener('click', NewGame);
+			newGameBtn.addEventListener('click', () => player.NewGame());
 			document.addEventListener('keydown', ControlKeyboard.controlling);
 			document.addEventListener('keyup', ControlKeyboard.uncontrolling);
 			right.addEventListener('touchstart', ControlTouch.controlRight, false);
@@ -604,23 +603,12 @@ const Canvas = (props: CanvasProps) => {
 				ctx.clearRect(0, 0, screenWidth, screenHeight);
 				
 				//Then, redrawing objects
-				if (player.IsAlive && isAttempted && food.IsAppearing) food.Update();
+				if (player.IsAlive && player.IsAppearing && food.IsAppearing) food.Update();
 				for (const rain of rains) if (rain) rain.Update();
-				if (player.IsAppearing) player.Update();
+				player.Update();
 			}
 		}, 1000/FPS);
 		
-
-		/////////RAINFALL GENERATOR
-		
-		const GenerateRain = () => {
-			if (player.IsAlive && !isTabInactive && executeGame) rains.push(new Rain(rainIndex++));
-			
-			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
-			if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
-		};
-		const GenerateRainTimeout: NodeJS.Timeout = GenerateRain();
-
 
 		/////////USE-EFFECT CLEAN-UP
 		return () => {
