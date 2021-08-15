@@ -39,7 +39,7 @@ const Canvas = (props: CanvasProps) => {
 		/////////CANVAS INITIALIZATION 
 		const canvas: HTMLCanvasElement = canvasRef.current;
 		const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-		const navbarOffset = 60;
+		const navbarOffset = 0;
 
 		let screenHeight = window.innerHeight;
 		let screenWidth = window.innerWidth;
@@ -551,6 +551,7 @@ const Canvas = (props: CanvasProps) => {
 
 		if (isInitialLoad) window.addEventListener('load', executeLoaded);
 		else executeLoaded();
+		const executeFallback = setTimeout(executeLoaded, 2000);
 
 		
 		/////////SCREEN UPDATER
@@ -600,6 +601,7 @@ const Canvas = (props: CanvasProps) => {
 			clearTimeout(timeoutIntro);
 			clearTimeout(timeoutInitial);
 			clearTimeout(timeoutExecute);
+			clearTimeout(executeFallback);
 			clearTimeout(GenerateRainTimeout);
 			clearInterval(Updater);
 
@@ -613,8 +615,8 @@ const Canvas = (props: CanvasProps) => {
 
 	return (
 		<div className="flex-sc col full pointer-events-none" style={{ zIndex: -1 }}>
-			<canvas ref={canvasRef} style={{ zIndex: -2 }} />
-			<div className="absolute full inset-0 flex-bc pointer-events-none" style={{ zIndex: 0 }}>
+			<canvas ref={canvasRef} style={{height: 'calc(100vh - 60px)', zIndex: -2 }} />
+			<div className="absolute w-full inset-0 flex-bc pointer-events-none" style={{height: 'calc(100vh - 60px)', zIndex: 0 }}>
 				<div className="h-full opacity-20 w-1/2 pointer-events-auto select-none" ref={leftTouchRef}></div>
 				<div className="h-full opacity-20 w-1/2 pointer-events-auto select-none" ref={rightTouchRef}></div>
 			</div>
