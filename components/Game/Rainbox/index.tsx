@@ -107,24 +107,21 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 
 	return (
 		<Wrapper gameStatus={gameStatus} screen={screen} skipIntro={skipIntro}>
-			<div className="container-canvas" id="game-container">
-				<div className="canvas">
-					<div className="absolute inset-0 h1-cont zi-dimm full">
-						<div className="h1-subcont">
-							<div className="h1-dimm supertitle"></div>
-							<div className="subtitle">
-								<p>
-									{
-										gameStatus == 'over' ? <span>&emsp;</span> :
-											gameStatus != 'running' ? <span>&emsp;&emsp;</span> : 'A CREATIVE DEVELOPER'
-									}
+			<div className="absolute inset-0 flex-ec col full" style={{zIndex: -6}} id="game-container">
+				<div className="absolute top-0 flex-sc col w-full bg-top bg-cover no-repeat" style={{zIndex: -5, height: 'calc(100% - 60px)', background: 'url("/img/bg3d.webp")'}}>
+					<div className="absolute inset-0 flex-cc pb-64 pointer-events-none full" style={{zIndex: -3}}>
+						<div className="absolute flex-cc col w-full">
+							<div className="bg-center bg-contain no-repeat" style={{background: 'url("/img/title/h1-dimm.svg")', maxWidth: 675, width: '90%', minWidth: 340, height: 200}}></div>
+							<div className="relative flex-cc-container" style={{zIndex: -4, top: screen > 500 ? '-12px' : '-48px', minHeight: '38px'}}>
+								<p className="pt-1 text-center transition-all font-bahn" style={{fontSize: screen > 500 ? 32 : 24, color: {'running': '#BBBBBB'}[gameStatus] || '#0000'}}>
+									A CREATIVE DEVELOPER
 								</p>
 							</div>
 						</div>
 					</div>
-					<div ref={nrRef} className="glimpse nr"></div>
-					<div ref={etRef} className="glimpse et"></div>
-					<div ref={briRef} className="glimpse bri"></div>
+					<div ref={nrRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full no-repeat" style={{background: 'url("/img/glimpse/nr.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
+					<div ref={etRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full no-repeat" style={{background: 'url("/img/glimpse/et.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
+					<div ref={briRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full no-repeat" style={{background: 'url("/img/glimpse/bri.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
 					<Canvas setGameStatus={setGameStatus}
 						skipIntro={skipIntro}
 						newGameBtnRef={newGameBtnRef}
@@ -137,18 +134,36 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 						sideRef={sideRef}
 						briRef={briRef}
 						etRef={etRef}
-						nrRef={nrRef} />
-					<div className="absolute inset-0 h1-cont zi-orange full">
-						<div className="h1-subcont">
-							<div className="h1 supertitle"></div>
-							<div className={`subtitle hideable ${gameStatus == 'running' ? 'hide' : ''}`}>
-								<p>
-									{
-										gameStatus == 'over' ? 'GAME OVER' :
-											gameStatus == 'recorded' ? 'SCORE SAVED' : 'A CREATIVE DEVELOPER'
-									}
+						nrRef={nrRef} 
+					/>
+					<div className="absolute inset-0 z-0 flex-cc pb-64 pointer-events-none full">
+						<div className="absolute flex-cc col w-full">
+							<div 
+								className={'transition-all bg-center bg-contain no-repeat opacity-100'} 
+								style={{
+									background: 'url("/img/title/h1.svg")', 
+									maxWidth: 675, 
+									width: '90%',
+									minWidth: 340, 
+									height: 200, 
+									transitionDuration: gameStatus === 'sub.intro' ? '2.5s' : '1s', 
+									opacity: {
+										'intro': '0',
+										'sub.intro': '1',
+										'initial': '1',
+										'over': '1',
+										'running': '0',
+									}[gameStatus] || '1'}}
+							>										
+							</div>
+							<div className="flex-cc relative transition-all" style={{zIndex: -4, top: screen > 500 ? '-12px' : '-48px', transition: skipIntro ? 'none' : gameStatus === 'running' || gameStatus === 'over' ? 'all 1s 2s, opacity 0s' : 'all 1s 2s', opacity: {intro: '0', running: '0'}[gameStatus] || '1', minHeight: '38px'}}>
+								<p className="pt-1 text-center transition-all font-bahn" style={{fontSize: screen > 500 ? 32 : 24, color: gameStatus == 'running' ? '#BBBBBB' :	gameStatus == 'over' ? 'black' : 'gray'}}>
+									{{
+										'over': 'GAME OVER',
+										'recorded': 'SCORE SAVED'
+									}[gameStatus] || 'A CREATIVE DEVELOPER' }
 								</p>
-								<button className="newgame" ref={newGameBtnRef}>PLAY AGAIN</button>
+								<button className="ml-3 pointer-events-auto" ref={newGameBtnRef} style={{display: gameStatus == 'over' || gameStatus == 'recorded' ? 'unset' : 'none', fontSize: screen < 500 ? 16 : ''}}>PLAY AGAIN</button>
 							</div>
 						</div>
 					</div>
@@ -168,7 +183,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 				<p className="orange">#{checkRank()}</p>
 			</div>
 
-			<div className="absolute inset-0 final-score full pointer-events-none">
+			<div className="absolute inset-0 pointer-events-none final-score full">
 				{
 					gameStatus == 'over' ?
 						<>
@@ -186,7 +201,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 				}
 			</div>
 
-			<div className="absolute inset-0 dialog-cont full pointer-events-none">
+			<div className="absolute inset-0 pointer-events-none dialog-cont full">
 				<div className="dialog-avoid" ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
 				<div className="dialog-ohno" ref={dialogOhnoRef}>OH NO!</div>
 			</div>
@@ -209,11 +224,9 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 };
 
 const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
-    position: absolute;
+    position: relative;
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
     z-index: 0;
 
     .orange{
@@ -531,7 +544,7 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
         }
     }
 
-    .container-canvas{
+    .container-canvas{  
         position: absolute;
         width: 100%;
         height: 100%;
