@@ -78,11 +78,11 @@ const Canvas = (props: CanvasProps) => {
 				this.Velocity = 5 * REALTIME;
 				this.Emphasis = { alpha: 0.0, direction: 'up'};
 				this.Shine = 0;
-				
+								
 				this.EatCount = 0;
 				this.TimeStart = new Date().getTime();
 				this.TimeEnd = 'initial';
-				this.TimeSpan = new Date().getTime();
+				this.TimeSpan = 0;
 				
 				this.Position = {
 					X: posX,
@@ -100,6 +100,7 @@ const Canvas = (props: CanvasProps) => {
 						this.Position.Y <= rain.Position.Y + rain.Height
 					) {
 						GameOver();
+						this.Dead();
 						this.DrawShine('init');
 					}
 				}
@@ -163,6 +164,25 @@ const Canvas = (props: CanvasProps) => {
 				ohno.style.left = `${this.Position.X + this.Width - 20}px`;
 			};
 
+			Dead = () => {
+				this.TimeEnd = new Date().getTime();
+				this.Shadow = '#000';
+				this.Color = '#000';
+			}
+
+			UpdateTimeSpan = () => {
+				this.TimeSpan = new Date().getTime() - player.TimeStart;
+			}
+
+			UpdateScoring = () => {
+				if (!isGameOver){
+					setScore({
+						food: player.EatCount,
+						time: parseInt(((isAttempted ? player.TimeSpan : 0) / 10).toFixed(0))
+					});
+				}
+			}
+
 			Move = (direction: EnumDirection) => {
 				const vector = this.Velocity * {left: -1, right: 1, idle: 0}[direction];
 				
@@ -183,6 +203,8 @@ const Canvas = (props: CanvasProps) => {
 				this.DrawShine();
 				this.Draw();
 				this.DrawEmphasis();
+				this.UpdateTimeSpan();
+				this.UpdateScoring();
 			};
 		}
 
@@ -298,11 +320,6 @@ const Canvas = (props: CanvasProps) => {
 		/////////GAME OVER HANDLER        
 		const GameOver = () => {
 			if (!isGameOver && isAttempted) {
-				player.TimeSpan = new Date().getTime() - player.TimeSpan;
-				player.TimeEnd = new Date().getTime();
-				player.Shadow = 'black';
-				player.Color = 'black';
-
 				isGameOver = true;
 				food = {};
 				
@@ -334,9 +351,6 @@ const Canvas = (props: CanvasProps) => {
 			setGameStatus('running');
 				
 			food = new Food();
-			player.TimeStart = new Date().getTime();
-			player.TimeEnd = 'initial';
-			player.TimeSpan = new Date().getTime();
 			
 			for (const rain of rains) {
 				if (rain){
@@ -565,13 +579,6 @@ const Canvas = (props: CanvasProps) => {
 		/////////SCREEN UPDATER
 		const Updater = setInterval(() => {
 			if (executeGame) {
-				const livespan = player.TimeEnd != 'initial' ? player.TimeSpan : new Date().getTime() - player.TimeStart;
-
-				setScore({
-					food: player.EatCount,
-					time: parseInt(((isAttempted ? livespan : 0) / 10).toFixed(0))
-				});
-				
 				//Reseting canvas
 				ctx.clearRect(0, 0, screenWidth, screenHeight);
 				
