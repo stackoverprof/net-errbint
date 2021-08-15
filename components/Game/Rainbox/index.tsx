@@ -1,7 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from 'react';
 import AnimatedNumber from 'animated-number-react';
 import SideLeaderBoard from './SideLeaderBoard';
-import { DB } from '../../../core/services/firebase';
+import { DB } from '@core/services/firebase';
 import useResize from 'use-resizing';
 import Canvas from './Canvas';
 
@@ -24,9 +25,9 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 	const dialogAvoidRef = useRef<HTMLDivElement>(null);
 	const dialogOhnoRef = useRef<HTMLDivElement>(null);
 	const sideRef = useRef<HTMLInputElement>(null);
-	const briRef = useRef<HTMLDivElement>(null);
-	const etRef = useRef<HTMLDivElement>(null);
-	const nrRef = useRef<HTMLDivElement>(null);
+	const briRef = useRef<HTMLImageElement>(null);
+	const etRef = useRef<HTMLImageElement>(null);
+	const nrRef = useRef<HTMLImageElement>(null);
 
 	const formatValue = (value) => `${(Number(value) / 1000).toFixed(2)}`;
 
@@ -119,10 +120,10 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 						</div>
 					</div>
 
-					<div className="absolute inset-0 full">
-						<div ref={nrRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full bg-no-repeat" style={{backgroundImage: 'url("/img/glimpse/nr.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
-						<div ref={etRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full bg-no-repeat" style={{backgroundImage: 'url("/img/glimpse/et.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
-						<div ref={briRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full bg-no-repeat" style={{backgroundImage: 'url("/img/glimpse/bri.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
+					<div className="absolute inset-0 full pointer-events-none">
+						<img src="/img/glimpse/nr.webp" alt="glimpse" ref={nrRef} className="absolute top-0 transition-all duration-200 full object-cover object-top" style={{ zIndex: -4, opacity: skipIntro ? 0 : 1}}/>
+						<img src="/img/glimpse/et.webp" alt="glimpse" ref={etRef} className="absolute top-0 transition-all duration-200 full object-cover object-top" style={{ zIndex: -4, opacity: skipIntro ? 0 : 1}}/>
+						<img src="/img/glimpse/bri.webp" alt="glimpse" ref={briRef} className="absolute top-0 transition-all duration-200 full object-cover object-top" style={{ zIndex: -4, opacity: skipIntro ? 0 : 1}}/>
 					</div>
 					
 					<Canvas setGameStatus={setGameStatus}

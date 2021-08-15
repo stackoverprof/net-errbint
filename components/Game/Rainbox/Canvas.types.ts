@@ -8,9 +8,9 @@ export interface CanvasProps {
 	setGameStatus(arg0: string): void;
 	setScore(arg0: { food: number, time: number }): void;
 	sideRef: MutableRefObject<HTMLInputElement>;
-	briRef: MutableRefObject<HTMLDivElement>;
-	nrRef: MutableRefObject<HTMLDivElement>;
-	etRef: MutableRefObject<HTMLDivElement>;
+	briRef: MutableRefObject<HTMLImageElement>;
+	nrRef: MutableRefObject<HTMLImageElement>;
+	etRef: MutableRefObject<HTMLImageElement>;
 	newGameBtnRef: MutableRefObject<HTMLButtonElement>;
 	dialogAvoidRef: MutableRefObject<HTMLDivElement>;
 	dialogOhnoRef: MutableRefObject<HTMLDivElement>;
