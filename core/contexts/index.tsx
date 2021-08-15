@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import LayoutStore, { LayoutStoreType } from './LayoutStore';
+import LayoutStore from './layout';
+import { LayoutStoreType } from './layout.types';
 
 const AppContext = React.createContext(null);
 
@@ -7,20 +8,14 @@ interface Props {
 	children: React.ReactNode
 }
 
-const AppProvider = ({children}: Props): JSX.Element => {
-
-	const Store = {
+const AppProvider = ({children}: Props): JSX.Element => (
+	<AppContext.Provider value={{
 		layout: LayoutStore()
-	};
-
-	return (
-		<AppContext.Provider value={Store}>
-			{ children }
-		</AppContext.Provider>
-	);
-};
+	}}>
+		{ children }
+	</AppContext.Provider>
+);
 
 export default AppProvider;
 
-const useStore = () => useContext(AppContext);
-export const useLayout = (): LayoutStoreType => useStore().layout;
+export const useLayout = (): LayoutStoreType => useContext(AppContext).layout;
