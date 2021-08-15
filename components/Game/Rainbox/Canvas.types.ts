@@ -16,6 +16,8 @@ export interface CanvasProps {
 	dialogOhnoRef: MutableRefObject<HTMLDivElement>;
 }
 
+export type EnumDirection = 'idle' | 'left' | 'right';
+
 export class PlayerType {
 	Height: number;
 	Width: number;

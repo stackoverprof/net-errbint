@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useMemo } from 'react';
-import { PlayerType, RainType, FoodType, CanvasProps} from './Canvas.types';
+import { PlayerType, RainType, FoodType, CanvasProps, EnumDirection} from './Canvas.types';
 import { useLayout } from '@core/contexts/index';
 import { GameTheme } from './theme';
 
@@ -160,16 +160,20 @@ const Canvas = (props: CanvasProps) => {
 				ohno.style.left = `${this.Position.X + this.Width - 20}px`;
 			};
 
-			Move = () => {
-				if (!(this.Position.X + this.Velocity < 0) && !(this.Position.X + this.Velocity > screenWidth - 50)) {
-					this.Position.X += this.Velocity;
+			Move = (direction: EnumDirection) => {
+				console.log(direction);
+				
+				if (!(this.Position.X + this.Velocity < 0 || this.Position.X + this.Velocity > screenWidth - this.Width)) {
+					this.Position.X += this.Acceleration * {left: -1, right: 1, idle: 0}[direction];
 				} else if (this.Position.X > screenWidth - this.Width) {
 					this.Position.X = screenWidth - (this.Width + 2);
+				} else if (this.Position.X < 0) {
+					this.Position.X = 0 + 2;
 				}
 			};
 
 			Update = () => {
-				this.Move();
+				this.Move(CONTROL_DIRECTION);
 				this.DialogAttachment();
 				this.CheckCollisions();
 				this.CheckEaten();
@@ -339,6 +343,9 @@ const Canvas = (props: CanvasProps) => {
 		};
 		
 
+		/////////CONTROLLER
+		let CONTROL_DIRECTION: EnumDirection = 'idle';
+
 		/////////CONTROLLER - KEYBOARD EVENT HANDLER
 		let isRightPressed = false;
 		let isLeftPressed = false;
@@ -348,12 +355,12 @@ const Canvas = (props: CanvasProps) => {
 				if (e.which === 65 || e.which === 37) {
 					//GO LEFT 
 					isLeftPressed = true;
-					player.Velocity = -player.Acceleration;
+					CONTROL_DIRECTION = 'left';
 					FirstAttempt();
 				} else if (e.which === 68 || e.which === 39) {
 					//GO RIGHT
 					isRightPressed = true;
-					player.Velocity = player.Acceleration;
+					CONTROL_DIRECTION = 'right';
 					FirstAttempt();
 				}
 
@@ -375,10 +382,10 @@ const Canvas = (props: CanvasProps) => {
 			uncontrolling: (e) => {
 				if (e.which === 65 || e.which === 37) {
 					isLeftPressed = false;
-					player.Velocity = isRightPressed ? player.Acceleration : 0;
+					CONTROL_DIRECTION = isRightPressed ? 'right' : 'idle';
 				} else if (e.which === 68 || e.which === 39) {
 					isRightPressed = false;
-					player.Velocity = isLeftPressed ? -player.Acceleration : 0;
+					CONTROL_DIRECTION = isLeftPressed ? 'left' : 'idle';
 				}
 			}
 			

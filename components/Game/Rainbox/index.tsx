@@ -5,6 +5,7 @@ import SideLeaderBoard from './SideLeaderBoard';
 import { DB } from '@core/services/firebase';
 import useResize from 'use-resizing';
 import Canvas from './Canvas';
+import Glimpse from './Glimpse';
 
 interface Props {
 	isInitialLoad: boolean
@@ -120,13 +121,10 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 						</div>
 					</div>
 
-					<div className="absolute inset-0 full pointer-events-none">
-						<img src="/img/glimpse/nr.webp" alt="glimpse" ref={nrRef} className="absolute top-0 transition-all duration-200 full object-cover object-top" style={{ zIndex: -4, opacity: skipIntro ? 0 : 1}}/>
-						<img src="/img/glimpse/et.webp" alt="glimpse" ref={etRef} className="absolute top-0 transition-all duration-200 full object-cover object-top" style={{ zIndex: -4, opacity: skipIntro ? 0 : 1}}/>
-						<img src="/img/glimpse/bri.webp" alt="glimpse" ref={briRef} className="absolute top-0 transition-all duration-200 full object-cover object-top" style={{ zIndex: -4, opacity: skipIntro ? 0 : 1}}/>
-					</div>
+					<Glimpse skipIntro={skipIntro} etRef={etRef} nrRef={nrRef} briRef={briRef} />
 					
-					<Canvas setGameStatus={setGameStatus}
+					<Canvas
+						setGameStatus={setGameStatus}
 						skipIntro={skipIntro && gameStatus === 'intro'}
 						newGameBtnRef={newGameBtnRef}
 						setAnimateValue={setAnimateValue}
