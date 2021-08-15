@@ -9,7 +9,7 @@ const Index = (): JSX.Element => {
 	return (
 		<MainLayout title="" className="flex-sc col" transition="fade">
 			<div className="relative w-full h-screen">
-				<Rainbox isInitialLoad={false} skipIntro={false}/>
+				<Rainbox isInitialLoad={true} skipIntro={true}/>
 			</div>
 			<div className="w-full h-96 bg-red-400">
 				{selectedTheme}
