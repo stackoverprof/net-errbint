@@ -21,6 +21,7 @@ export type EnumDirection = 'idle' | 'left' | 'right';
 export class EnvironmentType {
 	FPS: number;
 	REALTIME: number;
+	IS_EXECUTED: boolean;
 	canvas: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
 	screenWidth: number;

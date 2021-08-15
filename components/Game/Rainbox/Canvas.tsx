@@ -27,65 +27,8 @@ const Canvas = (props: CanvasProps) => {
 	const leftTouchRef = useRef<HTMLDivElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
-	const memoized = {
-		player: useMemo(() => ({}), []),
-		food: useMemo(() => ({}), []),
-		rains: useMemo(() => [], []),
-	};
-
-			
-	/////////GLIMPSE HANDLER
-	const GlimpseHandler = (score) => {
-		const bri = briRef.current;
-		const nr = nrRef.current;
-		const et = etRef.current;
-			
-		const animate = (element) => {
-			element.style.opacity = 1;
-
-			setTimeout(() => {
-				element.style.opacity = 0;
-			}, 200);
-		};
-			
-		const animateIntro = (element) => {
-			element.style.transition = '1s';
-			element.style.opacity = 0;
-
-			setTimeout(() => {
-				element.style.transition = '0.2s';
-			}, 1000);
-		};
-
-		const animateSpecial = (et, nr, bri) => {
-			et.style.opacity = 1;
-			nr.style.opacity = 1;
-			bri.style.opacity = 1;
-				
-			setTimeout(() => {
-				et.style.opacity = 0;
-				nr.style.opacity = 0;
-				bri.style.opacity = 0;
-			}, 350);
-		};
-			
-		if (score % 10 === 0 || score === 'special') {
-			animateSpecial(et, nr, bri);
-			setTimeout(() => animateSpecial(et, nr, bri), 700);
-			setTimeout(() => animateSpecial(et, nr, bri), 1400);
-		} else if (score % 5 === 0 || score === 'regular') {
-			animate(et);
-			setTimeout(() => animate(nr), 150);
-			setTimeout(() => animate(bri), 400);
-		} else if (score === 'intro') {
-			setGameStatus('sub.intro');
-			animateIntro(et);
-			setTimeout(() => animateIntro(bri), 500);
-			setTimeout(() => animateIntro(nr), 1000);
-		}
-	};
-
-		
+	const memoized_rains = useMemo(() => [], []);
+	
 
 	const GameScript = () => {
 		let _isMounted = true;	
@@ -132,7 +75,7 @@ const Canvas = (props: CanvasProps) => {
 				setGameStatus('running');
 				setProcessMessage('');
 				setAnimateValue(0);
-				if(option !== 'no-glimpse') GlimpseHandler('regular');
+				if(option !== 'no-glimpse') ENV.GlimpseHandler('regular');
 			}
 			
 			DiscoverShield = () => {
@@ -171,7 +114,7 @@ const Canvas = (props: CanvasProps) => {
 			CheckEaten = () => {
 				if (food.IsAppearing && player.Position.X <= food.PosX + food.Width && player.Position.X + player.Width >= food.PosX) {
 					this.EatCount++;
-					GlimpseHandler(this.EatCount);
+					ENV.GlimpseHandler(this.EatCount);
 					food.Spawn();
 					this.DrawShine('init');
 				}
@@ -464,8 +407,8 @@ const Canvas = (props: CanvasProps) => {
 	
 					//SPECIAL THING
 					else if (e.which === 16) {
-						if (e.location === 1) GlimpseHandler('regular');
-						else if (e.location === 2) GlimpseHandler('special');
+						if (e.location === 1) ENV.GlimpseHandler('regular');
+						else if (e.location === 2) ENV.GlimpseHandler('special');
 					}
 				},			
 				uncontrolling: (e) => {
@@ -509,6 +452,8 @@ const Canvas = (props: CanvasProps) => {
 
 				this.FPS = 50;
 				this.REALTIME = 100/this.FPS;
+
+				this.IS_EXECUTED = false;
 		
 				/////////CANVAS INITIALIZATION 
 				this.canvas = canvasRef.current;
@@ -534,9 +479,63 @@ const Canvas = (props: CanvasProps) => {
 				this.canvas.width = this.screenWidth;
 				this.canvas.height = this.screenHeight;
 	
-				if (IS_EXECUTED) player.Position.Y = this.screenHeight - player.Height;
+				if (this.IS_EXECUTED) player.Position.Y = this.screenHeight - player.Height;
 			};
-			HandleInactive = () => this.isTabInactive = document.hidden ? true : false;
+			
+			HandleInactive = () => {
+				this.isTabInactive = document.hidden ? true : false;
+			}
+
+			GlimpseHandler = (score) => {
+				const bri = briRef.current;
+				const nr = nrRef.current;
+				const et = etRef.current;
+					
+				const animate = (element) => {
+					element.style.opacity = 1;
+
+					setTimeout(() => {
+						element.style.opacity = 0;
+					}, 200);
+				};
+					
+				const animateIntro = (element) => {
+					element.style.transition = '1s';
+					element.style.opacity = 0;
+
+					setTimeout(() => {
+						element.style.transition = '0.2s';
+					}, 1000);
+				};
+
+				const animateSpecial = (et, nr, bri) => {
+					et.style.opacity = 1;
+					nr.style.opacity = 1;
+					bri.style.opacity = 1;
+						
+					setTimeout(() => {
+						et.style.opacity = 0;
+						nr.style.opacity = 0;
+						bri.style.opacity = 0;
+					}, 350);
+				};
+					
+				if (score % 10 === 0 || score === 'special') {
+					animateSpecial(et, nr, bri);
+					setTimeout(() => animateSpecial(et, nr, bri), 700);
+					setTimeout(() => animateSpecial(et, nr, bri), 1400);
+				} else if (score % 5 === 0 || score === 'regular') {
+					animate(et);
+					setTimeout(() => animate(nr), 150);
+					setTimeout(() => animate(bri), 400);
+				} else if (score === 'intro') {
+					setGameStatus('sub.intro');
+					animateIntro(et);
+					setTimeout(() => animateIntro(bri), 500);
+					setTimeout(() => animateIntro(nr), 1000);
+				}
+			};
+
 		}
 
 
@@ -545,14 +544,14 @@ const Canvas = (props: CanvasProps) => {
 		const control: Control = new Control();
 		const player: Player = new Player();
 		const food: Food = new Food();
-		const rains: Rain[] = memoized.rains;
+		const rains: Rain[] = memoized_rains;
 		
-		let IS_EXECUTED = false;
+		
 		const EXECUTE = () => {
 			const IgniteGame = () => {
 				const startingPosition = ENV.screenWidth < 744 ? ENV.screenWidth * 10 / 100 : ENV.screenWidth / 2 - 306;
 				player.NewGame('no-glimpse');
-				IS_EXECUTED = true;
+				ENV.IS_EXECUTED = true;
 	
 				setGameStatus('ready');
 				player.DialogHandler('init', startingPosition);
@@ -573,8 +572,8 @@ const Canvas = (props: CanvasProps) => {
 			}
 			else {
 				const delay = 1000;
-				const timeoutIntro = setTimeout(() => GlimpseHandler('intro'), delay);
-				const timeoutInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900);
+				const timeoutIntro = setTimeout(() => ENV.GlimpseHandler('intro'), delay);
+				const timeoutInitial = setTimeout(() => ENV.GlimpseHandler('regular'), delay + 3900);
 				const timeoutExecute = setTimeout(IgniteGame, delay + 4500);
 				return [timeoutIntro, timeoutInitial, timeoutExecute];
 			}
@@ -585,7 +584,7 @@ const Canvas = (props: CanvasProps) => {
 		
 		/////////RAINFALL GENERATOR
 		const GenerateRain = () => {
-			if (player.IsAlive && !ENV.isTabInactive && IS_EXECUTED) rains.push(new Rain(rains.length));
+			if (player.IsAlive && !ENV.isTabInactive && ENV.IS_EXECUTED) rains.push(new Rain(rains.length));
 			
 			const dynamicInterval = ENV.screenWidth > 540 ? 100 * (1366 / ENV.screenWidth) : 100 * (1366 / ENV.screenWidth) * 3 / 4;
 			if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
@@ -595,7 +594,7 @@ const Canvas = (props: CanvasProps) => {
 		
 		/////////SCREEN UPDATER
 		const Updater = setInterval(() => {
-			if (IS_EXECUTED) {
+			if (ENV.IS_EXECUTED) {
 				//Reseting canvas
 				ENV.ctx.clearRect(0, 0, ENV.screenWidth, ENV.screenHeight);
 
