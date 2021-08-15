@@ -7,7 +7,7 @@ export const GameTheme = {
 	purple: {
 		dark: '#7810ff',
 		light: '#c42eff',
-		shadow: '#8c00ff',
+		shadow: '#da46ff',
 	},
 	green: {
 		dark: '#45cf22',

@@ -33,7 +33,7 @@ const Canvas = (props: CanvasProps) => {
 	const GameScript = () => {
 		let _isMounted = true;	
 
-		const FPS = 50;
+		const FPS = 100;
 		const REALTIME = 100/FPS;
 
 		/////////CANVAS INITIALIZATION 
@@ -136,8 +136,9 @@ const Canvas = (props: CanvasProps) => {
 				if (!isGameOver) {
 					if (this.Emphasis.alpha >= 1.0) this.Emphasis.direction = 'down';
 					if (this.Emphasis.alpha <= 0.0) this.Emphasis.direction = 'up';
-					this.Emphasis.alpha += this.Emphasis.direction === 'up' ? 0.005 * REALTIME : -0.005 * REALTIME;
-				
+					const speed = 0.005 * REALTIME;
+					this.Emphasis.alpha += this.Emphasis.direction === 'up' ? speed : -speed;
+					
 					ctx.shadowColor = '#0000';
 					ctx.shadowBlur = 0;
 					ctx.fillStyle = THEME.light + (this.Emphasis.alpha * 255).toString(16).split('.')[0];
@@ -226,7 +227,7 @@ const Canvas = (props: CanvasProps) => {
 				this.TrailGradient.addColorStop(0, this.Colortrail0);
 				this.TrailGradient.addColorStop(1, this.Colortrail1);
 				ctx.fillStyle = this.TrailGradient;
-				ctx.shadowColor = 'rgba(0,0,0,0)';
+				ctx.shadowColor = '#000';
 				ctx.shadowBlur = 0;
 				ctx.fill();
 			};
@@ -254,8 +255,8 @@ const Canvas = (props: CanvasProps) => {
 
 				this.Width = 20;
 				this.Height = 20;
-				this.Color = '#FF5B14';
-				this.Shadow = 'orange';
+				this.Color = THEME.dark;
+				this.Shadow = THEME.shadow;
 				this.Blur = 25;
 				this.distance = 50;
 				this.PosX = this.RandomPosition();
