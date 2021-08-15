@@ -271,7 +271,7 @@ const Canvas = (props: CanvasProps) => {
 			};
 
 			Update = () => {
-				this.Move(CONTROL_DIRECTION);
+				this.Move(control.CONTROL_DIRECTION);
 				this.CheckCollisions();
 				this.CheckEaten();
 				this.DrawShine();
@@ -401,85 +401,92 @@ const Canvas = (props: CanvasProps) => {
 			};
 		}
 
-		
 
-		/////////CONTROLLER
-		let CONTROL_DIRECTION: EnumDirection = 'idle';
+		class Control {
+			CONTROL_DIRECTION: EnumDirection;
+			isRightPressed: boolean;
+			isLeftPressed: boolean;
+			newGameBtn: HTMLButtonElement;
+			right: HTMLDivElement;
+			left: HTMLDivElement;
+			isRightTouched: boolean;
+			isLeftTouched: boolean;
 
-		/////////CONTROLLER - KEYBOARD EVENT HANDLER
-		let isRightPressed = false;
-		let isLeftPressed = false;
-
-		const ControlKeyboard = {
-			controlling: (e) => {
-				if (e.which === 65 || e.which === 37) {
-					//GO LEFT 
-					isLeftPressed = true;
-					CONTROL_DIRECTION = 'left';
-					if (!player.IsAppearing) player.DiscoverShield();
-				} else if (e.which === 68 || e.which === 39) {
-					//GO RIGHT
-					isRightPressed = true;
-					CONTROL_DIRECTION = 'right';
-					if (!player.IsAppearing) player.DiscoverShield();
-				}
-
-				//PRESSING ENTER
-				const siderinput: HTMLInputElement = sideRef.current;
-				if (e.which === 13 && !player.IsAlive && document.activeElement !== siderinput) {
-					player.NewGame();
-				}
+			constructor() {
+				this.CONTROL_DIRECTION = 'idle';
 				
-				//AVOID UNEXPECTED SCROLLDOWN
-				if (e.which === 40 && window.scrollY === 0) e.preventDefault();
+				this.isRightPressed = false;
+				this.isLeftPressed = false;
+				
+				this.newGameBtn = newGameBtnRef.current;
+				this.right = rightTouchRef.current;
+				this.left = leftTouchRef.current;
+				this.isRightTouched = false;
+				this.isLeftTouched = false;
+			}
 
-				//SPECIAL THING
-				else if (e.which === 16) {
-					if (e.location === 1) GlimpseHandler('regular');
-					else if (e.location === 2) GlimpseHandler('special');
-				}
-			},			
-			uncontrolling: (e) => {
-				if (e.which === 65 || e.which === 37) {
-					isLeftPressed = false;
-					CONTROL_DIRECTION = isRightPressed ? 'right' : 'idle';
-				} else if (e.which === 68 || e.which === 39) {
-					isRightPressed = false;
-					CONTROL_DIRECTION = isLeftPressed ? 'left' : 'idle';
+			Keyboard = {
+				controlling: (e) => {
+					if (e.which === 65 || e.which === 37) {
+						//GO LEFT 
+						this.isLeftPressed = true;
+						this.CONTROL_DIRECTION = 'left';
+						if (!player.IsAppearing) player.DiscoverShield();
+					} else if (e.which === 68 || e.which === 39) {
+						//GO RIGHT
+						this.isRightPressed = true;
+						this.CONTROL_DIRECTION = 'right';
+						if (!player.IsAppearing) player.DiscoverShield();
+					}
+	
+					//PRESSING ENTER
+					const siderinput: HTMLInputElement = sideRef.current;
+					if (e.which === 13 && !player.IsAlive && document.activeElement !== siderinput) {
+						player.NewGame();
+					}
+					
+					//AVOID UNEXPECTED SCROLLDOWN
+					if (e.which === 40 && window.scrollY === 0) e.preventDefault();
+	
+					//SPECIAL THING
+					else if (e.which === 16) {
+						if (e.location === 1) GlimpseHandler('regular');
+						else if (e.location === 2) GlimpseHandler('special');
+					}
+				},			
+				uncontrolling: (e) => {
+					if (e.which === 65 || e.which === 37) {
+						this.isLeftPressed = false;
+						this.CONTROL_DIRECTION = this.isRightPressed ? 'right' : 'idle';
+					} else if (e.which === 68 || e.which === 39) {
+						this.isRightPressed = false;
+						this.CONTROL_DIRECTION = this.isLeftPressed ? 'left' : 'idle';
+					}
 				}
 			}
-			
-		};
 
-		/////////CONTROLLER - TOUCHSCREEN EVENT HANDLER
-		const newGameBtn: HTMLButtonElement = newGameBtnRef.current;
-		const right: HTMLDivElement = rightTouchRef.current;
-		const left: HTMLDivElement = leftTouchRef.current;
+			Touch = {
+				controlRight: () => {
+					this.isRightTouched = true;
+					this.CONTROL_DIRECTION = 'right';
+					if (!player.IsAppearing) player.DiscoverShield();
+				},
+				controlLeft: () => {
+					this.isLeftTouched = true;
+					this.CONTROL_DIRECTION = 'left';
+					if (!player.IsAppearing) player.DiscoverShield();
+				},
+				uncontrolRight: () => {
+					this.isRightTouched = false;
+					this.CONTROL_DIRECTION = this.isLeftTouched ? 'left' : 'idle';
+				},
+				uncontrolLeft: () => {
+					this.isLeftTouched = false;
+					this.CONTROL_DIRECTION = this.isRightTouched ? 'right' : 'idle';
+				},
+			}
+		}
 		
-		let isRightTouched = false;
-		let isLeftTouched = false;
-
-		const ControlTouch = {
-			controlRight: () => {
-				isRightTouched = true;
-				CONTROL_DIRECTION = 'right';
-				if (!player.IsAppearing) player.DiscoverShield();
-			},
-			controlLeft: () => {
-				isLeftTouched = true;
-				CONTROL_DIRECTION = 'left';
-				if (!player.IsAppearing) player.DiscoverShield();
-			},
-			uncontrolRight: () => {
-				isRightTouched = false;
-				CONTROL_DIRECTION = isLeftTouched ? 'left' : 'idle';
-			},
-			uncontrolLeft: () => {
-				isLeftTouched = false;
-				CONTROL_DIRECTION = isRightTouched ? 'right' : 'idle';
-			},
-		};
-
 		/////////GLIMPSE HANDLER
 		const GlimpseHandler = (score) => {
 			const bri = briRef.current;
@@ -536,6 +543,7 @@ const Canvas = (props: CanvasProps) => {
 		const player: Player = new Player();
 		const food: Food = new Food();
 		const rains: Rain[] = memoized.rains;
+		const control: Control = new Control();
 		
 		let IS_EXECUTED = false;
 		const EXECUTE = () => {
@@ -547,14 +555,14 @@ const Canvas = (props: CanvasProps) => {
 				setGameStatus('ready');
 				player.DialogHandler('init', startingPosition);
 				
-				//Controllers registration
-				newGameBtn.addEventListener('click', () => player.NewGame());
-				document.addEventListener('keydown', ControlKeyboard.controlling);
-				document.addEventListener('keyup', ControlKeyboard.uncontrolling);
-				right.addEventListener('touchstart', ControlTouch.controlRight, false);
-				left.addEventListener('touchstart', ControlTouch.controlLeft, false);
-				right.addEventListener('touchend', ControlTouch.uncontrolRight, false);
-				left.addEventListener('touchend', ControlTouch.uncontrolLeft, false);
+				//Controls registration
+				control.newGameBtn.addEventListener('click', () => player.NewGame());
+				document.addEventListener('keydown', control.Keyboard.controlling);
+				document.addEventListener('keyup', control.Keyboard.uncontrolling);
+				control.right.addEventListener('touchstart', control.Touch.controlRight, false);
+				control.left.addEventListener('touchstart', control.Touch.controlLeft, false);
+				control.right.addEventListener('touchend', control.Touch.uncontrolRight, false);
+				control.left.addEventListener('touchend', control.Touch.uncontrolLeft, false);
 			};
 				
 			if (skipIntro) {
@@ -600,13 +608,13 @@ const Canvas = (props: CanvasProps) => {
 		/////////USE-EFFECT CLEAN-UP
 		return () => {
 			document.removeEventListener('visibilitychange', handleInactive);
-			document.removeEventListener('keydown', ControlKeyboard.controlling);
-			document.removeEventListener('keyup', ControlKeyboard.uncontrolling);
+			document.removeEventListener('keydown', control.Keyboard.controlling);
+			document.removeEventListener('keyup', control.Keyboard.uncontrolling);
 			window.removeEventListener('resize', reportWindowSize);
-			right.removeEventListener('touchstart', ControlTouch.controlRight, false);
-			left.removeEventListener('touchstart', ControlTouch.controlLeft, false);
-			right.removeEventListener('touchend', ControlTouch.uncontrolRight, false);
-			left.removeEventListener('touchend', ControlTouch.uncontrolLeft, false);
+			control.right.removeEventListener('touchstart', control.Touch.controlRight, false);
+			control.left.removeEventListener('touchstart', control.Touch.controlLeft, false);
+			control.right.removeEventListener('touchend', control.Touch.uncontrolRight, false);
+			control.left.removeEventListener('touchend', control.Touch.uncontrolLeft, false);
 
 			clearTimeout(timeoutIntro);
 			clearTimeout(timeoutInitial);
