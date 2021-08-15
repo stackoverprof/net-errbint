@@ -99,7 +99,7 @@ const Canvas = (props: CanvasProps) => {
 						this.Position.Y <= rain.Position.Y + rain.Height
 					) {
 						GameOver();
-						this.Shine = 0.025;
+						this.Shine = 1;
 					}
 				}
 			};
@@ -109,38 +109,43 @@ const Canvas = (props: CanvasProps) => {
 					this.EatCount++;
 					GlimpseHandler(this.EatCount);
 					food = new Food();
-					this.Shine = 0.025;
+					this.Shine = 1;
 				}
-			};
+			};			
 
 			DrawShine = () => {
 				if (this.Shine > 0) {
-					ctx.fillStyle = `rgba(${isGameOver ? '0, 0, 0,' : '255, 90, 20,'} ${-(this.Shine * 2 - 1)})`;
+					console.log(this.Shine.toFixed(2), (isGameOver ? '#000000' : THEME.light) + (this.Shine * 255).toString(16).split('.')[0]);
+					
+					ctx.shadowColor = '#0000';
+					ctx.shadowBlur = 0;
+					ctx.fillStyle = (isGameOver ? '#000000' : THEME.light) + (this.Shine * 255).toString(16).split('.')[0];
 					ctx.beginPath();
 					ctx.rect(
-						this.Position.X - (this.Width * (1 + this.Shine) - this.Width) / 2,
-						this.Position.Y - (this.Width * (1 + this.Shine) - this.Width) / 2,
-						this.Width * (1 + this.Shine),
-						this.Height * (1 + this.Shine)
+						this.Position.X - (this.Width * (1 - (this.Shine - 1)) - this.Width) / 2,
+						this.Position.Y - (this.Width * (1 - (this.Shine - 1)) - this.Width) / 2,
+						this.Width * (1 - (this.Shine - 1)),
+						this.Height * (1 - (this.Shine - 1))
 					);
 					ctx.fill();
 
-					this.Shine += 0.025 * REALTIME;
-					if (this.Shine >= 1) this.Shine = 0;
+					this.Shine -= 0.05 * REALTIME;
 				}
 			};
 			
 			DrawEmphasis = () => {
-				if (this.Emphasis.alpha >= 1.0) this.Emphasis.direction = 'down';
-				if (this.Emphasis.alpha <= 0.0) this.Emphasis.direction = 'up';
-				this.Emphasis.alpha += this.Emphasis.direction === 'up' ? 0.01 : -0.01;
+				if (!isGameOver) {
+					if (this.Emphasis.alpha >= 1.0) this.Emphasis.direction = 'down';
+					if (this.Emphasis.alpha <= 0.0) this.Emphasis.direction = 'up';
+					this.Emphasis.alpha += this.Emphasis.direction === 'up' ? 0.005 * REALTIME : -0.005 * REALTIME;
 				
-				ctx.shadowColor = '#0000';
-				ctx.shadowBlur = 0;
-				ctx.fillStyle = THEME.light + (this.Emphasis.alpha * 255).toString(16).split('.')[0];
-				ctx.beginPath();
-				ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
-				ctx.fill();
+					ctx.shadowColor = '#0000';
+					ctx.shadowBlur = 0;
+					ctx.fillStyle = THEME.light + (this.Emphasis.alpha * 255).toString(16).split('.')[0];
+					ctx.beginPath();
+					ctx.rect(this.Position.X, this.Position.Y, this.Width, this.Height);
+					ctx.fill();
+				}
 			};
 			
 			Draw = () => {
