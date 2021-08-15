@@ -7,7 +7,6 @@ import { GameTheme } from './theme';
 
 const Canvas = (props: CanvasProps) => {
 	const {
-		isInitialLoad,
 		skipIntro,
 		setAnimateValue,
 		setProcessMessage,
@@ -49,6 +48,12 @@ const Canvas = (props: CanvasProps) => {
 		canvas.width = screenWidth;
 		canvas.height = screenHeight;
 
+		
+		/////////HANDLE INACTIVE TAB
+		let isTabInactive = false;
+		const handleInactive = () => isTabInactive = document.hidden ? true : false;
+		document.addEventListener('visibilitychange', handleInactive);
+
 
 		/////////SCREEN RESIZE HANDLER
 		const reportWindowSize = () => {
@@ -57,7 +62,7 @@ const Canvas = (props: CanvasProps) => {
 			canvas.width = screenWidth;
 			canvas.height = screenHeight;
 
-			if (executeGame) player.Position.Y = screenHeight - player.Height;
+			if (IS_EXECUTED) player.Position.Y = screenHeight - player.Height;
 		};
 		window.addEventListener('resize', reportWindowSize);
 
@@ -524,81 +529,62 @@ const Canvas = (props: CanvasProps) => {
 					break;
 			}
 		};
-
-
-		/////////HANDLE INACTIVE TAB
-		let isTabInactive = false;
-		const handleInactive = () => isTabInactive = document.hidden ? true : false;
-		document.addEventListener('visibilitychange', handleInactive);
-
-
+		
+		
 		/////////RUNNING THE GAME :: Execute the game
 		const player: Player = new Player();
 		const food: Food = new Food();
 		const rains: Rain[] = memoized.rains;
 		
-		let executeGame = false;
-		let rainIndex = 0;
+		let IS_EXECUTED = false;
+		const EXECUTE = () => {
+			const IgniteGame = () => {
+				const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
+				player.NewGame('no-glimpse');
+				IS_EXECUTED = true;
+	
+				setGameStatus('ready');
+				DialogHandler('init', startingPosition);
+				
+				//Controllers registration
+				newGameBtn.addEventListener('click', () => player.NewGame());
+				document.addEventListener('keydown', ControlKeyboard.controlling);
+				document.addEventListener('keyup', ControlKeyboard.uncontrolling);
+				right.addEventListener('touchstart', ControlTouch.controlRight, false);
+				left.addEventListener('touchstart', ControlTouch.controlLeft, false);
+				right.addEventListener('touchend', ControlTouch.uncontrolRight, false);
+				left.addEventListener('touchend', ControlTouch.uncontrolLeft, false);
+			};
+				
+			if (skipIntro) {
+				IgniteGame();
+				return [null, null, null];
+			}
+			else {
+				const delay = 1000;
+				const timeoutIntro = setTimeout(() => GlimpseHandler('intro'), delay);
+				const timeoutInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900);
+				const timeoutExecute = setTimeout(IgniteGame, delay + 4500);
+				return [timeoutIntro, timeoutInitial, timeoutExecute];
+			}
+			
+		};
+		const [timeoutIntro, timeoutInitial, timeoutExecute]: NodeJS.Timeout[] = EXECUTE();
 
 		
 		/////////RAINFALL GENERATOR
-		
 		const GenerateRain = () => {
-			if (player.IsAlive && !isTabInactive && executeGame) rains.push(new Rain(rainIndex++));
+			if (player.IsAlive && !isTabInactive && IS_EXECUTED) rains.push(new Rain(rains.length));
 			
 			const dynamicInterval = screenWidth > 540 ? 100 * (1366 / screenWidth) : 100 * (1366 / screenWidth) * 3 / 4;
 			if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
 		};
 		const GenerateRainTimeout: NodeJS.Timeout = GenerateRain();
-
 		
-		const IgniteGame = () => {
-			const startingPosition = screenWidth < 744 ? screenWidth * 10 / 100 : screenWidth / 2 - 306;
-			player.NewGame();
-			executeGame = true;
-
-			setGameStatus('ready');
-			DialogHandler('init', startingPosition);
-			
-			//Controllers registration
-			newGameBtn.addEventListener('click', () => player.NewGame());
-			document.addEventListener('keydown', ControlKeyboard.controlling);
-			document.addEventListener('keyup', ControlKeyboard.uncontrolling);
-			right.addEventListener('touchstart', ControlTouch.controlRight, false);
-			left.addEventListener('touchstart', ControlTouch.controlLeft, false);
-			right.addEventListener('touchend', ControlTouch.uncontrolRight, false);
-			left.addEventListener('touchend', ControlTouch.uncontrolLeft, false);
-		};
-		
-		
-		/////////TIMELINE EXECUTION (WEB CINEMATIC INTRO PART)
-		let executeLoadedRun = false;
-		let timeoutIntro: NodeJS.Timeout;
-		let timeoutInitial: NodeJS.Timeout;
-		let timeoutExecute: NodeJS.Timeout;
-
-		const executeLoaded = () => {
-			if (!executeLoadedRun) {
-				executeLoadedRun = true;
-				
-				if (skipIntro) IgniteGame();
-				else {
-					const delay = 1000;
-					timeoutIntro = setTimeout(() => GlimpseHandler('intro'), delay);
-					timeoutInitial = setTimeout(() => GlimpseHandler('regular'), delay + 3900);
-					timeoutExecute = setTimeout(IgniteGame, delay + 4500);
-				}
-			}
-		};
-
-		if (isInitialLoad) window.addEventListener('load', executeLoaded);
-		else executeLoaded();
-		const executeFallback = setTimeout(executeLoaded, 2000);
-
 		
 		/////////SCREEN UPDATER
 		const Updater = setInterval(() => {
-			if (executeGame) {
+			if (IS_EXECUTED) {
 				//Reseting canvas
 				ctx.clearRect(0, 0, screenWidth, screenHeight);
 				
@@ -616,7 +602,6 @@ const Canvas = (props: CanvasProps) => {
 			document.removeEventListener('keydown', ControlKeyboard.controlling);
 			document.removeEventListener('keyup', ControlKeyboard.uncontrolling);
 			window.removeEventListener('resize', reportWindowSize);
-			window.removeEventListener('load', executeLoaded);
 			right.removeEventListener('touchstart', ControlTouch.controlRight, false);
 			left.removeEventListener('touchstart', ControlTouch.controlLeft, false);
 			right.removeEventListener('touchend', ControlTouch.uncontrolRight, false);
@@ -625,7 +610,6 @@ const Canvas = (props: CanvasProps) => {
 			clearTimeout(timeoutIntro);
 			clearTimeout(timeoutInitial);
 			clearTimeout(timeoutExecute);
-			clearTimeout(executeFallback);
 			clearTimeout(GenerateRainTimeout);
 			clearInterval(Updater);
 
