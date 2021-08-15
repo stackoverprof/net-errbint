@@ -200,9 +200,36 @@ const Canvas = (props: CanvasProps) => {
 				ctx.fill();
 			};
 			
-			DialogAttachment = () => {
+			DrawDialog = () => {
+				const avoid = dialogAvoidRef.current;
+				const ohno = dialogOhnoRef.current;
+				
 				avoid.style.left = `${this.Position.X + this.Width - 20}px`;
 				ohno.style.left = `${this.Position.X + this.Width - 20}px`;
+			};
+
+			DialogHandler = (action: string, startingPosition?: number) => {
+				const avoid = dialogAvoidRef.current;
+				const ohno = dialogOhnoRef.current;
+		
+				switch (action) {
+					case 'init':
+						avoid.style.display = 'flex';
+						avoid.style.left = `${startingPosition + 34}px`;
+						break;
+					case 'over':
+						avoid.style.display = 'none';
+						ohno.style.visibility = 'visible';
+						ohno.style.opacity = '1';
+						ohno.style.transition = '0s';
+	
+						setTimeout(() => {
+							ohno.style.visibility = 'hidden';
+							ohno.style.opacity = '0';
+							ohno.style.transition = 'opacity 2s, visibility 0s 2s';
+						}, 1000);
+						break;
+				}
 			};
 
 			GameOver = () => {
@@ -214,7 +241,7 @@ const Canvas = (props: CanvasProps) => {
 				this.Color = '#000';
 				
 				food.Remove();
-				DialogHandler('over');
+				this.DialogHandler('over');
 				setGameStatus('over');
 			}
 
@@ -245,12 +272,12 @@ const Canvas = (props: CanvasProps) => {
 
 			Update = () => {
 				this.Move(CONTROL_DIRECTION);
-				this.DialogAttachment();
 				this.CheckCollisions();
 				this.CheckEaten();
 				this.DrawShine();
 				this.Draw();
 				this.DrawEmphasis();
+				this.DrawDialog();
 				this.UpdateTimeSpan();
 				this.UpdateScoring();
 			};
@@ -505,32 +532,6 @@ const Canvas = (props: CanvasProps) => {
 		};
 
 		
-		/////////DIALOG HANDLER
-		const avoid = dialogAvoidRef.current;
-		const ohno = dialogOhnoRef.current;
-		
-		const DialogHandler = (action: string, startingPosition?: number) => {
-			switch (action) {
-				case 'init':
-					avoid.style.display = 'flex';
-					avoid.style.left = `${startingPosition + 34}px`;
-					break;
-				case 'over':
-					avoid.style.display = 'none';
-					ohno.style.visibility = 'visible';
-					ohno.style.opacity = '1';
-					ohno.style.transition = '0s';
-
-					setTimeout(() => {
-						ohno.style.visibility = 'hidden';
-						ohno.style.opacity = '0';
-						ohno.style.transition = 'opacity 2s, visibility 0s 2s';
-					}, 1000);
-					break;
-			}
-		};
-		
-		
 		/////////RUNNING THE GAME :: Execute the game
 		const player: Player = new Player();
 		const food: Food = new Food();
@@ -544,7 +545,7 @@ const Canvas = (props: CanvasProps) => {
 				IS_EXECUTED = true;
 	
 				setGameStatus('ready');
-				DialogHandler('init', startingPosition);
+				player.DialogHandler('init', startingPosition);
 				
 				//Controllers registration
 				newGameBtn.addEventListener('click', () => player.NewGame());
@@ -587,7 +588,7 @@ const Canvas = (props: CanvasProps) => {
 			if (IS_EXECUTED) {
 				//Reseting canvas
 				ctx.clearRect(0, 0, screenWidth, screenHeight);
-				
+
 				//Then, redrawing objects
 				if (player.IsAlive && player.IsAppearing && food.IsAppearing) food.Update();
 				for (const rain of rains) if (rain) rain.Update();
