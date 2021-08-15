@@ -123,7 +123,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 					<div ref={etRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full no-repeat" style={{background: 'url("/img/glimpse/et.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
 					<div ref={briRef} className="absolute top-0 transition-all duration-200 bg-top bg-cover full no-repeat" style={{background: 'url("/img/glimpse/bri.webp")', zIndex: -4, opacity: skipIntro ? 0 : 1}}></div>
 					<Canvas setGameStatus={setGameStatus}
-						skipIntro={skipIntro}
+						skipIntro={skipIntro && gameStatus === 'intro'}
 						newGameBtnRef={newGameBtnRef}
 						setAnimateValue={setAnimateValue}
 						setProcessMessage={setProcessMessage}
@@ -150,7 +150,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 									opacity: {
 										'intro': '0',
 										'sub.intro': '1',
-										'initial': '1',
+										'ready': '1',
 										'over': '1',
 										'running': '0',
 									}[gameStatus] || '1'}}
@@ -191,7 +191,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 							<p className="fixed-size"><AnimatedNumber value={animateValue} formatValue={formatValue} duration={1000} easing={'linear'} /></p>
 						</>
 						:
-						gameStatus == 'initial' ?
+						gameStatus == 'ready' ?
 							<p className={`instruction ${screen < 600 && 'instruction-mobile'}`}>Touch the screen <span className="light-gray">/</span> use arrow key to move</p>
 							:
 							gameStatus == 'recorded' ?
@@ -379,7 +379,7 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
             align-items: center;
             padding-bottom: 16px;
             
-            opacity: ${gameStatus == 'initial' ? 1 : 0};
+            opacity: ${gameStatus == 'ready' ? 1 : 0};
             transition: opacity 3s;
 
             font-size: 18px;
@@ -456,7 +456,7 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
 
     .live-score{
         position: absolute;
-        opacity: ${gameStatus == 'initial' ? 0.75 : gameStatus == 'running' ? 1 : 0};
+        opacity: ${gameStatus == 'ready' ? 0.75 : gameStatus == 'running' ? 1 : 0};
         transition: 0.25s;
         top: 16px;
         left: 20px;
@@ -471,7 +471,7 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
     
     .game-status{
         position: absolute;
-        opacity: ${gameStatus == 'initial' ? 0.25 : gameStatus == 'running' ? 0.50 : gameStatus == 'over' ? 0.50 : 0.15};
+        opacity: ${gameStatus == 'ready' ? 0.25 : gameStatus == 'running' ? 0.50 : gameStatus == 'over' ? 0.50 : 0.15};
         transition: 0.25s;
         top: 18px;
         right: 20px;
@@ -535,7 +535,7 @@ const Wrapper = Styled.div(({ gameStatus, screen, skipIntro }: any) => `
             transition: ${gameStatus == 'sub.intro' ? '2.5s' : '1s'};
             opacity: ${gameStatus == 'intro' ? 0 :
 		gameStatus == 'sub.intro' ? 1 :
-			gameStatus == 'initial' ? 1 :
+			gameStatus == 'ready' ? 1 :
 				gameStatus == 'over' ? 1 :
 					gameStatus == 'running' ? 0 : 1};
         }

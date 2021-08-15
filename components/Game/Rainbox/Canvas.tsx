@@ -515,7 +515,7 @@ const Canvas = (props: CanvasProps) => {
 			
 			executeGame = true;
 
-			setGameStatus('initial');
+			setGameStatus('ready');
 			DialogHandler('init', startingPosition);
 			
 			//Controllers registration
