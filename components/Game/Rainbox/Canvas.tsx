@@ -547,10 +547,31 @@ const Canvas = (props: CanvasProps) => {
 		const rains: Rain[] = memoized_rains;
 		
 		
+		
 		const EXECUTE = () => {
+			const Updater = () => setInterval(() => {
+				ENV.ctx.clearRect(0, 0, ENV.screenWidth, ENV.screenHeight);
+	
+				if (player.IsAlive && player.IsAppearing && food.IsAppearing) food.Update();
+				for (const rain of rains) if (rain) rain.Update();
+				player.Update();
+			}, 1000/ENV.FPS);
+
+			const GenerateRain = () => {
+				if (player.IsAlive && !ENV.isTabInactive) rains.push(new Rain(rains.length));
+			
+				const dynamicInterval = ENV.screenWidth > 540 ? 100 * (1366 / ENV.screenWidth) : 100 * (1366 / ENV.screenWidth) * 3 / 4;
+				if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
+			};
+
+			let timeoutRain, intervalUpdater, timeoutIntro, timeoutInitial, timeoutExecute;
+		
 			const IgniteGame = () => {
 				const startingPosition = ENV.screenWidth < 744 ? ENV.screenWidth * 10 / 100 : ENV.screenWidth / 2 - 306;
 				player.NewGame('no-glimpse');
+				
+				timeoutRain = GenerateRain();
+				intervalUpdater = Updater();
 				ENV.IS_EXECUTED = true;
 	
 				setGameStatus('ready');
@@ -566,46 +587,20 @@ const Canvas = (props: CanvasProps) => {
 				control.left.addEventListener('touchend', control.Touch.uncontrolLeft, false);
 			};
 				
-			if (skipIntro) {
-				IgniteGame();
-				return [null, null, null];
-			}
+			if (skipIntro) IgniteGame();
 			else {
 				const delay = 1000;
-				const timeoutIntro = setTimeout(() => ENV.GlimpseHandler('intro'), delay);
-				const timeoutInitial = setTimeout(() => ENV.GlimpseHandler('regular'), delay + 3900);
-				const timeoutExecute = setTimeout(IgniteGame, delay + 4500);
-				return [timeoutIntro, timeoutInitial, timeoutExecute];
+				timeoutIntro = setTimeout(() => ENV.GlimpseHandler('intro'), delay);
+				timeoutInitial = setTimeout(() => ENV.GlimpseHandler('regular'), delay + 3900);
+				timeoutExecute = setTimeout(IgniteGame, delay + 4500);
 			}
 			
-		};
-		const [timeoutIntro, timeoutInitial, timeoutExecute]: NodeJS.Timeout[] = EXECUTE();
-
-		
-		/////////RAINFALL GENERATOR
-		const GenerateRain = () => {
-			if (player.IsAlive && !ENV.isTabInactive && ENV.IS_EXECUTED) rains.push(new Rain(rains.length));
+			return {intervalUpdater, timeoutRain, timeoutIntro, timeoutInitial, timeoutExecute};
 			
-			const dynamicInterval = ENV.screenWidth > 540 ? 100 * (1366 / ENV.screenWidth) : 100 * (1366 / ENV.screenWidth) * 3 / 4;
-			if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
 		};
-		const GenerateRainTimeout: NodeJS.Timeout = GenerateRain();
+		const {intervalUpdater, timeoutRain, timeoutIntro, timeoutInitial, timeoutExecute} = EXECUTE();
 		
 		
-		/////////SCREEN UPDATER
-		const Updater = setInterval(() => {
-			if (ENV.IS_EXECUTED) {
-				//Reseting canvas
-				ENV.ctx.clearRect(0, 0, ENV.screenWidth, ENV.screenHeight);
-
-				//Then, redrawing objects
-				if (player.IsAlive && player.IsAppearing && food.IsAppearing) food.Update();
-				for (const rain of rains) if (rain) rain.Update();
-				player.Update();
-			}
-		}, 1000/ENV.FPS);
-		
-
 		document.addEventListener('visibilitychange', ENV.HandleInactive);
 		window.addEventListener('resize', ENV.ReportWindowSize);
 
@@ -623,8 +618,8 @@ const Canvas = (props: CanvasProps) => {
 			clearTimeout(timeoutIntro);
 			clearTimeout(timeoutInitial);
 			clearTimeout(timeoutExecute);
-			clearTimeout(GenerateRainTimeout);
-			clearInterval(Updater);
+			clearTimeout(timeoutRain);
+			clearInterval(intervalUpdater);
 
 			_isMounted = false;
 		};
