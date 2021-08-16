@@ -202,6 +202,10 @@ const Canvas = (props: CanvasProps) => {
 				}
 			};
 
+			HandleResponsive = () => {
+				player.Position.Y = ENV.el.canvas.height - player.Height;
+			}
+
 			GameOver = () => {
 				if (this.IsAlive) setAnimateValue(this.TimeSpan);
 
@@ -475,14 +479,12 @@ const Canvas = (props: CanvasProps) => {
 				
 				this.ctx = this.el.canvas.getContext('2d');
 
-				this.ReportWindowSize();
+				this.HandleResponsive();
 			}
 			
-			ReportWindowSize = () => {
+			HandleResponsive = () => {
 				this.el.canvas.width = responsive.width(window);
 				this.el.canvas.height = responsive.height(window);
-				
-				player.Position.Y = this.el.canvas.height - player.Height;
 			};
 			
 			HandleInactive = () => {
@@ -490,20 +492,20 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			GlimpseHandler = (score) => {				
-				const animate = (el) => {
-					el.style.opacity = 1;
+				const animate = (element) => {
+					element.style.opacity = 1;
 					
 					safeTimeout(() => {
-						el.style.opacity = 0;
+						element.style.opacity = 0;
 					}, 200);
 				};
 					
-				const animateIntro = (el) => {
-					el.style.transition = '1s';
-					el.style.opacity = 0;
+				const animateIntro = (element) => {
+					element.style.transition = '1s';
+					element.style.opacity = 0;
 
 					safeTimeout(() => {
-						el.style.transition = '0.2s';
+						element.style.transition = '0.2s';
 					}, 1000);
 				};
 
@@ -536,7 +538,6 @@ const Canvas = (props: CanvasProps) => {
 					safeTimeout(() => animateIntro(nr), 1000);
 				}
 			};
-
 		}
 
 
@@ -600,14 +601,16 @@ const Canvas = (props: CanvasProps) => {
 		
 		
 		document.addEventListener('visibilitychange', ENV.HandleInactive);
-		window.addEventListener('resize', ENV.ReportWindowSize);
+		window.addEventListener('resize', ENV.HandleResponsive);
+		window.addEventListener('resize', player.HandleResponsive);
 
 		/////////USE-EFFECT CLEAN-UP
 		return () => {
 			document.removeEventListener('visibilitychange', ENV.HandleInactive);
 			document.removeEventListener('keydown', control.Keyboard.controlling);
 			document.removeEventListener('keyup', control.Keyboard.uncontrolling);
-			window.removeEventListener('resize', ENV.ReportWindowSize);
+			window.removeEventListener('resize', ENV.HandleResponsive);
+			window.removeEventListener('resize', player.HandleResponsive);
 			control.right.removeEventListener('touchstart', control.Touch.controlRight, false);
 			control.right.removeEventListener('touchend', control.Touch.uncontrolRight, false);
 			control.left.removeEventListener('touchstart', control.Touch.controlLeft, false);
