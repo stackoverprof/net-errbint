@@ -24,9 +24,19 @@ export type EnumDirection = 'idle' | 'left' | 'right';
 export class EnvironmentType {
 	FPS: number;
 	REALTIME: number;
+	el: {
+		side: HTMLInputElement;
+		bri: HTMLImageElement;
+		nr: HTMLImageElement;
+		et: HTMLImageElement;
+		newGameBtn: HTMLButtonElement;
+		avoid: HTMLDivElement;
+		ohno: HTMLDivElement;
+		rightTouch: HTMLDivElement;
+		leftTouch: HTMLDivElement;
+		canvas: HTMLCanvasElement;
+	};
 	IS_EXECUTED: boolean;
-	canvas: HTMLCanvasElement;
-	area: HTMLElement;
 	ctx: CanvasRenderingContext2D;
 	screenWidth: number;
 	screenHeight: number;

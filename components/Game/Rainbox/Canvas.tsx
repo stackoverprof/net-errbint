@@ -63,8 +63,8 @@ const Canvas = (props: CanvasProps) => {
 				this.TimeSpan = 0;
 				
 				this.Position = {
-					X: ENV.canvas.width < 744 ? ENV.canvas.width * 10 / 100 : ENV.canvas.width / 2 - 306,
-					Y: ENV.canvas.height - this.Height
+					X: ENV.el.canvas.width < 744 ? ENV.el.canvas.width * 10 / 100 : ENV.el.canvas.width / 2 - 306,
+					Y: ENV.el.canvas.height - this.Height
 				};
 			}
 			
@@ -172,37 +172,31 @@ const Canvas = (props: CanvasProps) => {
 			};
 			
 			DrawDialog = () => {
-				const avoid = dialogAvoidRef.current;
-				const ohno = dialogOhnoRef.current;
-				
-				avoid.style.left = `${this.Position.X + this.Width - 20}px`;
-				ohno.style.left = `${this.Position.X + this.Width - 20}px`;
+				ENV.el.avoid.style.left = `${this.Position.X + this.Width - 20}px`;
+				ENV.el.ohno.style.left = `${this.Position.X + this.Width - 20}px`;
 			};
 
 			DialogHandler = (action: string) => {
-				const avoid = dialogAvoidRef.current;
-				const ohno = dialogOhnoRef.current;
-				
 				switch (action) {
 					case 'init-avoid':
-						avoid.style.transition = 'none';
-						avoid.style.opacity = '1';
+						ENV.el.avoid.style.transition = 'none';
+						ENV.el.avoid.style.opacity = '1';
 						break;
 					case 'remove-avoid':
-						avoid.style.transition = 'opacity 3s';
-						avoid.style.opacity = '0';
+						ENV.el.avoid.style.transition = 'opacity 3s';
+						ENV.el.avoid.style.opacity = '0';
 						break;
 					case 'over':
-						avoid.style.display = 'none';
-						ohno.style.transition = 'none';
-						ohno.style.visibility = 'visible';
-						ohno.style.opacity = '1';
+						ENV.el.avoid.style.display = 'none';
+						ENV.el.ohno.style.transition = 'none';
+						ENV.el.ohno.style.visibility = 'visible';
+						ENV.el.ohno.style.opacity = '1';
 						
 						safeTimeout(() => {
-							ohno.style.transition = 'opacity 2s, visibility 0s 2s';
-							avoid.style.display = 'flex';
-							ohno.style.visibility = 'hidden';
-							ohno.style.opacity = '0';
+							ENV.el.ohno.style.transition = 'opacity 2s, visibility 0s 2s';
+							ENV.el.avoid.style.display = 'flex';
+							ENV.el.ohno.style.visibility = 'hidden';
+							ENV.el.ohno.style.opacity = '0';
 						}, 500);
 						break;
 				}
@@ -237,10 +231,10 @@ const Canvas = (props: CanvasProps) => {
 			Move = (direction: EnumDirection) => {
 				const vector = this.Velocity * {left: -1, right: 1, idle: 0}[direction];
 				
-				if (!(this.Position.X + vector < 0 || this.Position.X + vector > ENV.canvas.width - this.Width)) {
+				if (!(this.Position.X + vector < 0 || this.Position.X + vector > ENV.el.canvas.width - this.Width)) {
 					this.Position.X += vector;
-				} else if (this.Position.X > ENV.canvas.width - this.Width) {
-					this.Position.X = ENV.canvas.width - (this.Width + 2);
+				} else if (this.Position.X > ENV.el.canvas.width - this.Width) {
+					this.Position.X = ENV.el.canvas.width - (this.Width + 2);
 				} else if (this.Position.X < 0) {
 					this.Position.X = 0 + 2;
 				}
@@ -284,7 +278,7 @@ const Canvas = (props: CanvasProps) => {
 
 			RandomPosition = () => {
 				let randomPos: number;
-				do randomPos = Math.random() * (ENV.canvas.width + this.Size * 2) - this.Size;
+				do randomPos = Math.random() * (ENV.el.canvas.width + this.Size * 2) - this.Size;
 				while (!player.IsAppearing && randomPos > player.Position.X - this.Size * 2 && randomPos < player.Position.X + this.Size * 2);
 				return randomPos;
 			}
@@ -301,7 +295,7 @@ const Canvas = (props: CanvasProps) => {
 			DrawTrail = () => {
 				ENV.ctx.beginPath();
 				ENV.ctx.rect(this.Position.X, this.Position.Y - 120, this.Width, this.Height * 4);
-				this.TrailGradient = ENV.ctx.createLinearGradient(ENV.canvas.height / 2, this.Position.Y, ENV.canvas.height / 2, this.Position.Y - 120);
+				this.TrailGradient = ENV.ctx.createLinearGradient(ENV.el.canvas.height / 2, this.Position.Y, ENV.el.canvas.height / 2, this.Position.Y - 120);
 				this.TrailGradient.addColorStop(0, this.Colortrail0);
 				this.TrailGradient.addColorStop(1, this.Colortrail1);
 				ENV.ctx.fillStyle = this.TrailGradient;
@@ -319,7 +313,7 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			Update = () => {
-				if (this.Position.Y < ENV.canvas.height + this.Height * 5) {
+				if (this.Position.Y < ENV.el.canvas.height + this.Height * 5) {
 					this.Move();
 					this.DrawHead();
 					this.DrawTrail();
@@ -347,7 +341,7 @@ const Canvas = (props: CanvasProps) => {
 			
 			RandomPosition = () => {
 				let randomPos;
-				do randomPos = Math.random() * (ENV.canvas.width - this.Width * 3) + this.Width;
+				do randomPos = Math.random() * (ENV.el.canvas.width - this.Width * 3) + this.Width;
 				while (randomPos >= player.Position.X - (this.Width + this.distance) && randomPos <= player.Position.X + player.Width + this.distance);
 				return randomPos;
 			}
@@ -362,10 +356,10 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			Draw = () => {
-				if (this.PosX > ENV.canvas.width - this.Width * 2) this.PosX = ENV.canvas.width - this.Width * 2;
+				if (this.PosX > ENV.el.canvas.width - this.Width * 2) this.PosX = ENV.el.canvas.width - this.Width * 2;
 
 				ENV.ctx.beginPath();
-				ENV.ctx.rect(this.PosX, ENV.canvas.height - this.Height * 2, this.Width, this.Width);
+				ENV.ctx.rect(this.PosX, ENV.el.canvas.height - this.Height * 2, this.Width, this.Width);
 				ENV.ctx.shadowColor = this.Shadow;
 				ENV.ctx.shadowBlur = this.Blur;
 				ENV.ctx.fillStyle = this.Color;
@@ -387,9 +381,9 @@ const Canvas = (props: CanvasProps) => {
 				this.isRightPressed = false;
 				this.isLeftPressed = false;
 				
-				this.newGameBtn = newGameBtnRef.current;
-				this.right = rightTouchRef.current;
-				this.left = leftTouchRef.current;
+				this.newGameBtn = ENV.el.newGameBtn;
+				this.right = ENV.el.rightTouch;
+				this.left = ENV.el.leftTouch;
 				this.isRightTouched = false;
 				this.isLeftTouched = false;
 			}
@@ -409,8 +403,7 @@ const Canvas = (props: CanvasProps) => {
 					}
 	
 					//PRESSING ENTER
-					const siderinput: HTMLInputElement = sideRef.current;
-					if (e.which === 13 && !player.IsAlive && document.activeElement !== siderinput) {
+					if (e.which === 13 && !player.IsAlive && document.activeElement !== ENV.el.side) {
 						player.NewGame();
 					}
 					
@@ -464,47 +457,53 @@ const Canvas = (props: CanvasProps) => {
 
 				this.FPS = 50;
 				this.REALTIME = 100/this.FPS;
-
-				this.canvas = canvasRef.current;
-				this.ctx = this.canvas.getContext('2d');
-
-				this.canvas.width = responsive.width(window);
-				this.canvas.height = responsive.height(window);
-				
 				this.isTabInactive = false;
 				this.THEME = GameTheme[selectedTheme];
+
+				this.el = {
+					side: sideRef.current,
+					bri: briRef.current,
+					nr: nrRef.current,
+					et: etRef.current,
+					newGameBtn: newGameBtnRef.current,
+					avoid: dialogAvoidRef.current,
+					ohno: dialogOhnoRef.current,
+					rightTouch: rightTouchRef.current,
+					leftTouch: leftTouchRef.current,
+					canvas: canvasRef.current,
+				};				
+				
+				this.ctx = this.el.canvas.getContext('2d');
+
+				this.ReportWindowSize();
 			}
 			
 			ReportWindowSize = () => {
-				this.canvas.width = responsive.width(window);
-				this.canvas.height = responsive.height(window);
+				this.el.canvas.width = responsive.width(window);
+				this.el.canvas.height = responsive.height(window);
 				
-				player.Position.Y = this.canvas.height - player.Height;
+				player.Position.Y = this.el.canvas.height - player.Height;
 			};
 			
 			HandleInactive = () => {
 				this.isTabInactive = document.hidden ? true : false;
 			}
 
-			GlimpseHandler = (score) => {
-				const bri = briRef.current;
-				const nr = nrRef.current;
-				const et = etRef.current;
-					
-				const animate = (element) => {
-					element.style.opacity = 1;
+			GlimpseHandler = (score) => {				
+				const animate = (el) => {
+					el.style.opacity = 1;
 					
 					safeTimeout(() => {
-						element.style.opacity = 0;
+						el.style.opacity = 0;
 					}, 200);
 				};
 					
-				const animateIntro = (element) => {
-					element.style.transition = '1s';
-					element.style.opacity = 0;
+				const animateIntro = (el) => {
+					el.style.transition = '1s';
+					el.style.opacity = 0;
 
 					safeTimeout(() => {
-						element.style.transition = '0.2s';
+						el.style.transition = '0.2s';
 					}, 1000);
 				};
 
@@ -519,6 +518,8 @@ const Canvas = (props: CanvasProps) => {
 						bri.style.opacity = 0;
 					}, 350);
 				};
+
+				const {et, nr, bri} = ENV.el;
 
 				if (score % 10 === 0 || score === 'special') {
 					animateSpecial(et, nr, bri);
@@ -576,7 +577,7 @@ const Canvas = (props: CanvasProps) => {
 
 			const Updater = () => setInterval(() => {
 				if (IS_EXECUTED) {
-					ENV.ctx.clearRect(0, 0, ENV.canvas.width, ENV.canvas.height);
+					ENV.ctx.clearRect(0, 0, ENV.el.canvas.width, ENV.el.canvas.height);
 		
 					if (player.IsAlive && player.IsAppearing && food.IsAppearing) food.Update();
 					for (const rain of rains) if (rain) rain.Update();
@@ -588,7 +589,7 @@ const Canvas = (props: CanvasProps) => {
 			const GenerateRain = () => {
 				if (player.IsAlive && !ENV.isTabInactive && IS_EXECUTED) rains.push(new Rain(rains.length));
 				
-				const dynamicInterval = ENV.canvas.width > 540 ? 100 * (1366 / ENV.canvas.width) : 100 * (1366 / ENV.canvas.width) * 3 / 4;
+				const dynamicInterval = ENV.el.canvas.width > 540 ? 100 * (1366 / ENV.el.canvas.width) : 100 * (1366 / ENV.el.canvas.width) * 3 / 4;
 				return safeTimeout(GenerateRain, dynamicInterval);
 			};
 			timeouts.push(GenerateRain());
