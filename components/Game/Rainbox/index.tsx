@@ -8,11 +8,10 @@ import Canvas from './Canvas';
 import Glimpse from './Glimpse';
 
 interface Props {
-	isInitialLoad: boolean
 	skipIntro: boolean
 }
 
-const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
+const Rainbox = ({ skipIntro }: Props) => {
 	const [processMessage, setProcessMessage] = useState('');
 	const [score, setScore] = useState({ food: 0, time: 0 });
 	const [gameStatus, setGameStatus] = useState('intro');
@@ -107,7 +106,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 	}, []);
 
 	return (
-		<div className="relative z-0" style={{ height: 'calc(100vh)', maxHeight: screen < 639 ? 'calc(100vh - 300px)' : 'unset'}}>
+		<div className="relative z-0" style={{ height: 'calc(100vh - 60px)', maxHeight: screen < 639 ? 'calc(100vh - 500px)' : 'unset'}}>
 			<div className="relative flex-ec col full" style={{ zIndex: -6 }} id="game-container">
 				<div className="relative flex-sc col full bg-top bg-no-repeat bg-cover" style={{ zIndex: -5, backgroundImage: 'url("/img/bg3d.webp")'}}>
 					<div className="absolute inset-0 flex-cc pb-40 pointer-events-none full" style={{ zIndex: -3 }}>
@@ -124,6 +123,8 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 					<Glimpse skipIntro={skipIntro} etRef={etRef} nrRef={nrRef} briRef={briRef} />
 					
 					<Canvas
+						width={100}
+						height={100}
 						setGameStatus={setGameStatus}
 						skipIntro={gameStatus === 'intro' ? skipIntro : true }
 						newGameBtnRef={newGameBtnRef}
@@ -131,7 +132,6 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 						setProcessMessage={setProcessMessage}
 						dialogAvoidRef={dialogAvoidRef}
 						dialogOhnoRef={dialogOhnoRef}
-						isInitialLoad={gameStatus === 'intro' ? isInitialLoad : false }
 						setScore={setScore}
 						sideRef={sideRef}
 						briRef={briRef}
@@ -154,7 +154,6 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 						</div>
 					</div>
 				</div>
-				<div className="w-full bg-black" style={{height: 60}}></div>
 			</div>
 
 
@@ -169,7 +168,7 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 				<p className="text-accent">#{checkRank()}</p>
 			</div>
 
-			<div className={'absolute inset-0 pointer-events-none flex-ce full font-bahn text-gray-600'} style={{paddingBottom: 78}}>
+			<div className="absolute inset-0 pointer-events-none flex-ce full font-bahn text-gray-600 pb-4">
 				{{
 					'over' : (
 						<p className="flex-sc w-40 gap-2 whitespace-nowrap">

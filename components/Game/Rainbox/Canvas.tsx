@@ -1,13 +1,16 @@
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { PlayerType, RainType, FoodType, CanvasProps, EnumDirection, ControlType, EnvironmentType} from './Canvas.types';
 import { useLayout } from '@core/contexts/index';
 import { GameTheme } from './theme';
+import useDebug from './../../../core/hooks/useDebug';
 
 
 // [TODO] : di hape masi ga nyaman, secara responsivitas
 
 const Canvas = (props: CanvasProps) => {
 	const {
+		width,
+		height,
 		skipIntro,
 		setAnimateValue,
 		setProcessMessage,
@@ -22,14 +25,23 @@ const Canvas = (props: CanvasProps) => {
 		dialogOhnoRef
 	} = props;
 
+	const [dimension, setDimension] = useState<{width: number, height: number}>({width: 0, height: 0});
+
 	const { selectedTheme } = useLayout();
 	
 	const rightTouchRef = useRef<HTMLDivElement>(null);
 	const leftTouchRef = useRef<HTMLDivElement>(null);
+	const areaRef = useRef<HTMLDivElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	const memoized_rains = useMemo(() => [], []);
+
+	useDebug(dimension);
 	
+	useEffect(() => {
+		console.log(areaRef.current.offsetWidth, areaRef.current.offsetHeight, areaRef.current);
+		
+	}, [areaRef]);
 
 	const GameScript = () => {
 		let _isMounted = true;
@@ -63,8 +75,8 @@ const Canvas = (props: CanvasProps) => {
 				this.TimeSpan = 0;
 				
 				this.Position = {
-					X: ENV.screenWidth < 744 ? ENV.screenWidth * 10 / 100 : ENV.screenWidth / 2 - 306,
-					Y: ENV.screenHeight - this.Height
+					X: ENV.canvas.width < 744 ? ENV.canvas.width * 10 / 100 : ENV.canvas.width / 2 - 306,
+					Y: ENV.canvas.height - this.Height
 				};
 			}
 			
@@ -237,10 +249,10 @@ const Canvas = (props: CanvasProps) => {
 			Move = (direction: EnumDirection) => {
 				const vector = this.Velocity * {left: -1, right: 1, idle: 0}[direction];
 				
-				if (!(this.Position.X + vector < 0 || this.Position.X + vector > ENV.screenWidth - this.Width)) {
+				if (!(this.Position.X + vector < 0 || this.Position.X + vector > ENV.canvas.width - this.Width)) {
 					this.Position.X += vector;
-				} else if (this.Position.X > ENV.screenWidth - this.Width) {
-					this.Position.X = ENV.screenWidth - (this.Width + 2);
+				} else if (this.Position.X > ENV.canvas.width - this.Width) {
+					this.Position.X = ENV.canvas.width - (this.Width + 2);
 				} else if (this.Position.X < 0) {
 					this.Position.X = 0 + 2;
 				}
@@ -284,7 +296,7 @@ const Canvas = (props: CanvasProps) => {
 
 			RandomPosition = () => {
 				let randomPos: number;
-				do randomPos = Math.random() * (ENV.screenWidth + this.Size * 2) - this.Size;
+				do randomPos = Math.random() * (ENV.canvas.width + this.Size * 2) - this.Size;
 				while (!player.IsAppearing && randomPos > player.Position.X - this.Size * 2 && randomPos < player.Position.X + this.Size * 2);
 				return randomPos;
 			}
@@ -301,7 +313,7 @@ const Canvas = (props: CanvasProps) => {
 			DrawTrail = () => {
 				ENV.ctx.beginPath();
 				ENV.ctx.rect(this.Position.X, this.Position.Y - 120, this.Width, this.Height * 4);
-				this.TrailGradient = ENV.ctx.createLinearGradient(ENV.screenHeight / 2, this.Position.Y, ENV.screenHeight / 2, this.Position.Y - 120);
+				this.TrailGradient = ENV.ctx.createLinearGradient(ENV.canvas.height / 2, this.Position.Y, ENV.canvas.height / 2, this.Position.Y - 120);
 				this.TrailGradient.addColorStop(0, this.Colortrail0);
 				this.TrailGradient.addColorStop(1, this.Colortrail1);
 				ENV.ctx.fillStyle = this.TrailGradient;
@@ -319,7 +331,7 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			Update = () => {
-				if (this.Position.Y < ENV.screenHeight + this.Height * 5) {
+				if (this.Position.Y < ENV.canvas.height + this.Height * 5) {
 					this.Move();
 					this.DrawHead();
 					this.DrawTrail();
@@ -347,7 +359,7 @@ const Canvas = (props: CanvasProps) => {
 			
 			RandomPosition = () => {
 				let randomPos;
-				do randomPos = Math.random() * (ENV.screenWidth - this.Width * 3) + this.Width;
+				do randomPos = Math.random() * (ENV.canvas.width - this.Width * 3) + this.Width;
 				while (randomPos >= player.Position.X - (this.Width + this.distance) && randomPos <= player.Position.X + player.Width + this.distance);
 				return randomPos;
 			}
@@ -362,10 +374,10 @@ const Canvas = (props: CanvasProps) => {
 			}
 
 			Draw = () => {
-				if (this.PosX > ENV.screenWidth - this.Width * 2) this.PosX = ENV.screenWidth - this.Width * 2;
+				if (this.PosX > ENV.canvas.width - this.Width * 2) this.PosX = ENV.canvas.width - this.Width * 2;
 
 				ENV.ctx.beginPath();
-				ENV.ctx.rect(this.PosX, ENV.screenHeight - this.Height * 2, this.Width, this.Width);
+				ENV.ctx.rect(this.PosX, ENV.canvas.height - this.Height * 2, this.Width, this.Width);
 				ENV.ctx.shadowColor = this.Shadow;
 				ENV.ctx.shadowBlur = this.Blur;
 				ENV.ctx.fillStyle = this.Color;
@@ -468,12 +480,11 @@ const Canvas = (props: CanvasProps) => {
 				/////////CANVAS INITIALIZATION 
 				this.canvas = canvasRef.current;
 				this.ctx = this.canvas.getContext('2d');
+				this.canvas.width = window.innerWidth;
+				this.canvas.height = window.innerHeight - 60;
+
+				console.log(areaRef.current.offsetWidth, areaRef.current.offsetHeight);
 				
-				this.screenWidth = window.innerWidth;
-				this.screenHeight = window.innerHeight;
-				this.canvas.width = this.screenWidth;
-				this.canvas.height = this.screenHeight;
-		
 				
 				/////////HANDLE INACTIVE TAB
 				this.isTabInactive = false;
@@ -484,11 +495,9 @@ const Canvas = (props: CanvasProps) => {
 			}
 			
 			ReportWindowSize = () => {
-				this.screenWidth = window.innerWidth;
-				this.screenHeight = window.innerHeight;
-				this.canvas.width = this.screenWidth;
-				this.canvas.height = this.screenHeight;
-	
+				this.canvas.width = window.innerWidth;
+				this.canvas.height = window.innerHeight - 60;
+				
 				player.Position.Y = this.canvas.height - player.Height;
 			};
 			
@@ -586,7 +595,7 @@ const Canvas = (props: CanvasProps) => {
 
 			const Updater = () => setInterval(() => {
 				if (IS_EXECUTED) {
-					ENV.ctx.clearRect(0, 0, ENV.screenWidth, ENV.screenHeight);
+					ENV.ctx.clearRect(0, 0, ENV.canvas.width, ENV.canvas.height);
 		
 					if (player.IsAlive && player.IsAppearing && food.IsAppearing) food.Update();
 					for (const rain of rains) if (rain) rain.Update();
@@ -598,7 +607,7 @@ const Canvas = (props: CanvasProps) => {
 			const GenerateRain = () => {
 				if (player.IsAlive && !ENV.isTabInactive && IS_EXECUTED) rains.push(new Rain(rains.length));
 				
-				const dynamicInterval = ENV.screenWidth > 540 ? 100 * (1366 / ENV.screenWidth) : 100 * (1366 / ENV.screenWidth) * 3 / 4;
+				const dynamicInterval = ENV.canvas.width > 540 ? 100 * (1366 / ENV.canvas.width) : 100 * (1366 / ENV.canvas.width) * 3 / 4;
 				return safeTimeout(GenerateRain, dynamicInterval);
 			};
 			timeouts.push(GenerateRain());
@@ -631,14 +640,16 @@ const Canvas = (props: CanvasProps) => {
 
 
 	/////////HOOK THE SCRIPT TO USE-EFFECT  
-	useEffect(GameScript, [selectedTheme]); 
+	useEffect(GameScript, [selectedTheme, areaRef]); 
 
 	return (
-		<div className="flex-sc col w-full pointer-events-none" style={{height: 'calc(100%)', zIndex: -1}}>
+		<div ref={areaRef} className="flex-sc col full pointer-events-none" style={{zIndex: -1}}>
 			<canvas ref={canvasRef} className="absolute inset-0 full" style={{ zIndex: -2 }} />
-			<div className="absolute inset-0 flex-bc pointer-events-none full" style={{ zIndex: 0 }}>
-				<div className="w-1/2 h-full pointer-events-auto select-none opacity-20" ref={leftTouchRef}></div>
-				<div className="w-1/2 h-full pointer-events-auto select-none opacity-20" ref={rightTouchRef}></div>
+			<div className="absolute inset-0 flex-cc col full pointer-events-none" style={{zIndex: 0 }}>
+				<div className="flex-cc full">
+					<div className="w-1/2 h-full pointer-events-auto select-none opacity-20" ref={leftTouchRef}></div>
+					<div className="w-1/2 h-full pointer-events-auto select-none opacity-20" ref={rightTouchRef}></div>
+				</div>
 			</div>
 		</div>
 	);

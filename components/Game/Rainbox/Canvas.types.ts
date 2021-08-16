@@ -1,7 +1,8 @@
 import { MutableRefObject } from 'react';
 
 export interface CanvasProps {
-	isInitialLoad: boolean;
+	width: number;
+	height: number;
 	skipIntro: boolean;
 	setAnimateValue(arg0: number): void;
 	setProcessMessage(arg0: string): void;
@@ -23,6 +24,7 @@ export class EnvironmentType {
 	REALTIME: number;
 	IS_EXECUTED: boolean;
 	canvas: HTMLCanvasElement;
+	area: HTMLElement;
 	ctx: CanvasRenderingContext2D;
 	screenWidth: number;
 	screenHeight: number;
