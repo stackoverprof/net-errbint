@@ -5,15 +5,14 @@ import { useLayout } from '@core/contexts/index';
 import Link from '@components/_shared/Link';
  
 const Index = (): JSX.Element => {
-	const { selectedTheme, setSelectedTheme } = useLayout();
+	const { setSelectedTheme } = useLayout();
 
 	return (
 		<MainLayout title="" className="flex-sc col" transition="fade">
 			<div className="relative w-full">
 				<Rainbox skipIntro={false}/>
 			</div>
-			<div className="w-full h-96 bg-red-400">
-				{selectedTheme}
+			<div className="w-full h-96 bg-black text-white">
 				<button onClick={() => setSelectedTheme('orange')}>orange</button>
 				<button onClick={() => setSelectedTheme('purple')}>purple</button>
 				<button onClick={() => setSelectedTheme('green')}>green</button>
