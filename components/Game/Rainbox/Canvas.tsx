@@ -67,7 +67,7 @@ const Canvas = (props: CanvasProps) => {
 				};
 			}
 			
-			NewGame = (option?: string) => {
+			NewGame = ({noGlimpse, showAvoid}: {noGlimpse?: boolean, showAvoid?: boolean} = {}) => {
 				this.IsAlive = true;
 				this.EatCount = 0;
 				this.TimeStart = new Date().getTime();
@@ -75,24 +75,24 @@ const Canvas = (props: CanvasProps) => {
 				this.TimeSpan = 0;
 				this.Shadow = ENV.THEME.shadow;
 				this.Color = ENV.THEME.dark;
-				
+
 				food.Spawn();
 				
 				setGameStatus('running');
 				setProcessMessage('');
 				setAnimateValue(0);
-				if(option !== 'no-glimpse') ENV.GlimpseHandler('regular');
+				if (!noGlimpse) ENV.GlimpseHandler('regular');
+				if (showAvoid) this.DialogHandler('init-avoid');
 			}
 			
 			DiscoverShield = () => {
 				this.IsAppearing = true;
-
-				this.NewGame('no-glimpse');
-
-				setGameStatus('running');
-				
+				this.NewGame({noGlimpse: true});
+				this.DialogHandler('remove-avoid');
 				food.Spawn();
 				
+				setGameStatus('running');
+
 				for (const rain of rains) {
 					if (rain){
 						rain.Colorbox = '#888888';
@@ -178,26 +178,31 @@ const Canvas = (props: CanvasProps) => {
 				ohno.style.left = `${this.Position.X + this.Width - 20}px`;
 			};
 
-			DialogHandler = (action: string, startingPosition?: number) => {
+			DialogHandler = (action: string) => {
 				const avoid = dialogAvoidRef.current;
 				const ohno = dialogOhnoRef.current;
 				
 				switch (action) {
-					case 'init':
-						avoid.style.display = 'flex';
-						avoid.style.left = `${startingPosition + 34}px`;
+					case 'init-avoid':
+						avoid.style.transition = 'none';
+						avoid.style.opacity = '1';
+						break;
+					case 'remove-avoid':
+						avoid.style.transition = 'opacity 3s';
+						avoid.style.opacity = '0';
 						break;
 					case 'over':
 						avoid.style.display = 'none';
+						ohno.style.transition = 'none';
 						ohno.style.visibility = 'visible';
 						ohno.style.opacity = '1';
-						ohno.style.transition = '0s';
-
+						
 						safeTimeout(() => {
+							ohno.style.transition = 'opacity 2s, visibility 0s 2s';
+							avoid.style.display = 'flex';
 							ohno.style.visibility = 'hidden';
 							ohno.style.opacity = '0';
-							ohno.style.transition = 'opacity 2s, visibility 0s 2s';
-						}, 1000);
+						}, 500);
 						break;
 				}
 			};
@@ -558,13 +563,9 @@ const Canvas = (props: CanvasProps) => {
 			const intervals: NodeJS.Timeout[] = [];
 		
 			const IgniteGame = () => {
-				const startingPosition = ENV.screenWidth < 744 ? ENV.screenWidth * 10 / 100 : ENV.screenWidth / 2 - 306;
-				player.NewGame('no-glimpse');
-				
 				IS_EXECUTED = true;
-	
+				player.NewGame({noGlimpse: true, showAvoid: true});	
 				setGameStatus('ready');
-				player.DialogHandler('init', startingPosition);
 				
 				//Controls registration
 				control.newGameBtn.addEventListener('click', () => player.NewGame());
@@ -596,8 +597,6 @@ const Canvas = (props: CanvasProps) => {
 			intervals.push(Updater());
 
 			const GenerateRain = () => {
-				console.log('raining');
-				
 				if (player.IsAlive && !ENV.isTabInactive && IS_EXECUTED) rains.push(new Rain(rains.length));
 				
 				const dynamicInterval = ENV.screenWidth > 540 ? 100 * (1366 / ENV.screenWidth) : 100 * (1366 / ENV.screenWidth) * 3 / 4;
@@ -620,8 +619,8 @@ const Canvas = (props: CanvasProps) => {
 			document.removeEventListener('keyup', control.Keyboard.uncontrolling);
 			window.removeEventListener('resize', ENV.ReportWindowSize);
 			control.right.removeEventListener('touchstart', control.Touch.controlRight, false);
-			control.left.removeEventListener('touchstart', control.Touch.controlLeft, false);
 			control.right.removeEventListener('touchend', control.Touch.uncontrolRight, false);
+			control.left.removeEventListener('touchstart', control.Touch.controlLeft, false);
 			control.left.removeEventListener('touchend', control.Touch.uncontrolLeft, false);
 
 			for (const interval of intervals) clearInterval(interval);

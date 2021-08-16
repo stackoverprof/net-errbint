@@ -107,12 +107,12 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 	}, []);
 
 	return (
-		<div className="relative full z-0">
+		<div className="relative z-0 full">
 			<div className="relative flex-ec col full" style={{ zIndex: -6 }} id="game-container">
-				<div className="relative flex-sc col w-full bg-top bg-cover bg-no-repeat" style={{ zIndex: -5, backgroundImage: 'url("/img/bg3d.webp")'}}>
+				<div className="relative flex-sc col w-full bg-top bg-no-repeat bg-cover" style={{ zIndex: -5, backgroundImage: 'url("/img/bg3d.webp")'}}>
 					<div className="absolute inset-0 flex-cc pb-40 pointer-events-none full" style={{ zIndex: -3 }}>
 						<div className="absolute flex-cc col w-full">
-							<div className="bg-center bg-contain bg-no-repeat" style={{ backgroundImage: 'url("/img/title/h1-dimm.svg")', maxWidth: 675, width: '90%', minWidth: 340, height: 200}}></div>
+							<div className="bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'url("/img/title/h1-dimm.svg")', maxWidth: 675, width: '90%', minWidth: 340, height: 200}}></div>
 							<div className="relative flex-cc-container" style={{ zIndex: -4, top: screen > 500 ? '-12px' : '-48px', minHeight: '38px'}}>
 								<p className="pt-1 text-center transition-all font-bahn" style={{ fontSize: screen > 500 ? 32 : 24, color: {'running': '#BBBBBB'}[gameStatus] || '#0000'}}>
 									A CREATIVE DEVELOPER
@@ -187,8 +187,8 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 			</div>
 
 			<div className="absolute inset-0 flex-ce pointer-events-none full">
-				<div className="absolute left-0 flex-cc pb-4 text-lg font-bold transition-all bg-center bg-no-repeat bg-cover bottom-28 font-bahn" style={{backgroundImage: 'url("/img/dialog/avoid.svg")', width: 261, height: 110, opacity: gameStatus === 'ready' ? 1 : 0, transition: gameStatus === 'running' ? 'opacity 3s' : 'none'}} ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
-				<div className="absolute left-0 flex-cc invisible pb-4 text-xl font-bold bg-center bg-no-repeat bg-cover bottom-28 font-bahn" style={{backgroundImage: 'url("/img/dialog/ohno.svg")', width: 158, height: 110}} ref={dialogOhnoRef}>OH NO!</div>
+				<div className="absolute left-0 flex-cc pb-4 text-lg font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0 bottom-28 font-bahn" style={{backgroundImage: 'url("/img/dialog/avoid.svg")', width: 261, height: 110}} ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
+				<div className="absolute left-0 flex-cc pb-4 text-xl font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0 bottom-28 font-bahn" style={{backgroundImage: 'url("/img/dialog/ohno.svg")', width: 158, height: 110}} ref={dialogOhnoRef}>OH NO!</div>
 			</div>
 
 			<SideLeaderBoard
