@@ -464,8 +464,6 @@ const Canvas = (props: CanvasProps) => {
 				this.FPS = 50;
 				this.REALTIME = 100/this.FPS;
 
-				this.IS_EXECUTED = false;
-		
 				/////////CANVAS INITIALIZATION 
 				this.canvas = canvasRef.current;
 				this.ctx = this.canvas.getContext('2d');
@@ -490,7 +488,7 @@ const Canvas = (props: CanvasProps) => {
 				this.canvas.width = this.screenWidth;
 				this.canvas.height = this.screenHeight;
 	
-				if (this.IS_EXECUTED) player.Position.Y = this.screenHeight - player.Height;
+				player.Position.Y = this.canvas.height - player.Height;
 			};
 			
 			HandleInactive = () => {
