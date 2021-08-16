@@ -39,7 +39,7 @@ const Canvas = (props: CanvasProps) => {
 			return _timeout;
 		};
 
-		
+
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
 		class Player extends PlayerType {
 			constructor () {
@@ -554,9 +554,8 @@ const Canvas = (props: CanvasProps) => {
 		
 		const EXECUTE = () => {
 			let IS_EXECUTED = false;
-			let timeoutIntro: NodeJS.Timeout;
-			let	timeoutInitial: NodeJS.Timeout;
-			let	timeoutExecute: NodeJS.Timeout;
+			const timeouts: NodeJS.Timeout[] = [];
+			const intervals: NodeJS.Timeout[] = [];
 		
 			const IgniteGame = () => {
 				const startingPosition = ENV.screenWidth < 744 ? ENV.screenWidth * 10 / 100 : ENV.screenWidth / 2 - 306;
@@ -580,9 +579,9 @@ const Canvas = (props: CanvasProps) => {
 			if (skipIntro) IgniteGame();
 			else {
 				const delay = 1000;
-				timeoutIntro = setTimeout(() => ENV.GlimpseHandler('intro'), delay);
-				timeoutInitial = setTimeout(() => ENV.GlimpseHandler('regular'), delay + 3900);
-				timeoutExecute = setTimeout(IgniteGame, delay + 4500);
+				timeouts.push(setTimeout(() => ENV.GlimpseHandler('intro'), delay));
+				timeouts.push(setTimeout(() => ENV.GlimpseHandler('regular'), delay + 3900));
+				timeouts.push(setTimeout(IgniteGame, delay + 4500));
 			}
 
 			const Updater = () => setInterval(() => {
@@ -594,7 +593,7 @@ const Canvas = (props: CanvasProps) => {
 					player.Update();
 				}
 			}, 1000/ENV.FPS);
-			const intervalUpdater: NodeJS.Timeout = Updater();
+			intervals.push(Updater());
 
 			const GenerateRain = () => {
 				console.log('raining');
@@ -604,10 +603,9 @@ const Canvas = (props: CanvasProps) => {
 				const dynamicInterval = ENV.screenWidth > 540 ? 100 * (1366 / ENV.screenWidth) : 100 * (1366 / ENV.screenWidth) * 3 / 4;
 				return safeTimeout(GenerateRain, dynamicInterval);
 			};
-			const timeoutRain: NodeJS.Timeout = GenerateRain();
+			timeouts.push(GenerateRain());
 
-			return { intervals: [intervalUpdater], timeouts: [timeoutRain, timeoutIntro, timeoutInitial, timeoutExecute] };
-			
+			return { intervals, timeouts };	
 		};
 		const { intervals, timeouts } = EXECUTE();
 		
