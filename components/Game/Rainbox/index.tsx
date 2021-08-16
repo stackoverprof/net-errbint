@@ -127,20 +127,22 @@ const Rainbox = ({ skipIntro }: Props) => {
 							width: window => window.innerWidth,
 							height: window => window.innerWidth > 629 ? window.innerHeight - 60 : 500
 						}}
-						skipIntro={gameStatus === 'intro' ? skipIntro : true }
-						
-						setGameStatus={setGameStatus}
-						setAnimateValue={setAnimateValue}
-						setProcessMessage={setProcessMessage}
-						setScore={setScore}
-						
-						dialogAvoidRef={dialogAvoidRef}
-						dialogOhnoRef={dialogOhnoRef}
-						newGameBtnRef={newGameBtnRef}
-						sideRef={sideRef}
-						briRef={briRef}
-						etRef={etRef}
-						nrRef={nrRef} 
+						skipIntro={gameStatus === 'intro' ? skipIntro : true}
+						setter={{
+							setGameStatus,
+							setAnimateValue,
+							setProcessMessage,
+							setScore,
+						}}
+						refs={{
+							dialogAvoidRef,
+							dialogOhnoRef,
+							newGameBtnRef,
+							sideRef,
+							briRef,
+							etRef,
+							nrRef,
+						}}
 					/>
 
 					<div className="absolute inset-0 z-0 flex-cc pb-40 pointer-events-none full">

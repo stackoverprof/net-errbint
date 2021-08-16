@@ -6,17 +6,21 @@ export interface CanvasProps {
 		height(arg0: Window & typeof globalThis): number
 	};
 	skipIntro: boolean;
-	setAnimateValue(arg0: number): void;
-	setProcessMessage(arg0: string): void;
-	setGameStatus(arg0: string): void;
-	setScore(arg0: { food: number, time: number }): void;
-	sideRef: MutableRefObject<HTMLInputElement>;
-	briRef: MutableRefObject<HTMLImageElement>;
-	nrRef: MutableRefObject<HTMLImageElement>;
-	etRef: MutableRefObject<HTMLImageElement>;
-	newGameBtnRef: MutableRefObject<HTMLButtonElement>;
-	dialogAvoidRef: MutableRefObject<HTMLDivElement>;
-	dialogOhnoRef: MutableRefObject<HTMLDivElement>;
+	setter: {
+		setAnimateValue(arg0: number): void;
+		setProcessMessage(arg0: string): void;
+		setGameStatus(arg0: string): void;
+		setScore(arg0: { food: number, time: number }): void;
+	}
+	refs: {
+		sideRef: MutableRefObject<HTMLInputElement>;
+		briRef: MutableRefObject<HTMLImageElement>;
+		nrRef: MutableRefObject<HTMLImageElement>;
+		etRef: MutableRefObject<HTMLImageElement>;
+		newGameBtnRef: MutableRefObject<HTMLButtonElement>;
+		dialogAvoidRef: MutableRefObject<HTMLDivElement>;
+		dialogOhnoRef: MutableRefObject<HTMLDivElement>;
+	}
 }
 
 export type EnumDirection = 'idle' | 'left' | 'right';

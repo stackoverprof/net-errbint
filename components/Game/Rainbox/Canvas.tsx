@@ -6,22 +6,8 @@ import { GameTheme } from './theme';
 
 // [TODO] : di hape masi ga nyaman, secara responsivitas
 
-const Canvas = (props: CanvasProps) => {
-	const {
-		responsive,
-		skipIntro,
-		setAnimateValue,
-		setProcessMessage,
-		setGameStatus,
-		setScore,
-		sideRef,
-		briRef,
-		nrRef,
-		etRef,
-		newGameBtnRef,
-		dialogAvoidRef,
-		dialogOhnoRef
-	} = props;
+const Canvas = ({responsive, skipIntro, setter, refs}: CanvasProps) => {
+	const { setAnimateValue, setProcessMessage, setGameStatus, setScore } = setter;
 
 	const rightTouchRef = useRef<HTMLDivElement>(null);
 	const leftTouchRef = useRef<HTMLDivElement>(null);
@@ -30,7 +16,7 @@ const Canvas = (props: CanvasProps) => {
 	const { selectedTheme } = useLayout();
 	
 	const memoized_rains = useMemo(() => [], []);
-
+	
 	const GameScript = () => {
 		let _isMounted = true;
 
@@ -465,13 +451,13 @@ const Canvas = (props: CanvasProps) => {
 				this.THEME = GameTheme[selectedTheme];
 
 				this.el = {
-					side: sideRef.current,
-					bri: briRef.current,
-					nr: nrRef.current,
-					et: etRef.current,
-					newGameBtn: newGameBtnRef.current,
-					avoid: dialogAvoidRef.current,
-					ohno: dialogOhnoRef.current,
+					side: refs.sideRef.current,
+					bri: refs.briRef.current,
+					nr: refs.nrRef.current,
+					et: refs.etRef.current,
+					newGameBtn: refs.newGameBtnRef.current,
+					avoid: refs.dialogAvoidRef.current,
+					ohno: refs.dialogOhnoRef.current,
 					rightTouch: rightTouchRef.current,
 					leftTouch: leftTouchRef.current,
 					canvas: canvasRef.current,
