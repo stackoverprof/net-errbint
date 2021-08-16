@@ -549,30 +549,14 @@ const Canvas = (props: CanvasProps) => {
 		
 		
 		const EXECUTE = () => {
-			const Updater = () => setInterval(() => {
-				ENV.ctx.clearRect(0, 0, ENV.screenWidth, ENV.screenHeight);
-	
-				if (player.IsAlive && player.IsAppearing && food.IsAppearing) food.Update();
-				for (const rain of rains) if (rain) rain.Update();
-				player.Update();
-			}, 1000/ENV.FPS);
-
-			const GenerateRain = () => {
-				if (player.IsAlive && !ENV.isTabInactive) rains.push(new Rain(rains.length));
-			
-				const dynamicInterval = ENV.screenWidth > 540 ? 100 * (1366 / ENV.screenWidth) : 100 * (1366 / ENV.screenWidth) * 3 / 4;
-				if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
-			};
-
-			let timeoutRain, intervalUpdater, timeoutIntro, timeoutInitial, timeoutExecute;
+			let IS_EXECUTED = false;
+			let timeoutIntro: NodeJS.Timeout, timeoutInitial: NodeJS.Timeout, timeoutExecute: NodeJS.Timeout;
 		
 			const IgniteGame = () => {
 				const startingPosition = ENV.screenWidth < 744 ? ENV.screenWidth * 10 / 100 : ENV.screenWidth / 2 - 306;
 				player.NewGame('no-glimpse');
 				
-				timeoutRain = GenerateRain();
-				intervalUpdater = Updater();
-				ENV.IS_EXECUTED = true;
+				IS_EXECUTED = true;
 	
 				setGameStatus('ready');
 				player.DialogHandler('init', startingPosition);
@@ -594,7 +578,28 @@ const Canvas = (props: CanvasProps) => {
 				timeoutInitial = setTimeout(() => ENV.GlimpseHandler('regular'), delay + 3900);
 				timeoutExecute = setTimeout(IgniteGame, delay + 4500);
 			}
-			
+
+			const Updater = () => setInterval(() => {
+				if (IS_EXECUTED) {
+					ENV.ctx.clearRect(0, 0, ENV.screenWidth, ENV.screenHeight);
+		
+					if (player.IsAlive && player.IsAppearing && food.IsAppearing) food.Update();
+					for (const rain of rains) if (rain) rain.Update();
+					player.Update();
+				}
+			}, 1000/ENV.FPS);
+			const intervalUpdater: NodeJS.Timeout = Updater();
+
+			const GenerateRain = () => {
+				if (player.IsAlive && !ENV.isTabInactive && IS_EXECUTED) rains.push(new Rain(rains.length));
+				console.log('generating...');
+				
+				
+				const dynamicInterval = ENV.screenWidth > 540 ? 100 * (1366 / ENV.screenWidth) : 100 * (1366 / ENV.screenWidth) * 3 / 4;
+				if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
+			};
+			const timeoutRain: NodeJS.Timeout = GenerateRain();
+
 			return {intervalUpdater, timeoutRain, timeoutIntro, timeoutInitial, timeoutExecute};
 			
 		};
