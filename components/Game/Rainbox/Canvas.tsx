@@ -31,8 +31,14 @@ const Canvas = (props: CanvasProps) => {
 	
 
 	const GameScript = () => {
-		let _isMounted = true;	
-		
+		let _isMounted = true;
+
+		const safeTimeout = (fn: () => void, time: number) => {
+			const _timeout = setTimeout(fn, time);
+			if (!_isMounted) clearTimeout(_timeout);
+			return _timeout;
+		};
+
 		
 		/////////THE PLAYER (ORANGE BOX) OBJECT 
 		class Player extends PlayerType {
@@ -175,7 +181,7 @@ const Canvas = (props: CanvasProps) => {
 			DialogHandler = (action: string, startingPosition?: number) => {
 				const avoid = dialogAvoidRef.current;
 				const ohno = dialogOhnoRef.current;
-		
+				
 				switch (action) {
 					case 'init':
 						avoid.style.display = 'flex';
@@ -186,8 +192,8 @@ const Canvas = (props: CanvasProps) => {
 						ohno.style.visibility = 'visible';
 						ohno.style.opacity = '1';
 						ohno.style.transition = '0s';
-	
-						setTimeout(() => {
+
+						safeTimeout(() => {
 							ohno.style.visibility = 'hidden';
 							ohno.style.opacity = '0';
 							ohno.style.transition = 'opacity 2s, visibility 0s 2s';
@@ -493,8 +499,8 @@ const Canvas = (props: CanvasProps) => {
 					
 				const animate = (element) => {
 					element.style.opacity = 1;
-
-					setTimeout(() => {
+					
+					safeTimeout(() => {
 						element.style.opacity = 0;
 					}, 200);
 				};
@@ -503,7 +509,7 @@ const Canvas = (props: CanvasProps) => {
 					element.style.transition = '1s';
 					element.style.opacity = 0;
 
-					setTimeout(() => {
+					safeTimeout(() => {
 						element.style.transition = '0.2s';
 					}, 1000);
 				};
@@ -513,26 +519,26 @@ const Canvas = (props: CanvasProps) => {
 					nr.style.opacity = 1;
 					bri.style.opacity = 1;
 						
-					setTimeout(() => {
+					safeTimeout(() => {
 						et.style.opacity = 0;
 						nr.style.opacity = 0;
 						bri.style.opacity = 0;
 					}, 350);
 				};
-					
+
 				if (score % 10 === 0 || score === 'special') {
 					animateSpecial(et, nr, bri);
-					setTimeout(() => animateSpecial(et, nr, bri), 700);
-					setTimeout(() => animateSpecial(et, nr, bri), 1400);
+					safeTimeout(() => animateSpecial(et, nr, bri), 700);
+					safeTimeout(() => animateSpecial(et, nr, bri), 1400);
 				} else if (score % 5 === 0 || score === 'regular') {
 					animate(et);
-					setTimeout(() => animate(nr), 150);
-					setTimeout(() => animate(bri), 400);
+					safeTimeout(() => animate(nr), 150);
+					safeTimeout(() => animate(bri), 400);
 				} else if (score === 'intro') {
 					setGameStatus('sub.intro');
 					animateIntro(et);
-					setTimeout(() => animateIntro(bri), 500);
-					setTimeout(() => animateIntro(nr), 1000);
+					safeTimeout(() => animateIntro(bri), 500);
+					safeTimeout(() => animateIntro(nr), 1000);
 				}
 			};
 
@@ -546,11 +552,11 @@ const Canvas = (props: CanvasProps) => {
 		const food: Food = new Food();
 		const rains: Rain[] = memoized_rains;
 		
-		
-		
 		const EXECUTE = () => {
 			let IS_EXECUTED = false;
-			let timeoutIntro: NodeJS.Timeout, timeoutInitial: NodeJS.Timeout, timeoutExecute: NodeJS.Timeout;
+			let timeoutIntro: NodeJS.Timeout;
+			let	timeoutInitial: NodeJS.Timeout;
+			let	timeoutExecute: NodeJS.Timeout;
 		
 			const IgniteGame = () => {
 				const startingPosition = ENV.screenWidth < 744 ? ENV.screenWidth * 10 / 100 : ENV.screenWidth / 2 - 306;
@@ -591,19 +597,19 @@ const Canvas = (props: CanvasProps) => {
 			const intervalUpdater: NodeJS.Timeout = Updater();
 
 			const GenerateRain = () => {
-				if (player.IsAlive && !ENV.isTabInactive && IS_EXECUTED) rains.push(new Rain(rains.length));
-				console.log('generating...');
+				console.log('raining');
 				
+				if (player.IsAlive && !ENV.isTabInactive && IS_EXECUTED) rains.push(new Rain(rains.length));
 				
 				const dynamicInterval = ENV.screenWidth > 540 ? 100 * (1366 / ENV.screenWidth) : 100 * (1366 / ENV.screenWidth) * 3 / 4;
-				if (_isMounted) return setTimeout(GenerateRain, dynamicInterval); 
+				return safeTimeout(GenerateRain, dynamicInterval);
 			};
 			const timeoutRain: NodeJS.Timeout = GenerateRain();
 
-			return {intervalUpdater, timeoutRain, timeoutIntro, timeoutInitial, timeoutExecute};
+			return { intervals: [intervalUpdater], timeouts: [timeoutRain, timeoutIntro, timeoutInitial, timeoutExecute] };
 			
 		};
-		const {intervalUpdater, timeoutRain, timeoutIntro, timeoutInitial, timeoutExecute} = EXECUTE();
+		const { intervals, timeouts } = EXECUTE();
 		
 		
 		document.addEventListener('visibilitychange', ENV.HandleInactive);
@@ -620,11 +626,8 @@ const Canvas = (props: CanvasProps) => {
 			control.right.removeEventListener('touchend', control.Touch.uncontrolRight, false);
 			control.left.removeEventListener('touchend', control.Touch.uncontrolLeft, false);
 
-			clearTimeout(timeoutIntro);
-			clearTimeout(timeoutInitial);
-			clearTimeout(timeoutExecute);
-			clearTimeout(timeoutRain);
-			clearInterval(intervalUpdater);
+			for (const interval of intervals) clearInterval(interval);
+			for (const timeout of timeouts) clearTimeout(timeout);
 
 			_isMounted = false;
 		};
