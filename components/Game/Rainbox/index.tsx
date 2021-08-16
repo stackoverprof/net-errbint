@@ -107,9 +107,9 @@ const Rainbox = ({ isInitialLoad, skipIntro }: Props) => {
 	}, []);
 
 	return (
-		<div className="relative z-0 full">
+		<div className="relative z-0" style={{ height: 'calc(100vh)', maxHeight: screen < 639 ? 'calc(100vh - 300px)' : 'unset'}}>
 			<div className="relative flex-ec col full" style={{ zIndex: -6 }} id="game-container">
-				<div className="relative flex-sc col w-full bg-top bg-no-repeat bg-cover" style={{ zIndex: -5, backgroundImage: 'url("/img/bg3d.webp")'}}>
+				<div className="relative flex-sc col full bg-top bg-no-repeat bg-cover" style={{ zIndex: -5, backgroundImage: 'url("/img/bg3d.webp")'}}>
 					<div className="absolute inset-0 flex-cc pb-40 pointer-events-none full" style={{ zIndex: -3 }}>
 						<div className="absolute flex-cc col w-full">
 							<div className="bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'url("/img/title/h1-dimm.svg")', maxWidth: 675, width: '90%', minWidth: 340, height: 200}}></div>

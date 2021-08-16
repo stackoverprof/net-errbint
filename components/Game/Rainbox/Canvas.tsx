@@ -3,6 +3,7 @@ import { PlayerType, RainType, FoodType, CanvasProps, EnumDirection, ControlType
 import { useLayout } from '@core/contexts/index';
 import { GameTheme } from './theme';
 
+
 // [TODO] : di hape masi ga nyaman, secara responsivitas
 
 const Canvas = (props: CanvasProps) => {
@@ -633,9 +634,9 @@ const Canvas = (props: CanvasProps) => {
 	useEffect(GameScript, [selectedTheme]); 
 
 	return (
-		<div className="flex-sc col w-full pointer-events-none" style={{height: 'calc(100vh - 60px)', zIndex: -1 }}>
+		<div className="flex-sc col w-full pointer-events-none" style={{height: 'calc(100%)', zIndex: -1}}>
 			<canvas ref={canvasRef} className="absolute inset-0 full" style={{ zIndex: -2 }} />
-			<div className="absolute inset-0 flex-bc full pointer-events-none" style={{ zIndex: 0 }}>
+			<div className="absolute inset-0 flex-bc pointer-events-none full" style={{ zIndex: 0 }}>
 				<div className="w-1/2 h-full pointer-events-auto select-none opacity-20" ref={leftTouchRef}></div>
 				<div className="w-1/2 h-full pointer-events-auto select-none opacity-20" ref={rightTouchRef}></div>
 			</div>
