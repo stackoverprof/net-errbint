@@ -1,8 +1,10 @@
 import { MutableRefObject } from 'react';
 
 export interface CanvasProps {
-	width: number;
-	height: number;
+	responsive: {
+		width(arg0: Window & typeof globalThis): number,
+		height(arg0: Window & typeof globalThis): number
+	};
 	skipIntro: boolean;
 	setAnimateValue(arg0: number): void;
 	setProcessMessage(arg0: string): void;

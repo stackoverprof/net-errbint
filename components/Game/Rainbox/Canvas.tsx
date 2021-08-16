@@ -1,16 +1,14 @@
-import React, { useRef, useEffect, useMemo, useState } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { PlayerType, RainType, FoodType, CanvasProps, EnumDirection, ControlType, EnvironmentType} from './Canvas.types';
 import { useLayout } from '@core/contexts/index';
 import { GameTheme } from './theme';
-import useDebug from './../../../core/hooks/useDebug';
 
 
 // [TODO] : di hape masi ga nyaman, secara responsivitas
 
 const Canvas = (props: CanvasProps) => {
 	const {
-		width,
-		height,
+		responsive,
 		skipIntro,
 		setAnimateValue,
 		setProcessMessage,
@@ -25,23 +23,13 @@ const Canvas = (props: CanvasProps) => {
 		dialogOhnoRef
 	} = props;
 
-	const [dimension, setDimension] = useState<{width: number, height: number}>({width: 0, height: 0});
-
-	const { selectedTheme } = useLayout();
-	
 	const rightTouchRef = useRef<HTMLDivElement>(null);
 	const leftTouchRef = useRef<HTMLDivElement>(null);
-	const areaRef = useRef<HTMLDivElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-
-	const memoized_rains = useMemo(() => [], []);
-
-	useDebug(dimension);
 	
-	useEffect(() => {
-		console.log(areaRef.current.offsetWidth, areaRef.current.offsetHeight, areaRef.current);
-		
-	}, [areaRef]);
+	const { selectedTheme } = useLayout();
+	
+	const memoized_rains = useMemo(() => [], []);
 
 	const GameScript = () => {
 		let _isMounted = true;
@@ -477,26 +465,19 @@ const Canvas = (props: CanvasProps) => {
 				this.FPS = 50;
 				this.REALTIME = 100/this.FPS;
 
-				/////////CANVAS INITIALIZATION 
 				this.canvas = canvasRef.current;
 				this.ctx = this.canvas.getContext('2d');
-				this.canvas.width = window.innerWidth;
-				this.canvas.height = window.innerWidth > 629 ? window.innerHeight - 60 : 500;
 
-				console.log(areaRef.current.offsetWidth, areaRef.current.offsetHeight);
+				this.canvas.width = responsive.width(window);
+				this.canvas.height = responsive.height(window);
 				
-				
-				/////////HANDLE INACTIVE TAB
 				this.isTabInactive = false;
-				
-				
-				/////////PICK THEME
 				this.THEME = GameTheme[selectedTheme];
 			}
 			
 			ReportWindowSize = () => {
-				this.canvas.width = window.innerWidth;
-				this.canvas.height = window.innerWidth > 629 ? window.innerHeight - 60 : 500;
+				this.canvas.width = responsive.width(window);
+				this.canvas.height = responsive.height(window);
 				
 				player.Position.Y = this.canvas.height - player.Height;
 			};
@@ -640,10 +621,10 @@ const Canvas = (props: CanvasProps) => {
 
 
 	/////////HOOK THE SCRIPT TO USE-EFFECT  
-	useEffect(GameScript, [selectedTheme, areaRef]); 
+	useEffect(GameScript, [selectedTheme]); 
 
 	return (
-		<div ref={areaRef} className="flex-sc col full pointer-events-none" style={{zIndex: -1}}>
+		<div className="flex-sc col full pointer-events-none" style={{zIndex: -1}}>
 			<canvas ref={canvasRef} className="absolute inset-0 full" style={{ zIndex: -2 }} />
 			<div className="absolute inset-0 flex-cc col full pointer-events-none" style={{zIndex: 0 }}>
 				<div className="flex-cc full">

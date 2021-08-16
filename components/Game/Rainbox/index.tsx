@@ -123,16 +123,20 @@ const Rainbox = ({ skipIntro }: Props) => {
 					<Glimpse skipIntro={skipIntro} etRef={etRef} nrRef={nrRef} briRef={briRef} />
 					
 					<Canvas
-						width={100}
-						height={100}
-						setGameStatus={setGameStatus}
+						responsive={{
+							width: window => window.innerWidth,
+							height: window => window.innerWidth > 629 ? window.innerHeight - 60 : 500
+						}}
 						skipIntro={gameStatus === 'intro' ? skipIntro : true }
-						newGameBtnRef={newGameBtnRef}
+						
+						setGameStatus={setGameStatus}
 						setAnimateValue={setAnimateValue}
 						setProcessMessage={setProcessMessage}
+						setScore={setScore}
+						
 						dialogAvoidRef={dialogAvoidRef}
 						dialogOhnoRef={dialogOhnoRef}
-						setScore={setScore}
+						newGameBtnRef={newGameBtnRef}
 						sideRef={sideRef}
 						briRef={briRef}
 						etRef={etRef}
