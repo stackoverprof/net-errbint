@@ -481,7 +481,7 @@ const Canvas = (props: CanvasProps) => {
 				this.canvas = canvasRef.current;
 				this.ctx = this.canvas.getContext('2d');
 				this.canvas.width = window.innerWidth;
-				this.canvas.height = window.innerHeight - 60;
+				this.canvas.height = window.innerWidth > 629 ? window.innerHeight - 60 : 500;
 
 				console.log(areaRef.current.offsetWidth, areaRef.current.offsetHeight);
 				
@@ -496,7 +496,7 @@ const Canvas = (props: CanvasProps) => {
 			
 			ReportWindowSize = () => {
 				this.canvas.width = window.innerWidth;
-				this.canvas.height = window.innerHeight - 60;
+				this.canvas.height = window.innerWidth > 629 ? window.innerHeight - 60 : 500;
 				
 				player.Position.Y = this.canvas.height - player.Height;
 			};
