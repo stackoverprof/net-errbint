@@ -18,23 +18,21 @@ const MainLayout = ({children, title, className, transition}: Props): JSX.Elemen
 
 	return (
 		<Transition type={transition}>
-			<Head>
-				{title && <title>{title} — Errbint.NET</title>}
-			</Head>
+			<SEOTags title={title} />
 
-			<header ref={HeaderRef}>
-				
+			<header ref={upperRef}>
+				{/* Navbar things */}
 			</header>
 
-			<main style={{minHeight: `calc(100vh - ${clearance}px)`}} className={`${className} overflow-x-hidden`}>
+			<main style={{minHeight: clearance, ...style}} className={className}>
 				{children}
 			</main>
 
-			<footer ref={FooterRef}>
-
+			<footer ref={lowerRef}>
+				{/* Footer things */}
 			</footer>
 
-			{mainAlert && <AlertHandler type={mainAlert.type} message={mainAlert.message} handleClose={resetMainAlert} key={(new Date).toISOString()}/>}
+			{alert_value && <AlertHandler type={alert_value.type} message={alert_value.message} handleClose={resetAlert} key={Math.random()}/>}
 		</Transition>
 	);
 };
