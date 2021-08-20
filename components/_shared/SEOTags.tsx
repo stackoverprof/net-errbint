@@ -1,38 +1,45 @@
+
+import { useRouter } from 'next/dist/client/router';
+import Head from 'next/head';
 import React from 'react';
 
-const SEOTags = (): JSX.Element => (
-	<>
-		<link rel="canonical" href="https://errbint.net" />
-		<meta name="description" content="Personal website of R.Bintang Bagus Putra Angkasa / erbin / errbint / stackoverprof" />
-		<meta name="summary" content=""/>
-		<meta name="keywords" content=""/>
-		<meta name="locale" content="en"/>
-		<meta name="robots" content="index,follow"/>
-		<meta name="googlebot" content="index,follow"/>
-		<meta name="copyright"content=""/>
-		<meta name="subject" content="net-errbint"/>
-		<meta name="revised" content="" />
-		<meta name="abstract" content=""/>
-		<meta name="topic" content="technology"/>
-		<meta name="Classification" content="technology"/>
-		<meta name="author" content="stackoverprof, mail.errbint@gmail.com"/>
-		<meta name="designer" content=""/>
-		<meta name="reply-to" content="mail.errbint@gmail.com"/>
-		<meta name="owner" content="net-errbint"/>
-		<meta name="url" content="https://errbint.net"/>
-		<meta name="identifier-URL" content="https://errbint.net"/>
-		<meta name="directory" content="submission"/>
-		<meta name="category" content="technology"/>
-		<meta name="coverage" content="Worldwide"/>
-		<meta name="distribution" content="Global"/>
-		<meta name="rating" content="General"/>
-		
-		<meta property="og:site_name" content="net-errbint" />
-		<meta property="og:title" content="net-errbint" />
-		<meta property="og:url" content="https://errbint.net" />
-		<meta property="og:description" content="Personal website of R.Bintang Bagus Putra Angkasa / erbin / errbint / stackoverprof" />
-		<meta property="og:image" content="" />
-	</>
-);
+const DEFAULT = {
+	sitename: 'My Site',
+	domain: 'http://my-site.com/',
+	description: 'Site description that contains some information about what is your site about and blablabla',
+	image: 'https://images.unsplash.com/photo-1629058622223-93665bf5d046?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+};
+
+
+const SEOTags = (props: any) => {
+	const data = {...DEFAULT, ...props};
+
+	const router = useRouter();
+
+	const supertitle = data.title ? `${data.title} — ${data.sitename} ` : data.sitename;
+	
+	return (
+		<Head>
+			<title>{supertitle}</title>
+
+			<meta name="robots" content="follow, index" />
+			<meta name="description" content={data.description} />
+			<meta property="og:url" content={router.asPath} />
+			<link rel="canonical" href={router.asPath} />
+			
+			<meta property="og:type" content="website" />
+			<meta property="og:title" content={supertitle} />
+			<meta property="og:site_name" content={supertitle} />
+			<meta property="og:description" content={data.description} />
+			<meta property="og:image" name="image" content={data.image} />
+
+			<meta name="twitter:card" content="summary_large_image" />
+			<meta name="twitter:site" content={supertitle} />
+			<meta name="twitter:title" content={supertitle} />
+			<meta name="twitter:description" content={data.description} />
+			<meta name="twitter:image" content={data.image} />
+		</Head>
+	);
+};
 
 export default SEOTags;

@@ -183,7 +183,9 @@ const Rainbox = ({ skipIntro }: Props) => {
 						</p>
 					),
 					'ready': (
-						<p className={`text-gray-500 font-medium text-lg ${screen < 600 && 'instruction-mobile'}`}>Touch the screen <span className="text-gray-300">/</span> use arrow key to move</p>
+						<div className="w-full flex-cc -sm:flex-ec -sm:w-9/12">
+							<p className={`text-gray-500 font-medium text-lg -sm:w-48 -sm:text-right -sm:text-sm ${screen < 600 && 'instruction-mobile'}`}>Touch the screen <span className="text-gray-300">/</span> use arrow key to move</p>
+						</div>
 					),
 					'recorded': (
 						<p className={`text-gray-500 font-medium text-lg ${screen < 600 && 'instruction-mobile'}`}>Press ENTER <span className="text-gray-300">/</span> click the button to play again</p>
@@ -192,8 +194,8 @@ const Rainbox = ({ skipIntro }: Props) => {
 			</div>
 
 			<div className="absolute inset-0 flex-ce pointer-events-none full">
-				<div className="absolute left-0 flex-cc pb-4 text-lg font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0 bottom-12 font-bahn" style={{backgroundImage: 'url("/img/dialog/avoid.svg")', width: 261, height: 110}} ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
-				<div className="absolute left-0 flex-cc pb-4 text-xl font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0 bottom-12 font-bahn" style={{backgroundImage: 'url("/img/dialog/ohno.svg")', width: 158, height: 110}} ref={dialogOhnoRef}>OH NO!</div>
+				<div className="absolute left-0 flex-cc pb-4 text-lg font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0 font-bahn" style={{backgroundImage: 'url("/img/dialog/avoid.svg")', bottom: 52, width: 261, height: 110}} ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
+				<div className="absolute left-0 flex-cc pb-4 text-xl font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0 font-bahn" style={{backgroundImage: 'url("/img/dialog/ohno.svg")', bottom: 52, width: 158, height: 110}} ref={dialogOhnoRef}>OH NO!</div>
 			</div>
 
 			<SideLeaderBoard

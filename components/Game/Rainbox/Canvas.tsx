@@ -440,7 +440,7 @@ const Canvas = ({responsive, skipIntro, setter, refs}: CanvasProps) => {
 		}
 
 
-		/////////THE CONTROLLER INPUT
+		/////////THE ENVIRONMENT
 		class Environment extends EnvironmentType {
 			constructor () {
 				super();

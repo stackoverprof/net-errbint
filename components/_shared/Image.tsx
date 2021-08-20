@@ -4,7 +4,6 @@ import NextImage, { ImageLoader } from 'next/image';
 interface Props {
 	src: string
 	alt: string
-	ref: React.MutableRefObject<HTMLDivElement>
 	className?: string
 	style?: React.CSSProperties
 	blurDataURL?: never
@@ -19,8 +18,8 @@ interface Props {
 	objectPosition?: string | 'inherit' | 'initial' | 'unset'	
 }
 
-const Image = ({src, alt, ref, className, style, objectFit, blurDataURL, loader, quality, priority, loading, unoptimized, objectPosition, width, height}: Props): JSX.Element => (
-	<div ref={ref} className={`relative ${className}`} style={{...style, width, height}}>
+const Image = ({src, alt, className, style, objectFit, blurDataURL, loader, quality, priority, loading, unoptimized, objectPosition, width, height}: Props): JSX.Element => (
+	<div className={['relative', className].join(' ')} style={{...style, width, height}}>
 		<NextImage
 			objectFit={objectFit}
 			layout="fill"
