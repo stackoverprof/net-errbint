@@ -4,7 +4,6 @@ import { AppProps } from 'next/dist/shared/lib/router/router';
 import ProgressBar from 'nextjs-progressbar';
 import { AnimatePresence } from 'framer-motion';
 import ContextProvider from '@core/contexts';
-import SEOTags from '@components/_shared/SEOTags';
 import Loader from '@components/_shared/Loader';
 
 import '@core/styles/tailwind.css';
@@ -14,10 +13,8 @@ const App = ({ Component, pageProps, router }: AppProps): JSX.Element => {
 	return (
 		<>
 			<Head>
-				<title>Errbint.NET</title>
 				<link rel="icon" href="/favicon.ico" />
 				<meta name="theme-color" content="#000000" />
-				<SEOTags />
 			</Head>
 			<ProgressBar
 				color="#FFCB11"
