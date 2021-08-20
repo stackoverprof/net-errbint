@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 
 type ReturnTuple = [
-	number,
+	string,
 	React.MutableRefObject<HTMLElement>,
 	React.MutableRefObject<HTMLElement>
 ]
 
-const useClearance = (initial: number): ReturnTuple => {
-	const [clearance, setClearance] = useState(initial);
+const useClearance = (): ReturnTuple => {
+	const [clearance, setClearance] = useState<string>('calc(100vh - 0px)');
 
-	const HeaderRef = useRef<HTMLElement>(null);
-	const FooterRef = useRef<HTMLElement>(null);
+	const upper = useRef<HTMLElement>(null);
+	const lower = useRef<HTMLElement>(null);
 
 	useEffect(() => {
-		const offset = HeaderRef.current.offsetHeight + FooterRef.current.offsetHeight;
-		setClearance(offset);
-	}, [HeaderRef, FooterRef]);
+		const offset = upper.current.offsetHeight + lower.current.offsetHeight;
+		setClearance(`calc(100vh - ${offset}px)`);
+	}, [upper, lower]);
 
-	return [clearance, HeaderRef, FooterRef];
+	return [clearance, upper, lower];
 };
 
 export default useClearance;
