@@ -1,11 +1,11 @@
 import { EnumType } from '@components/_shared/AlertHandler';
 
 export interface LayoutStoreType {
-	mainAlert: AlertType | null
+	alert_value: AlertType | null
+	Alert(arg0: AlertType | null): void
+	resetAlert(): void
 	selectedTheme: EnumTheme
 	setSelectedTheme(arg0: EnumTheme): void
-	setMainAlert(arg0: AlertType | null): void
-	resetMainAlert(): void
 }
 
 export interface AlertType {

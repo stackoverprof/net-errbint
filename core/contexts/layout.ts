@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { AlertType, LayoutStoreType, EnumTheme } from './layout.types';
 
 const LayoutStore = (): LayoutStoreType => {
-	const [mainAlert, setMainAlert] = useState<AlertType | null>(null);
+	const [alert_value, Alert] = useState<AlertType | null>(null);
 	const [selectedTheme, setSelectedTheme] = useState<EnumTheme>('orange');
 
-	const resetMainAlert = () => setMainAlert(null);
+	const resetAlert = () => Alert(null);
 
 	return {
-		mainAlert,
+		alert_value,
+		Alert,
+		resetAlert,
 		selectedTheme,
 		setSelectedTheme,
-		setMainAlert,
-		resetMainAlert,
 	};
 };
 
