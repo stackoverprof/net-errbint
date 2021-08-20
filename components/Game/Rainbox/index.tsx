@@ -106,7 +106,7 @@ const Rainbox = ({ skipIntro }: Props) => {
 	}, []);
 
 	return (
-		<div className="relative z-0" style={{ height: screen > 639 ? 'calc(100vh - 60px)' : 500}}>
+		<div className="relative z-0 overflow-x-hidden" style={{ height: screen > 639 ? 'calc(100vh - 60px)' : 500}}>
 			<div className="relative flex-ec col full" style={{ zIndex: -6 }} id="game-container">
 				<div className="relative flex-sc col full bg-top bg-no-repeat bg-cover" style={{ zIndex: -5, backgroundImage: 'url("/img/bg3d.webp")'}}>
 					<div className="absolute inset-0 flex-cc pb-40 pointer-events-none full" style={{ zIndex: -3 }}>
