@@ -1,20 +1,21 @@
 import React from 'react';
-import Head from 'next/head';
 import AlertHandler from '@components/_shared/AlertHandler';
 import { useLayout } from '@core/contexts/index';
 import useClearance from '@core/hooks/useClearance';
 import Transition from '@components/Transition';
+import SEOTags from '@components/_shared/SEOTags';
 
 interface Props {
 	children: React.ReactNode
 	title?: string
 	className?: string
+	style?: React.CSSProperties
 	transition?: 'fade' | '';
 }
 
-const MainLayout = ({children, title, className, transition}: Props): JSX.Element => {
-	const { mainAlert, resetMainAlert } = useLayout();
-	const [clearance, HeaderRef, FooterRef] = useClearance(0);
+const MainLayout = ({children, title, className, transition, style}: Props): JSX.Element => {
+	const { alert_value, resetAlert } = useLayout();
+	const [clearance, upperRef, lowerRef] = useClearance();
 
 	return (
 		<Transition type={transition}>
