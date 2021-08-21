@@ -1,13 +1,14 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { PlayerType, RainType, FoodType, CanvasProps, EnumDirection, ControlType, EnvironmentType} from './Canvas.types';
-import { useLayout } from '@core/contexts/index';
+import { useLayout, useRainbox } from '@core/contexts/index';
 import { GameTheme } from './theme';
 
 
 // [TODO] : di hape masi ga nyaman, secara responsivitas
 
-const Canvas = ({responsive, skipIntro, setter, refs}: CanvasProps) => {
-	const { setAnimateValue, setProcessMessage, setGameStatus, setScore } = setter;
+const Canvas = ({responsive, skipIntro}: CanvasProps) => {
+	const { setAnimateValue, setProcessMessage, setGameStatus, setScore } = useRainbox();
+	const { sideRef, briRef, nrRef, etRef, newGameBtnRef, dialogAvoidRef, dialogOhnoRef } = useRainbox();
 
 	const rightTouchRef = useRef<HTMLDivElement>(null);
 	const leftTouchRef = useRef<HTMLDivElement>(null);
@@ -451,13 +452,13 @@ const Canvas = ({responsive, skipIntro, setter, refs}: CanvasProps) => {
 				this.THEME = GameTheme[selectedTheme];
 
 				this.el = {
-					side: refs.sideRef.current,
-					bri: refs.briRef.current,
-					nr: refs.nrRef.current,
-					et: refs.etRef.current,
-					newGameBtn: refs.newGameBtnRef.current,
-					avoid: refs.dialogAvoidRef.current,
-					ohno: refs.dialogOhnoRef.current,
+					side: sideRef.current,
+					bri: briRef.current,
+					nr: nrRef.current,
+					et: etRef.current,
+					newGameBtn: newGameBtnRef.current,
+					avoid: dialogAvoidRef.current,
+					ohno: dialogOhnoRef.current,
 					rightTouch: rightTouchRef.current,
 					leftTouch: leftTouchRef.current,
 					canvas: canvasRef.current,
@@ -518,7 +519,7 @@ const Canvas = ({responsive, skipIntro, setter, refs}: CanvasProps) => {
 					safeTimeout(() => animate(nr), 150);
 					safeTimeout(() => animate(bri), 400);
 				} else if (score === 'intro') {
-					setGameStatus('sub.intro');
+					setGameStatus('sub_intro');
 					animateIntro(et);
 					safeTimeout(() => animateIntro(bri), 500);
 					safeTimeout(() => animateIntro(nr), 1000);
