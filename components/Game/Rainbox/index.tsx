@@ -3,10 +3,10 @@ import React, { useEffect } from 'react';
 import SideLeaderBoard from './SideLeaderBoard';
 import useResize from 'use-resizing';
 import Canvas from './Canvas';
-import Glimpse from './Glimpse';
+import Glimpse from './Decorative/Glimpse';
 import { useRainbox } from '@core/contexts';
-import SupertitleBack from './SupertitleBack';
-import SupertitleFront from './SupertitleFront';
+import SupertitleBack from './Decorative/SupertitleBack';
+import SupertitleFront from './Decorative/SupertitleFront';
 import FrameComponents from './FrameComponents';
 
 interface Props {
@@ -18,9 +18,7 @@ const Rainbox = ({ skipIntro }: Props) => {
 	
 	const screen = useResize().width;	
 
-	useEffect(() => {
-		fireAction();
-	}, []);
+	useEffect(() => fireAction(), []);
 
 	return (
 		<div className="relative z-0 overflow-hidden" style={{ height: screen > 639 ? 'calc(100vh - 60px)' : 500}}>
@@ -38,9 +36,7 @@ const Rainbox = ({ skipIntro }: Props) => {
 			</div>
 
 			<FrameComponents />
-
 			<SideLeaderBoard />
-
 		</div>
 	);
 };
