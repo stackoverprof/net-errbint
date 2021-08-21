@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import { useRainbox } from '@core/contexts';
 
@@ -31,6 +30,13 @@ const Glimpse = ({skipIntro}: Props) => {
 				ref={briRef} 
 				className="absolute top-0 transition-all duration-200 full object-cover object-top" 
 				style={{ zIndex: -4, opacity: skipIntro ? 0 : 1 }} 
+			/>
+			
+			<img 
+				src="/img/bg3d.webp" 
+				alt="game-background" 
+				className="absolute inset-0 full object-cover object-top" 
+				style={{zIndex: -5}} 
 			/>
 		</div>
 	);
