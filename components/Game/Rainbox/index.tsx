@@ -1,33 +1,46 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import AnimatedNumber from 'animated-number-react';
 import SideLeaderBoard from './SideLeaderBoard';
 import { DB } from '@core/services/firebase';
 import useResize from 'use-resizing';
 import Canvas from './Canvas';
 import Glimpse from './Glimpse';
+import { useRainbox } from '@core/contexts';
+import SupertitleBack from './SupertitleBack';
+import SupertitleFront from './SupertitleFront';
 
 interface Props {
 	skipIntro: boolean
 }
 
 const Rainbox = ({ skipIntro }: Props) => {
-	const [processMessage, setProcessMessage] = useState('');
-	const [score, setScore] = useState({ food: 0, time: 0 });
-	const [gameStatus, setGameStatus] = useState('intro');
-	const [animateValue, setAnimateValue] = useState(0);
-	const [Leaderboard, setLeaderboard] = useState([]);
-	const [UserData, setUserData] = useState({});
-	const [nickname, setNickname] = useState('');
-	const screen = useResize().width;
+	const { 
+		score,
+		gameStatus,
+		animateValue,
+		Leaderboard,
+		nickname,
+	} = useRainbox();
+
+	const { 
+		setProcessMessage,
+		setScore,
+		setGameStatus,
+		setLeaderboard,
+		setUserData,
+	} = useRainbox();
 	
-	const newGameBtnRef = useRef<HTMLButtonElement>(null);
-	const dialogAvoidRef = useRef<HTMLDivElement>(null);
-	const dialogOhnoRef = useRef<HTMLDivElement>(null);
-	const sideRef = useRef<HTMLInputElement>(null);
-	const briRef = useRef<HTMLImageElement>(null);
-	const etRef = useRef<HTMLImageElement>(null);
-	const nrRef = useRef<HTMLImageElement>(null);
+	const { 
+		dialogAvoidRef,
+		dialogOhnoRef,
+		briRef,
+		etRef,
+		nrRef,
+	} = useRainbox();
+	
+	const screen = useResize().width;
+
 
 	const formatValue = (value) => `${(Number(value) / 1000).toFixed(2)}`;
 
@@ -107,59 +120,17 @@ const Rainbox = ({ skipIntro }: Props) => {
 
 	return (
 		<div className="relative z-0 overflow-hidden" style={{ height: screen > 639 ? 'calc(100vh - 60px)' : 500}}>
-			<div className="relative flex-ec col full" style={{ zIndex: -6 }} id="game-container">
-				<div className="relative flex-sc col full bg-top bg-no-repeat bg-cover" style={{ zIndex: -5, backgroundImage: 'url("/img/bg3d.webp")'}}>
-					<div className="absolute inset-0 flex-cc pb-40 pointer-events-none full" style={{ zIndex: -3 }}>
-						<div className="absolute flex-cc col w-full">
-							<div className="bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'url("/img/title/h1-dimm.svg")', maxWidth: 675, width: '90%', minWidth: 340, height: 200}}></div>
-							<div className="relative flex-cc-container" style={{ zIndex: -4, top: screen > 500 ? '-12px' : '-48px', minHeight: '38px'}}>
-								<p className="pt-1 text-center transition-all" style={{ fontSize: screen > 500 ? 32 : 24, color: {'running': '#BBBBBB'}[gameStatus] || '#0000'}}>
-									A CREATIVE DEVELOPER
-								</p>
-							</div>
-						</div>
-					</div>
-
-					<Glimpse skipIntro={skipIntro} etRef={etRef} nrRef={nrRef} briRef={briRef} />
-					
-					<Canvas
-						responsive={{
-							width: window => window.innerWidth,
-							height: window => window.innerWidth > 629 ? window.innerHeight - 60 : 500
-						}}
-						skipIntro={gameStatus === 'intro' ? skipIntro : true}
-						setter={{
-							setGameStatus,
-							setAnimateValue,
-							setProcessMessage,
-							setScore,
-						}}
-						refs={{
-							dialogAvoidRef,
-							dialogOhnoRef,
-							newGameBtnRef,
-							sideRef,
-							briRef,
-							etRef,
-							nrRef,
-						}}
-					/>
-
-					<div className="absolute inset-0 z-0 flex-cc pb-40 pointer-events-none full">
-						<div className="absolute flex-cc col w-full">
-							<div className={'transition-all bg-center bg-contain bg-no-repeat opacity-100'} style={{backgroundImage: 'url("/img/title/h1.svg")', maxWidth: 675, width: '90%',minWidth: 340, height: 200, transitionDuration: gameStatus === 'sub.intro' ? '2.5s' : '1s', opacity: { 'intro': '0', 'sub.intro': '1', 'ready': '1', 'over': '1', 'running': '0'}[gameStatus] || '1'}}></div>
-							<div className="relative flex-cc transition-all" style={{zIndex: -4, top: screen > 500 ? '-12px' : '-48px', transition: skipIntro ? 'none' : gameStatus === 'running' || gameStatus === 'over' ? 'all 1s 2s, opacity 1s' : 'all 1s 2s', opacity: {intro: '0', running: '0'}[gameStatus] || '1', minHeight: '38px'}}>
-								<p className="pt-1 text-center transition-all" style={{fontSize: screen > 500 ? 32 : 24, color: gameStatus == 'running' ? '#BBBBBB' :	gameStatus == 'over' ? 'black' : 'gray'}}>
-									{{
-										'over': 'GAME OVER',
-										'recorded': 'SCORE SAVED'
-									}[gameStatus] || 'A CREATIVE DEVELOPER' }
-								</p>
-								<button className="ml-3 pointer-events-auto" ref={newGameBtnRef} style={{display: gameStatus == 'over' || gameStatus == 'recorded' ? 'unset' : 'none', fontSize: screen < 500 ? 16 : ''}}>PLAY AGAIN</button>
-							</div>
-						</div>
-					</div>
-				</div>
+			<div className="relative flex-sc col full bg-top bg-no-repeat bg-cover" style={{ zIndex: -5, backgroundImage: 'url("/img/bg3d.webp")'}}>
+				<SupertitleBack />
+				<Glimpse skipIntro={skipIntro} etRef={etRef} nrRef={nrRef} briRef={briRef} />
+				<Canvas
+					responsive={{
+						width: window => window.innerWidth,
+						height: window => window.innerWidth > 629 ? window.innerHeight - 60 : 500
+					}}
+					skipIntro={gameStatus === 'intro' ? skipIntro : true}
+				/>
+				<SupertitleFront skipIntro={skipIntro} />
 			</div>
 
 
@@ -198,18 +169,7 @@ const Rainbox = ({ skipIntro }: Props) => {
 				<div className="absolute left-0 flex-cc pb-4 text-xl font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0" style={{backgroundImage: 'url("/img/dialog/ohno.svg")', bottom: 52, width: 158, height: 110}} ref={dialogOhnoRef}>OH NO!</div>
 			</div>
 
-			<SideLeaderBoard
-				processMessage={processMessage}
-				handleSubmit={handleSubmit}
-				Leaderboard={Leaderboard}
-				setNickname={setNickname}
-				gameStatus={gameStatus}
-				checkRank={checkRank}
-				UserData={UserData}
-				nickname={nickname}
-				sideRef={sideRef}
-				score={score}
-			/>
+			<SideLeaderBoard handleSubmit={handleSubmit} checkRank={checkRank} />
 
 		</div>
 	);
