@@ -7,25 +7,14 @@ import Glimpse from './Glimpse';
 import { useRainbox } from '@core/contexts';
 import SupertitleBack from './SupertitleBack';
 import SupertitleFront from './SupertitleFront';
-import LiveScore from './LiveScore';
-import LiveGameStatus from './LiveGameStatus';
-import Instruction from './Instruction';
-import Dialogs from './Dialogs';
+import FrameComponents from './FrameComponents';
 
 interface Props {
 	skipIntro: boolean
 }
 
 const Rainbox = ({ skipIntro }: Props) => {
-	const { 
-		fireAction,
-		gameStatus,
-		dialogAvoidRef,
-		dialogOhnoRef,
-		briRef,
-		etRef,
-		nrRef,
-	} = useRainbox();
+	const { fireAction, gameStatus } = useRainbox();
 	
 	const screen = useResize().width;	
 
@@ -37,7 +26,7 @@ const Rainbox = ({ skipIntro }: Props) => {
 		<div className="relative z-0 overflow-hidden" style={{ height: screen > 639 ? 'calc(100vh - 60px)' : 500}}>
 			<div className="relative flex-sc col full bg-top bg-no-repeat bg-cover" style={{ zIndex: -5, backgroundImage: 'url("/img/bg3d.webp")'}}>
 				<SupertitleBack />
-				<Glimpse skipIntro={skipIntro} etRef={etRef} nrRef={nrRef} briRef={briRef} />
+				<Glimpse skipIntro={skipIntro} />
 				<Canvas
 					responsive={{
 						width: window => window.innerWidth,
@@ -48,11 +37,8 @@ const Rainbox = ({ skipIntro }: Props) => {
 				<SupertitleFront skipIntro={skipIntro} />
 			</div>
 
+			<FrameComponents />
 
-			<LiveScore />
-			<LiveGameStatus />
-			<Instruction />
-			<Dialogs />
 			<SideLeaderBoard />
 
 		</div>
