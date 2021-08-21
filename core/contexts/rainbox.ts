@@ -3,12 +3,12 @@ import { useRef, useState } from 'react';
 import { EnumGameStatus, LeaderboardType, RainboxStoreType, ScoreType, UserDataType } from './rainbox.types';
 
 const RainboxStore = (): RainboxStoreType => {
-	const [processMessage, setProcessMessage] = useState('');
-	const [score, setScore] = useState<ScoreType>({ food: 0, time: 0 });
 	const [gameStatus, setGameStatus] = useState<EnumGameStatus>('intro');
-	const [animateValue, setAnimateValue] = useState(0);
 	const [Leaderboard, setLeaderboard] = useState<LeaderboardType[]>([]);
 	const [UserData, setUserData] = useState<UserDataType>({});
+	const [score, setScore] = useState<ScoreType>({ food: 0, time: 0 });
+	const [processMessage, setProcessMessage] = useState('');
+	const [animateValue, setAnimateValue] = useState(0);
 	const [nickname, setNickname] = useState('');
 
 	const newGameBtnRef = useRef<HTMLButtonElement>(null);

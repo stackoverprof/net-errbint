@@ -22,4 +22,4 @@ const AppProvider = ({children}: Props): JSX.Element => (
 export default AppProvider;
 
 export const useLayout = (): LayoutStoreType => useContext(AppContext).layout;
-export const useRainbox= (): RainboxStoreType => useContext(AppContext).rainbox;
+export const useRainbox = (): RainboxStoreType => useContext(AppContext).rainbox;
