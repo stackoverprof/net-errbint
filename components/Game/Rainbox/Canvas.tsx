@@ -3,7 +3,6 @@ import { PlayerType, RainType, FoodType, CanvasProps, EnumDirection, ControlType
 import { useLayout, useRainbox } from '@core/contexts/index';
 import { GameTheme } from './Decorative/theme';
 
-
 // [TODO] : di hape masi ga nyaman, secara responsivitas
 
 const Canvas = ({responsive, skipIntro}: CanvasProps) => {
@@ -615,8 +614,8 @@ const Canvas = ({responsive, skipIntro}: CanvasProps) => {
 	useEffect(GameScript, [selectedTheme]); 
 
 	return (
-		<div className="flex-sc col full pointer-events-none" style={{zIndex: -1}}>
-			<canvas ref={canvasRef} className="absolute inset-0 full" style={{ zIndex: -2 }} />
+		<div className="flex-sc col full pointer-events-none" style={{zIndex: -2}}>
+			<canvas ref={canvasRef} className="absolute inset-0 full"/>
 			<div className="absolute inset-0 flex-cc col full pointer-events-none" style={{zIndex: 0 }}>
 				<div className="flex-cc full">
 					<div className="w-1/2 h-full pointer-events-auto select-none opacity-20" ref={leftTouchRef}></div>

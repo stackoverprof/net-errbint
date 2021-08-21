@@ -12,12 +12,14 @@ const Index = (): JSX.Element => {
 			<div className="relative w-full">
 				<Rainbox skipIntro={false}/>
 			</div>
-			<div className="w-full h-96 bg-black text-white">
-				<button onClick={() => setSelectedTheme('orange')}>orange</button>
-				<button onClick={() => setSelectedTheme('purple')}>purple</button>
-				<button onClick={() => setSelectedTheme('green')}>green</button>
-				<button onClick={() => setSelectedTheme('blue')}>blue</button>
-				<Link href="/about">ABOUT</Link>
+			<div className="flex-sc full col" style={{zIndex: 1}}>
+				<div className="w-full bg-black text-white" style={{height: 2000}}>
+					<button onClick={() => setSelectedTheme('orange')}>orange</button>
+					<button onClick={() => setSelectedTheme('purple')}>purple</button>
+					<button onClick={() => setSelectedTheme('green')}>green</button>
+					<button onClick={() => setSelectedTheme('blue')}>blue</button>
+					<Link href="/about">ABOUT</Link>
+				</div>
 			</div>
 		</MainLayout>
 	);
