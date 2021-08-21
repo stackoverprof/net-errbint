@@ -3,8 +3,8 @@ import Styled from '@emotion/styled';
 import useResize from 'use-resizing';
 import { useRainbox } from '@core/contexts';
 
-const SideLeaderBoard = ({ checkRank, handleSubmit }: any) => {
-	const { Leaderboard, UserData, processMessage, score, gameStatus, sideRef, nickname, setNickname } = useRainbox();
+const SideLeaderBoard = () => {
+	const { checkRank, handleSubmit, Leaderboard, UserData, processMessage, score, gameStatus, sideRef, nickname, setNickname } = useRainbox();
 	const screen = useResize().width;
 
 	return (
