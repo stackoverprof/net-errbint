@@ -1,8 +1,10 @@
 import React from 'react';
 import Styled from '@emotion/styled';
 import useResize from 'use-resizing';
+import { useRainbox } from '@core/contexts';
 
-const SideLeaderBoard = ({ Leaderboard, UserData, checkRank, processMessage, score, gameStatus, sideRef, nickname, setNickname, handleSubmit }: any) => {
+const SideLeaderBoard = ({ checkRank, handleSubmit }: any) => {
+	const { Leaderboard, UserData, processMessage, score, gameStatus, sideRef, nickname, setNickname } = useRainbox();
 	const screen = useResize().width;
 
 	return (
@@ -25,7 +27,7 @@ const SideLeaderBoard = ({ Leaderboard, UserData, checkRank, processMessage, sco
 													<p className="orange name">NEW SCORE</p>
 												</div>
 												<div>
-													<p><span className="gray">{parseInt(score.time) / 100} &ensp;</span></p>
+													<p><span className="gray">{score.time / 100} &ensp;</span></p>
 													<p><span className="orange food">{score.food}</span></p>
 												</div>
 											</div>
@@ -57,7 +59,7 @@ const SideLeaderBoard = ({ Leaderboard, UserData, checkRank, processMessage, sco
 											<p className="orange name">NEW SCORE</p>
 										</div>
 										<div>
-											<p><span className="gray">{parseInt(score.time) / 100} &ensp;</span></p>
+											<p><span className="gray">{score.time / 100} &ensp;</span></p>
 											<p><span className="orange food">{score.food}</span></p>
 										</div>
 									</div>
@@ -73,7 +75,7 @@ const SideLeaderBoard = ({ Leaderboard, UserData, checkRank, processMessage, sco
 						<form onSubmit={handleSubmit}>
 							<div className="input">
 								<input type="text" onChange={(e) => setNickname(e.target.value.toUpperCase())} value={nickname} ref={sideRef} placeholder="Enter a Nickname" maxLength={10} />
-								<p><span className="orange">{score.food}</span>&ensp;{parseInt(score.time) / 100}</p>
+								<p><span className="orange">{score.food}</span>&ensp;{score.time / 100}</p>
 							</div>
 							<div>
 								<button type="submit" className={`${gameStatus == 'recorded' ? 'disabled' : ''}`} disabled={gameStatus == 'recorded'}>{gameStatus != 'recorded' ? 'SAVE SCORE' : 'SCORE SAVED'}</button>
