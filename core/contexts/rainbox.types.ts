@@ -1,4 +1,7 @@
 export interface RainboxStoreType {
+	checkRank(): number
+	handleSubmit(arg0: React.SyntheticEvent): void
+	fireAction(): void
 	processMessage: string
 	score: ScoreType
 	gameStatus: EnumGameStatus

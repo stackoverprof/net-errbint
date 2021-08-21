@@ -1,3 +1,4 @@
+import { DB } from '@core/services/firebase';
 import { useRef, useState } from 'react';
 import { EnumGameStatus, LeaderboardType, RainboxStoreType, ScoreType, UserDataType } from './rainbox.types';
 
@@ -18,7 +19,81 @@ const RainboxStore = (): RainboxStoreType => {
 	const etRef = useRef<HTMLImageElement>(null);
 	const nrRef = useRef<HTMLImageElement>(null);
 
+	const checkRank = () => {
+		let rank = 1;
+
+		Leaderboard.forEach(each => {
+			if (score.food < each.score.food ||
+				(score.food == each.score.food && score.time > each.score.time))
+				rank++;
+		});
+		return rank;
+	};
+
+	const handleSubmit = async (e: React.SyntheticEvent) => {
+		e.preventDefault();
+
+		let isUpdate = false;
+		setProcessMessage('');
+
+		const isScoreBigger = (userData) => {
+			if (!userData.exists) return true;
+			isUpdate = true;
+			const old = userData.data();
+			return score.food > old.score.food ||
+				(score.food == old.score.food && parseInt(score.time.toString().replace('.', '')) <= old.score.time);
+		};
+
+		if (gameStatus == 'over' && /\S/.test(nickname) && nickname.match(/[0-9a-z]/i)) {
+			setProcessMessage('SAVING...');
+
+			const userData = await DB.collection('Leaderboard').doc(nickname.trim()).get();
+
+			if (isScoreBigger(userData)) {
+				DB.collection('Leaderboard').doc(nickname.trim()).set({
+					nickname: nickname.trim(),
+					score: {
+						food: score.food,
+						time: parseInt(score.time.toString().replace('.', ''))
+					},
+					timestamp: new Date().toDateString()
+				}).then(() => {
+					setProcessMessage(isUpdate ? 'UPDATED!' : 'ALL OK!');
+					setScore({ food: 0, time: 0 });
+					setGameStatus('recorded');
+				}).catch(() => {
+					setProcessMessage('ERROR!');
+				});
+			} else {
+				setProcessMessage(' ');
+				setUserData(userData.data());
+			}
+		} else {
+			setProcessMessage('INVALID');
+		}
+	};
+
+	const fireAction = () => {
+		DB.collection('Leaderboard').orderBy('score.food', 'desc').orderBy('score.time', 'asc').onSnapshot(querySnapshot => {
+			const dataSnapshot = [];
+			querySnapshot.forEach(doc => {
+				dataSnapshot.push({
+					nickname: doc.data().nickname,
+					score: {
+						food: doc.data().score.food,
+						time: doc.data().score.time
+					}
+				});
+			});
+			setLeaderboard(dataSnapshot);
+		});
+	};
+
 	return {
+		checkRank,
+		handleSubmit,
+		fireAction,
+
 		processMessage,
 		score,
 		gameStatus,
