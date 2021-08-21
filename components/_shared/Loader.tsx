@@ -3,33 +3,16 @@ import { AnimatePresence, motion } from 'framer-motion';
     
 const Loader = () => {
 	const [loaded, setLoaded] = useState(false);
-
-	const remover = () => {
-		setLoaded(true);
-		console.log('fallback triggered');
-	};
-
-	const handleOnLoad = () => {
-		setLoaded(true);
-		console.log('onload triggered');
-	};
-
-	useEffect(() => {
-		window.onload = handleOnLoad;
-		const timeout = setTimeout(remover, 2000);
-		return () => {
-			clearTimeout(timeout);
-		};
-	}, []);
+	useEffect(() => setLoaded(true), []);
 
 	return (
 		<>
 			<AnimatePresence exitBeforeEnter>
 				{!loaded && (
 					<motion.div initial="visible" animate={{ opacity: 0.5, transition: { duration: 1 }}} exit={{ opacity: 0 }}>
-						<div className="wrapper">
-							<div className="loading">
-								<div className="spinner">
+						<div className="fixed full flex-cs inset-0 bg-base transition-opacity duration-1000" style={{zIndex: 1000}}>
+							<div className="relative flex-cc" style={{height: 'calc(100vh - 60px)'}}>
+								<div className="spinner mt-12 mb-16 mx-auto h-14">
 									<div className="rect1"></div>
 									<div className="rect2"></div>
 									<div className="rect3"></div>
@@ -43,38 +26,6 @@ const Loader = () => {
 			</AnimatePresence>
 			
 			<style jsx>{`
-				.wrapper {
-					position: fixed;
-					height: 100%;
-					width: 100%;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					background-color: #F5F5F5;
-					transition: 1s;
-					z-index: 50;
-					top: 0;
-					left: 0;
-					padding-bottom: 10%;
-				}
-				.loading {
-					position: relative;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					flex-direction: column;
-					height: calc(100% - 60px);
-					top: 0;
-				}
-				.spinner {
-					margin: 100px auto;
-					margin-top: 48px;
-					margin-bottom: 68px;
-					height: 50px;
-					text-align: center;
-					font-size: 10px;
-				}
-				
 				.spinner > div {
 					background-color: #333;
 					height: 100%;
