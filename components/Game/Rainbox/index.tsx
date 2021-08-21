@@ -113,7 +113,7 @@ const Rainbox = ({ skipIntro }: Props) => {
 						<div className="absolute flex-cc col w-full">
 							<div className="bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'url("/img/title/h1-dimm.svg")', maxWidth: 675, width: '90%', minWidth: 340, height: 200}}></div>
 							<div className="relative flex-cc-container" style={{ zIndex: -4, top: screen > 500 ? '-12px' : '-48px', minHeight: '38px'}}>
-								<p className="pt-1 text-center transition-all font-bahn" style={{ fontSize: screen > 500 ? 32 : 24, color: {'running': '#BBBBBB'}[gameStatus] || '#0000'}}>
+								<p className="pt-1 text-center transition-all" style={{ fontSize: screen > 500 ? 32 : 24, color: {'running': '#BBBBBB'}[gameStatus] || '#0000'}}>
 									A CREATIVE DEVELOPER
 								</p>
 							</div>
@@ -148,8 +148,8 @@ const Rainbox = ({ skipIntro }: Props) => {
 					<div className="absolute inset-0 z-0 flex-cc pb-40 pointer-events-none full">
 						<div className="absolute flex-cc col w-full">
 							<div className={'transition-all bg-center bg-contain bg-no-repeat opacity-100'} style={{backgroundImage: 'url("/img/title/h1.svg")', maxWidth: 675, width: '90%',minWidth: 340, height: 200, transitionDuration: gameStatus === 'sub.intro' ? '2.5s' : '1s', opacity: { 'intro': '0', 'sub.intro': '1', 'ready': '1', 'over': '1', 'running': '0'}[gameStatus] || '1'}}></div>
-							<div className="relative flex-cc transition-all" style={{zIndex: -4, top: screen > 500 ? '-12px' : '-48px', transition: skipIntro ? 'none' : gameStatus === 'running' || gameStatus === 'over' ? 'all 1s 2s, opacity 0s' : 'all 1s 2s', opacity: {intro: '0', running: '0'}[gameStatus] || '1', minHeight: '38px'}}>
-								<p className="pt-1 text-center transition-all font-bahn" style={{fontSize: screen > 500 ? 32 : 24, color: gameStatus == 'running' ? '#BBBBBB' :	gameStatus == 'over' ? 'black' : 'gray'}}>
+							<div className="relative flex-cc transition-all" style={{zIndex: -4, top: screen > 500 ? '-12px' : '-48px', transition: skipIntro ? 'none' : gameStatus === 'running' || gameStatus === 'over' ? 'all 1s 2s, opacity 1s' : 'all 1s 2s', opacity: {intro: '0', running: '0'}[gameStatus] || '1', minHeight: '38px'}}>
+								<p className="pt-1 text-center transition-all" style={{fontSize: screen > 500 ? 32 : 24, color: gameStatus == 'running' ? '#BBBBBB' :	gameStatus == 'over' ? 'black' : 'gray'}}>
 									{{
 										'over': 'GAME OVER',
 										'recorded': 'SCORE SAVED'
@@ -163,10 +163,10 @@ const Rainbox = ({ skipIntro }: Props) => {
 			</div>
 
 
-			<p className="absolute text-2xl top-4 left-5 font-bahn" style={{transition: '0.25s', opacity: gameStatus == 'ready' ? 0.75 : gameStatus == 'running' ? 1 : 0}}>
+			<p className="absolute text-2xl top-4 left-5" style={{transition: '0.25s', opacity: gameStatus == 'ready' ? 0.75 : gameStatus == 'running' ? 1 : 0}}>
 				<span className="text-accent">{score.food}</span>&nbsp;&nbsp;{score.time == 0 ? 0 : score.time / 100}
 			</p>
-			<p className="absolute text-xl right-5 font-bahn" style={{zIndex: 1, top: 18, transition: '0.25s', opacity: gameStatus == 'ready' ? 0.25 : gameStatus == 'running' ? 0.50 : gameStatus == 'over' ? 0.50 : 0.15}}>
+			<p className="absolute text-xl right-5" style={{zIndex: 1, top: 18, transition: '0.25s', opacity: gameStatus == 'ready' ? 0.25 : gameStatus == 'running' ? 0.50 : gameStatus == 'over' ? 0.50 : 0.15}}>
 				: : {gameStatus}
 			</p>
 			<div className="absolute flex-ce col text-gray-400 right-5" style={{top: 54,transition: '0.25s', opacity: gameStatus == 'running' ? 1 : 0}}>
@@ -174,7 +174,7 @@ const Rainbox = ({ skipIntro }: Props) => {
 				<p className="text-accent">#{checkRank()}</p>
 			</div>
 
-			<div className="absolute inset-0 pointer-events-none flex-ce full font-bahn text-gray-600 pb-4">
+			<div className="absolute inset-0 pointer-events-none flex-ce full text-gray-600 pb-4">
 				{{
 					'over' : (
 						<p className="flex-sc w-40 gap-2 whitespace-nowrap">
@@ -194,8 +194,8 @@ const Rainbox = ({ skipIntro }: Props) => {
 			</div>
 
 			<div className="absolute inset-0 flex-ce pointer-events-none full">
-				<div className="absolute left-0 flex-cc pb-4 text-lg font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0 font-bahn" style={{backgroundImage: 'url("/img/dialog/avoid.svg")', bottom: 52, width: 261, height: 110}} ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
-				<div className="absolute left-0 flex-cc pb-4 text-xl font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0 font-bahn" style={{backgroundImage: 'url("/img/dialog/ohno.svg")', bottom: 52, width: 158, height: 110}} ref={dialogOhnoRef}>OH NO!</div>
+				<div className="absolute left-0 flex-cc pb-4 text-lg font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0" style={{backgroundImage: 'url("/img/dialog/avoid.svg")', bottom: 52, width: 261, height: 110}} ref={dialogAvoidRef}>AVOID THE RAINBOX!</div>
+				<div className="absolute left-0 flex-cc pb-4 text-xl font-bold transition-all bg-center bg-no-repeat bg-cover opacity-0" style={{backgroundImage: 'url("/img/dialog/ohno.svg")', bottom: 52, width: 158, height: 110}} ref={dialogOhnoRef}>OH NO!</div>
 			</div>
 
 			<SideLeaderBoard
