@@ -9,7 +9,13 @@ const SupertitleBack = () => {
 	return (
 		<div className="fixed inset-0 flex-cc pb-40 pointer-events-none full" style={{ zIndex: -3 }}>
 			<div className="absolute flex-cc col w-full">
-				<div className="bg-center bg-no-repeat bg-contain" style={{ backgroundImage: 'url("/img/title/h1-dimm.svg")', maxWidth: 675, width: '90%', minWidth: 340, height: 200}}></div>
+				<img 
+					src="/img/title/h1-dimm.svg" 
+					alt="supertitle-back" 
+					className="object-center object-contain" 
+					style={{ maxWidth: 675, width: '90%', minWidth: 340, height: 200}} 
+				/>
+				
 				<div className="relative flex-cc-container" style={{top: screen > 500 ? '-12px' : '-48px', minHeight: '38px'}}>
 					<p className="pt-1 text-center transition-all" style={{ fontSize: screen > 500 ? 32 : 24, color: {'running': '#BBBBBB'}[gameStatus] || '#0000'}}>
 						A CREATIVE DEVELOPER
