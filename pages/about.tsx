@@ -10,9 +10,7 @@ const About = (): JSX.Element => {
 		<MainLayout title="About" className="flex-sc col">
 			<p className="z-10 max-w-sm mt-48 mb-2 text-center">The technologies used in this template</p>
 			<div className="flex-cc gap-1 mb-4">
-				{/* eslint-disable-next-line @next/next/no-img-element */}
 				<img src="https://img.shields.io/badge/NEXT%20-%23000000.svg?&style=flat&logo=next.js&logoColor=white" alt="tech" />
-				{/* eslint-disable-next-line @next/next/no-img-element */}
 				<img src="https://img.shields.io/badge/TAILWIND%20-%2338B2AC.svg?&style=flat&logo=tailwindcss&logoColor=white" alt="tech" />
 			</div>
 			<p className="z-10 max-w-sm mb-16 text-center"><strong>Extras:</strong> Layout, Alert, Custom Link, Custom Image, SEOTags, useForm, Context setup</p>

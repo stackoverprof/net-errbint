@@ -1,6 +1,9 @@
 module.exports = {
 	mode: 'jit',
-	purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+	purge: {
+		content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+		safelist: ['text-accent-orange', 'text-accent-purple', 'text-accent-green', 'text-accent-blue', 'bg-accent-orange', 'bg-accent-purple', 'bg-accent-green', 'bg-accent-blue']
+	},
 	darkMode: false, // or 'media' or 'class'
 	theme: {
 		extend: {
