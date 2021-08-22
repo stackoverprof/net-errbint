@@ -2,8 +2,6 @@ import { useLayout, useRainbox } from '@core/contexts';
 import React from 'react';
 import useResize from 'use-resizing';
 import { useScrollYPosition } from 'react-use-scroll-position';
-
-
 interface Props {
 	skipIntro: boolean
 }
