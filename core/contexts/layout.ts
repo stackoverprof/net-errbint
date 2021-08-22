@@ -14,7 +14,7 @@ const LayoutStore = (): LayoutStoreType => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment 
 		// @ts-ignore 
 		const local: EnumTheme = window.localStorage.getItem('selected_theme');
-		setSelectedTheme(local);
+		if (local) setSelectedTheme(local);
 	}, []);
 
 	const resetAlert = () => Alert(null);
