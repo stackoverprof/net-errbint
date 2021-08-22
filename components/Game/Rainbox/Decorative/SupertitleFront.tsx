@@ -1,4 +1,4 @@
-import { useRainbox } from '@core/contexts';
+import { useLayout, useRainbox } from '@core/contexts';
 import React from 'react';
 import useResize from 'use-resizing';
 import { useScrollYPosition } from 'react-use-scroll-position';
@@ -14,11 +14,20 @@ const SupertitleFront = ({ skipIntro }: Props) => {
 	const screen_height = useResize().height;
 	const scroll = useScrollYPosition();
 
+	const { selectedTheme } = useLayout();
+
+	const img_src = {
+		orange: '/img/title/h1-orange.svg',
+		purple: '/img/title/h1-purple.svg',
+		green: '/img/title/h1-green.svg',
+		blue: '/img/title/h1-blue.svg',
+	}[selectedTheme] || '/img/title/h1-orange.svg';
+
 	return (
 		<div className="fixed inset-0 z-0 flex-cc pb-40 pointer-events-none full" style={{opacity: (screen_height/2 - scroll ) / (screen_height/2)}}>
 			<div className="absolute flex-cc col w-full">
 				<img 
-					src="/img/title/h1.svg" 
+					src={img_src} 
 					alt="supertitle-front" 
 					className="transition-all object-center object-contain opacity-100" 
 					style={{ maxWidth: 675, width: '90%', minWidth: 340, height: 200, transitionDuration: gameStatus === 'sub_intro' ? '2.5s' : '1s', opacity: { intro: '0', sub_intro: '1', ready: '1', over: '1', running: '0'}[gameStatus] || '1'}}
