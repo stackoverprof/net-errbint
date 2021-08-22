@@ -1,8 +1,20 @@
+const safelist = [
+	'text-accent-orange',
+	'text-accent-purple',
+	'text-accent-green',
+	'text-accent-blue',
+	'bg-accent-orange',
+	'bg-accent-purple',
+	'bg-accent-green',
+	'bg-accent-blue'
+];
+
 module.exports = {
 	mode: 'jit',
 	purge: {
-		content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
-		safelist: ['text-accent-orange', 'text-accent-purple', 'text-accent-green', 'text-accent-blue', 'bg-accent-orange', 'bg-accent-purple', 'bg-accent-green', 'bg-accent-blue']
+		content: ['./pages/**/*.{js,ts,jsx,tsx}',
+			'./components/**/*.{js,ts,jsx,tsx}'],
+		safelist: safelist
 	},
 	darkMode: false, // or 'media' or 'class'
 	theme: {
