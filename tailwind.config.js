@@ -9,7 +9,10 @@ module.exports = {
 				primary: '#000000',
 				accent: {
 					DEFAULT: '#FF5B14',
-					light: '#FFCB11'
+					orange: '#FF5B14',
+					purple: '#7810ff',
+					green: '#45cf22',
+					blue: '#0d78db'
 				},
 			},
 			fontFamily: {
