@@ -15,7 +15,7 @@ const SupertitleFront = ({ skipIntro }: Props) => {
 	const { selectedTheme } = useLayout();
 
 	return (
-		<div className="fixed inset-0 z-0 flex-cc pb-40 pointer-events-none full" style={{opacity: (screen_height/2 - scroll ) / (screen_height/2)}}>
+		<div className="fixed inset-0 z-0 flex-cc pb-40 pointer-events-none full" style={{opacity: (screen_height/2 - scroll ) / (screen_height/2) || 'unset'}}>
 			<div className="absolute flex-cc col w-full">
 				<img 
 					src={`/img/title/h1-${selectedTheme}.svg`} 
