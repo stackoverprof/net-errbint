@@ -1,10 +1,12 @@
 import React from 'react';
 import AnimatedNumber from 'animated-number-react';
 import useResize from 'use-resizing';
-import { useRainbox } from '@core/contexts';
+import { useLayout, useRainbox } from '@core/contexts';
 
 const Instruction = () => {
 	const { score, animateValue, gameStatus } = useRainbox();
+
+	const { selectedTheme } = useLayout();
 
 	const screen = useResize().width;
 
@@ -13,7 +15,7 @@ const Instruction = () => {
 			{{
 				'over' : (
 					<p className="flex-sc w-40 gap-2 whitespace-nowrap">
-						<span className="text-xl text-accent">Food : {score.food}</span>
+						<span className={['text-xl', `text-accent-${selectedTheme}`].join(' ')}>Food : {score.food}</span>
 						<span className="text-xl text-black fixed-size">Time : <AnimatedNumber value={animateValue} formatValue={(value) => `${(Number(value) / 1000).toFixed(2)}`} duration={1000} easing={'linear'} /></span>
 					</p>
 				),

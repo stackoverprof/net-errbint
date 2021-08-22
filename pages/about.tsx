@@ -4,7 +4,7 @@ import { useLayout } from '@core/contexts';
 import Link from '@components/_shared/Link';
  
 const About = (): JSX.Element => {
-	const { Alert } = useLayout(); 
+	const { Alert, selectedTheme } = useLayout(); 
 	
 	return (
 		<MainLayout title="About" className="flex-sc col">
@@ -18,7 +18,7 @@ const About = (): JSX.Element => {
 			<p className="z-10 max-w-sm mb-16 text-center"><strong>Extras:</strong> Layout, Alert, Custom Link, Custom Image, SEOTags, useForm, Context setup</p>
 			
 			<div className="flex-cc gap-4 mb-24">
-				<Link href="/" className="px-4 py-2 text-white bg-accent hover:bg-opacity-80">BACK HOME</Link>
+				<Link href="/" className={['px-4 py-2 text-white hover:bg-opacity-80', `bg-accent-${selectedTheme}`].join(' ')}>BACK HOME</Link>
 				<button 
 					type="submit"
 					onClick={() => Alert({message: 'More variation of color with the props type: something', type: 'success'})}
