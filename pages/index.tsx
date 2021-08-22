@@ -10,7 +10,7 @@ const Index = (): JSX.Element => {
 	return (
 		<MainLayout title="" className="flex-sc col" transition="fade">
 			<div className="relative w-full">
-				<Rainbox skipIntro={false}/>
+				<Rainbox />
 			</div>
 			<div className="flex-sc full col" style={{zIndex: 1}}>
 				<div className="w-full bg-black text-white" style={{height: 2000}}>

@@ -16,6 +16,14 @@ const Canvas = ({responsive, skipIntro}: CanvasProps) => {
 	const { selectedTheme } = useLayout();
 	
 	const memoized_rains = useMemo(() => [], []);
+
+	
+	useEffect(() => {
+		console.log('mount');
+		return () => {
+			console.log('unmount');
+		};
+	}, []);
 	
 	const GameScript = () => {
 		let _isMounted = true;
@@ -466,6 +474,10 @@ const Canvas = ({responsive, skipIntro}: CanvasProps) => {
 				this.ctx = this.el.canvas.getContext('2d');
 
 				this.HandleResponsive();
+				
+				this.el.bri.style.opacity = '0';
+				this.el.et.style.opacity = '0';
+				this.el.nr.style.opacity = '0';
 			}
 			
 			HandleResponsive = () => {

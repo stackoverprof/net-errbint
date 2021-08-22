@@ -1,11 +1,8 @@
 import React from 'react';
 import { useLayout, useRainbox } from '@core/contexts';
-interface Props {
-	skipIntro: boolean
-}
 
-const Glimpse = ({skipIntro}: Props) => {
-	const { nrRef, etRef, briRef } = useRainbox();
+const Glimpse = () => {
+	const { gameStatus ,nrRef, etRef, briRef } = useRainbox();
 	const { selectedTheme } = useLayout();
 	return (
 		<div className="absolute inset-0 full pointer-events-none">
@@ -14,21 +11,21 @@ const Glimpse = ({skipIntro}: Props) => {
 				alt="glimpse" 
 				ref={nrRef} 
 				className="absolute top-0 transition-all duration-200 full object-cover object-top" 
-				style={{ zIndex: -4, opacity: skipIntro ? 0 : 1 }} 
+				style={{ zIndex: -4, opacity: gameStatus === 'intro' ? 1 : 0 }} 
 			/>
 			<img 
 				src={`/img/glimpse/et-${selectedTheme}.webp`} 
 				alt="glimpse" 
 				ref={etRef} 
 				className="absolute top-0 transition-all duration-200 full object-cover object-top" 
-				style={{ zIndex: -4, opacity: skipIntro ? 0 : 1 }} 
+				style={{ zIndex: -4, opacity: gameStatus === 'intro' ? 1 : 0 }} 
 			/>
 			<img 
 				src={`/img/glimpse/bri-${selectedTheme}.webp`} 
 				alt="glimpse" 
 				ref={briRef} 
 				className="absolute top-0 transition-all duration-200 full object-cover object-top" 
-				style={{ zIndex: -4, opacity: skipIntro ? 0 : 1 }} 
+				style={{ zIndex: -4, opacity: gameStatus === 'intro' ? 1 : 0 }} 
 			/>
 			<img 
 				src="/img/bg3d.webp" 

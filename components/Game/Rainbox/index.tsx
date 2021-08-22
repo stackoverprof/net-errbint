@@ -8,11 +8,7 @@ import SupertitleBack from './Decorative/SupertitleBack';
 import SupertitleFront from './Decorative/SupertitleFront';
 import FrameComponents from './FrameComponents';
 
-interface Props {
-	skipIntro: boolean
-}
-
-const Rainbox = ({ skipIntro }: Props) => {
+const Rainbox = () => {
 	const { fireAction, gameStatus } = useRainbox();
 	
 	const screen = useResize().width;	
@@ -23,15 +19,15 @@ const Rainbox = ({ skipIntro }: Props) => {
 		<div className="relative z-0 overflow-hidden" style={{ height: screen > 639 ? 'calc(100vh - 60px)' : 500}}>
 			<div className="relative flex-sc col full">
 				<SupertitleBack />
-				<Background skipIntro={skipIntro} />
+				<Background />
 				<Canvas
-					skipIntro={gameStatus === 'intro' ? skipIntro : true}
+					skipIntro={gameStatus !== 'intro'}
 					responsive={{
 						width: window => window.innerWidth,
 						height: window => window.innerWidth > 629 ? window.innerHeight - 60 : 500
 					}}
 				/>
-				<SupertitleFront skipIntro={skipIntro} />
+				<SupertitleFront />
 			</div>
 
 			<FrameComponents />
