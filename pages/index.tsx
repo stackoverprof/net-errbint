@@ -8,7 +8,7 @@ const Index = (): JSX.Element => {
 	const { setSelectedTheme } = useLayout();
 
 	return (
-		<MainLayout title="" className="flex-sc col" transition="fade">
+		<MainLayout className="flex-sc col" transition="fade">
 			<div className="relative w-full">
 				<Rainbox />
 			</div>
