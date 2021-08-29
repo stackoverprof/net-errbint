@@ -17,7 +17,7 @@ interface Props {
 
 const MainLayout = ({children, title, className, transition, style, scrollUp}: Props): JSX.Element => {
 	const { alert_value, resetAlert } = useLayout();
-	const [clearance, upperRef, lowerRef] = useClearance();
+	const [minHeight, upperRef, lowerRef] = useClearance();
 	const router = useRouter();
 
 	useEffect(() => {
@@ -32,7 +32,7 @@ const MainLayout = ({children, title, className, transition, style, scrollUp}: P
 				{/* Navbar things */}
 			</header>
 
-			<main style={{minHeight: clearance, ...style}} className={className}>
+			<main style={{minHeight, ...style}} className={className}>
 				{children}
 			</main>
 
