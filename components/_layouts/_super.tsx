@@ -9,12 +9,14 @@ interface Props {
 
 const SuperLayout = ({children}: Props) => {
 	return (
-		<div className="flex-sc col w-full bg-black">
+		<>
 			<Rainbox />
-			<AnimatePresence exitBeforeEnter>
-				{children}
-			</AnimatePresence>
-		</div>
+			<div style={{zIndex: 1}} className="relative flex-sc col w-full bg-black">
+				<AnimatePresence exitBeforeEnter>
+					{children}
+				</AnimatePresence>
+			</div>
+		</>
 	);
 };
 

@@ -32,7 +32,7 @@ const MainLayout = ({children, title, className, transition, style, scrollUp}: P
 				{/* Navbar things */}
 			</header>
 
-			<main style={{minHeight: clearance, ...style}} className={[className, ''].join(' ')}>
+			<main style={{minHeight: clearance, ...style}} className={className}>
 				{children}
 			</main>
 

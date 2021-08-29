@@ -16,7 +16,7 @@ const Rainbox = () => {
 	useEffect(() => fireAction(), []);
 
 	return (
-		<div className="relative z-0 w-full" style={{ height: screen > 639 ? 'calc(100vh - 60px)' : 500}}>
+		<div className="relative w-full z-0" style={{ height: screen > 639 ? 'calc(100vh - 60px)' : 500}}>
 			<div className="relative flex-sc col full">
 				<SupertitleBack />
 				<Background />
