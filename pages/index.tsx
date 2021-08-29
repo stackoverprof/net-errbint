@@ -1,6 +1,5 @@
 import React from 'react';
 import MainLayout from '@components/_layouts/MainLayout';
-import Rainbox from '@components/Game/Rainbox';
 import { useLayout } from '@core/contexts/index';
 import Link from '@components/_shared/Link';
  
@@ -9,7 +8,6 @@ const Index = (): JSX.Element => {
 
 	return (
 		<MainLayout className="flex-sc col" transition="fade">
-			<Rainbox />
 			<div className="flex-sc full col" style={{zIndex: 1}}>
 				<div className="w-full bg-black text-white" style={{height: 2000}}>
 					<button onClick={() => setSelectedTheme('orange')}>orange</button>
