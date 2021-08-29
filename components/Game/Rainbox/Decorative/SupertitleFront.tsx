@@ -11,8 +11,10 @@ const SupertitleFront = () => {
 
 	const { selectedTheme } = useLayout();
 
+	const opacityChange = (screen_height/2 - scroll ) / (screen_height/2);
+
 	return (
-		<div className="fixed inset-0 z-0 flex-cc pb-40 pointer-events-none full" style={{opacity: (screen_height/2 - scroll ) / (screen_height/2) || 'unset'}}>
+		<div className="fixed inset-0 z-0 flex-cc pb-40 pointer-events-none full" style={{opacity: opacityChange >= 0 && opacityChange <= 1 ? opacityChange : 'unset'}}>
 			<div className="absolute flex-cc col w-full">
 				<img 
 					src={`/img/title/h1-${selectedTheme}.svg`} 
