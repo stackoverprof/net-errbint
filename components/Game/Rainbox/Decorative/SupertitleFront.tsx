@@ -2,7 +2,7 @@ import React from 'react';
 import useResize from 'use-resizing';
 import { useScrollYPosition } from 'react-use-scroll-position';
 import { useLayout } from '@core/contexts';
-import { useRainbox } from '@core/gameContext';
+import { useRainbox } from '@core/contexts/rainbox';
 
 const SupertitleFront = () => {
 	const { gameStatus, newGameBtnRef } = useRainbox();

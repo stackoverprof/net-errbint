@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { PlayerType, RainType, FoodType, CanvasProps, EnumDirection, ControlType, EnvironmentType} from './Canvas.types';
 import { useLayout } from '@core/contexts';
-import { useRainbox } from '@core/gameContext';
+import { useRainbox } from '@core/contexts/rainbox';
 import { GameTheme } from './Decorative/theme';
 
 // [TODO] : di hape masi ga nyaman, secara responsivitas

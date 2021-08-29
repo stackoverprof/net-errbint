@@ -3,7 +3,7 @@ import SideLeaderBoard from './SideLeaderBoard';
 import useResize from 'use-resizing';
 import Canvas from './Canvas';
 import Background from './Decorative/Background';
-import { useRainbox } from '@core/gameContext';
+import { useRainbox } from '@core/contexts/rainbox';
 import SupertitleBack from './Decorative/SupertitleBack';
 import SupertitleFront from './Decorative/SupertitleFront';
 import FrameComponents from './FrameComponents';

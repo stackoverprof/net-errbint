@@ -2,7 +2,7 @@ import React from 'react';
 import AnimatedNumber from 'animated-number-react';
 import useResize from 'use-resizing';
 import { useLayout } from '@core/contexts';
-import { useRainbox } from '@core/gameContext';
+import { useRainbox } from '@core/contexts/rainbox';
 
 const Instruction = () => {
 	const { score, animateValue, gameStatus } = useRainbox();

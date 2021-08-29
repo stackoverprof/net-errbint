@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AnimatePresence } from 'framer-motion';
 import Rainbox from '@components/Game/Rainbox';
-import RainboxProvider from '@core/gameContext';
+import RainboxProvider from '@core/contexts/rainbox';
 
 interface Props {
 	children: React.ReactNode

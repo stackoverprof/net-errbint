@@ -1,5 +1,5 @@
-import { useRainbox } from '@core/gameContext';
 import React from 'react';
+import { useRainbox } from '@core/contexts/rainbox';
 import useResize from 'use-resizing';
 
 const SupertitleBack = () => {

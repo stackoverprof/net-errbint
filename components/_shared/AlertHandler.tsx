@@ -1,25 +1,26 @@
+import { useLayout } from '@core/contexts';
 import React, { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 
 export type EnumType = 'info' | 'danger' | 'success' | 'warning'
 
-interface Props {
-	type?: EnumType;
-	message: string;
-	handleClose(): void;
-}
-
-const AlertHandler = ({ type = 'info', message, handleClose }: Props): JSX.Element => {
+const AlertHandler = (): JSX.Element => {
 	const [hold, setHold] = useState(false);
 
+	const { alert_value, resetAlert } = useLayout();
+
+	if (!alert_value) return <></>;
+
+	const { message, type = 'info' } = alert_value;
+
 	useEffect(() => {
-		const AutoClose = setTimeout(handleClose, 7000);
+		const AutoClose = setTimeout(resetAlert, 7000);
 		if (hold) clearTimeout(AutoClose);
 		return () => clearTimeout(AutoClose);
 	}, [hold]);
 
 	useEffect(() => {
-		return () => handleClose();
+		return () => resetAlert();
 	}, []);
 
 	const theme = {
@@ -38,7 +39,7 @@ const AlertHandler = ({ type = 'info', message, handleClose }: Props): JSX.Eleme
 				onMouseEnter={() => setHold(true)}
 			>
 				<p>{message}</p>
-				<i className="ml-4 cursor-pointer hover:bg-black hover:bg-opacity-10" onClick={handleClose}>
+				<i className="ml-4 cursor-pointer hover:bg-black hover:bg-opacity-10" onClick={resetAlert}>
 					<MdClose />
 				</i>
 

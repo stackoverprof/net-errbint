@@ -1,7 +1,7 @@
 import React from 'react';
 import Styled from '@emotion/styled';
 import useResize from 'use-resizing';
-import { useRainbox } from '@core/gameContext';
+import { useRainbox } from '@core/contexts/rainbox';
 
 const SideLeaderBoard = () => {
 	const { checkRank, handleSubmit, Leaderboard, UserData, processMessage, score, gameStatus, sideRef, nickname, setNickname } = useRainbox();

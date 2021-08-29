@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRainbox } from '@core/gameContext';
+import { useRainbox } from '@core/contexts/rainbox';
 
 const LiveGameStatus = () => {
 	const { gameStatus } = useRainbox();

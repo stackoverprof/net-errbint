@@ -1,4 +1,4 @@
-import { useRainbox } from '@core/gameContext';
+import { useRainbox } from '@core/contexts/rainbox';
 import React from 'react';
 
 const Dialogs = () => {
