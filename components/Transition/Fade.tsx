@@ -19,7 +19,7 @@ const Fade = ({ children }: Props) => {
 	};
 
 	return (
-		<motion.div initial="initial" animate="enter" exit="exit" variants={motionVariants}>
+		<motion.div initial="initial" animate="enter" exit="exit" variants={motionVariants} className="w-full">
 			{children}
 		</motion.div>
 	);
