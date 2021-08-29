@@ -1,5 +1,6 @@
 import React from 'react';
-import { useLayout, useRainbox } from '@core/contexts';
+import { useLayout } from '@core/contexts';
+import { useRainbox } from '@core/gameContext';
 
 const LiveCurrentPosition = () => {
 	const { checkRank, gameStatus } = useRainbox();

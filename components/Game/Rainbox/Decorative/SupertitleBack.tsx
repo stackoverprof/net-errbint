@@ -1,4 +1,4 @@
-import { useRainbox } from '@core/contexts';
+import { useRainbox } from '@core/gameContext';
 import React from 'react';
 import useResize from 'use-resizing';
 

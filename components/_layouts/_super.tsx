@@ -2,6 +2,7 @@ import React from 'react';
 
 import { AnimatePresence } from 'framer-motion';
 import Rainbox from '@components/Game/Rainbox';
+import RainboxProvider from '@core/gameContext';
 
 interface Props {
 	children: React.ReactNode
@@ -10,7 +11,10 @@ interface Props {
 const SuperLayout = ({children}: Props) => {
 	return (
 		<>
-			<Rainbox />
+			<RainboxProvider>
+				<Rainbox />
+			</RainboxProvider>
+			
 			<div style={{zIndex: 1}} className="relative flex-sc col w-full bg-black">
 				<AnimatePresence exitBeforeEnter>
 					{children}

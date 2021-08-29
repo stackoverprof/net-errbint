@@ -1,5 +1,6 @@
 import React from 'react';
-import { useLayout, useRainbox } from '@core/contexts';
+import { useLayout } from '@core/contexts';
+import { useRainbox } from '@core/gameContext';
 
 const Glimpse = () => {
 	const { nrRef, etRef, briRef } = useRainbox();
