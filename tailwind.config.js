@@ -30,6 +30,10 @@ module.exports = {
 					green: '#45cf22',
 					blue: '#0d78db'
 				},
+				info: '#2DA7FB',
+				warning: '#FFCB11',
+				danger: '#ec4141',
+				success: '#67db8e',
 			},
 			fontFamily: {
 				main: 'Bahnschrift, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
