@@ -5,7 +5,7 @@ import { EnumGameStatus, LeaderboardType, RainboxStoreType, ScoreType, UserDataT
 const RainboxStore = (): RainboxStoreType => {
 	const [gameStatus, setGameStatus] = useState<EnumGameStatus>('intro');
 	const [Leaderboard, setLeaderboard] = useState<LeaderboardType[]>([]);
-	const [UserData, setUserData] = useState<UserDataType>({});
+	const [UserData, setUserData] = useState<UserDataType>({ });
 	const [score, setScore] = useState<ScoreType>({ food: 0, time: 0 });
 	const [processMessage, setProcessMessage] = useState('');
 	const [animateValue, setAnimateValue] = useState(0);
@@ -24,7 +24,7 @@ const RainboxStore = (): RainboxStoreType => {
 
 		Leaderboard.forEach(each => {
 			if (score.food < each.score.food ||
-				(score.food == each.score.food && score.time > each.score.time))
+				(score.food === each.score.food && score.time > each.score.time))
 				rank++;
 		});
 		return rank;
@@ -41,10 +41,10 @@ const RainboxStore = (): RainboxStoreType => {
 			isUpdate = true;
 			const old = userData.data();
 			return score.food > old.score.food ||
-				(score.food == old.score.food && parseInt(score.time.toString().replace('.', '')) <= old.score.time);
+				(score.food === old.score.food && parseInt(score.time.toString().replace('.', '')) <= old.score.time);
 		};
 
-		if (gameStatus == 'over' && /\S/.test(nickname) && nickname.match(/[0-9a-z]/i)) {
+		if (gameStatus === 'over' && /\S/.test(nickname) && nickname.match(/[0-9a-z]/i)) {
 			setProcessMessage('SAVING...');
 
 			const userData = await DB.collection('Leaderboard').doc(nickname.trim()).get();

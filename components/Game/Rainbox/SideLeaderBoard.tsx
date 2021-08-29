@@ -16,9 +16,9 @@ const SideLeaderBoard = () => {
 						<p className="title-leaderboard">LEADERBOARD</p>
 						<div className="linesepar"></div>
 						<div className="the-leaderboard">
-							{Leaderboard.slice(0, checkRank() < 11 && gameStatus == 'over' ? 9 : 10).map((each, i) => (
+							{Leaderboard.slice(0, checkRank() < 11 && gameStatus === 'over' ? 9 : 10).map((each, i) => (
 								<div key={i} >
-									{(gameStatus == 'over' && checkRank() == i + 1) &&
+									{(gameStatus === 'over' && checkRank() === i + 1) &&
 										<div className="newscore">
 											<div className="linesepar-org"></div>
 											<div className="eachLead">
@@ -34,9 +34,9 @@ const SideLeaderBoard = () => {
 											<div className="linesepar-org"></div>
 										</div>
 									}
-									<div className="eachLead" style={{ transitionDelay: gameStatus == 'over' ? 0.75 + 0.10 * i + 's' : '0s' }}>
+									<div className="eachLead" style={{ transitionDelay: gameStatus === 'over' ? 0.75 + 0.10 * i + 's' : '0s' }}>
 										<div className="nick">
-											{gameStatus == 'over' ?
+											{gameStatus === 'over' ?
 												<p className="num">{checkRank() > i + 1 ? i + 1 : i + 2}.</p>
 												:
 												<p className="num">{i + 1}.</p>
@@ -50,7 +50,7 @@ const SideLeaderBoard = () => {
 									</div>
 								</div>
 							))}
-							{(gameStatus == 'over' && checkRank() == 10) &&
+							{(gameStatus === 'over' && checkRank() === 10) &&
 								<div className="newscore">
 									<div className="linesepar-org"></div>
 									<div className="eachLead">
@@ -67,7 +67,7 @@ const SideLeaderBoard = () => {
 								</div>
 							}
 
-							{Leaderboard.length == 0 && <p className="no-connection">CONNECTION ERROR</p>}
+							{Leaderboard.length === 0 && <p className="no-connection">CONNECTION ERROR</p>}
 						</div>
 					</div>
 
@@ -78,12 +78,12 @@ const SideLeaderBoard = () => {
 								<p><span className="orange">{score.food}</span>&ensp;{score.time / 100}</p>
 							</div>
 							<div>
-								<button type="submit" className={`${gameStatus == 'recorded' ? 'disabled' : ''}`} disabled={gameStatus == 'recorded'}>{gameStatus != 'recorded' ? 'SAVE SCORE' : 'SCORE SAVED'}</button>
+								<button type="submit" className={`${gameStatus === 'recorded' ? 'disabled' : ''}`} disabled={gameStatus === 'recorded'}>{gameStatus != 'recorded' ? 'SAVE SCORE' : 'SCORE SAVED'}</button>
 								<p className="process">
-									{processMessage == '' ? `RANK #${checkRank()}` : processMessage}
+									{processMessage === '' ? `RANK #${checkRank()}` : processMessage}
 								</p>
 							</div>
-							{processMessage == ' ' &&
+							{processMessage === ' ' &&
 								<p>{`Sorry, ${UserData.nickname} already got a higher score!`}</p>
 							}
 						</form>
@@ -110,7 +110,7 @@ const Wrapper = Styled.div(({ gameStatus, screen }: any) => `
             height: 100%;
             width: 288px;
             position: relative;
-            right: ${gameStatus == 'over' || gameStatus == 'recorded' ? '0' : '-292px'};
+            right: ${gameStatus === 'over' || gameStatus === 'recorded' ? '0' : '-292px'};
 
             transition: 1s;
             padding: 20px ${screen < 600 ? 24 : 40}px 24px 24px;
@@ -127,8 +127,8 @@ const Wrapper = Styled.div(({ gameStatus, screen }: any) => `
             p.title-leaderboard{
                 font-size: 18px;
                 text-shadow: 0 0 0.5px rgb(0, 0, 0);
-                // opacity: ${gameStatus == 'over' || gameStatus == 'recorded' ? 1 : 0};
-                // transition: opacity 1s ${gameStatus == 'over' ? '.25s' : '0s'};
+                // opacity: ${gameStatus === 'over' || gameStatus === 'recorded' ? 1 : 0};
+                // transition: opacity 1s ${gameStatus === 'over' ? '.25s' : '0s'};
             }
         }
         
@@ -146,7 +146,7 @@ const Wrapper = Styled.div(({ gameStatus, screen }: any) => `
             margin: 8px 0;
         }
         .linesepar-org{
-            opacity: ${gameStatus == 'over' ? 1 : 0};
+            opacity: ${gameStatus === 'over' ? 1 : 0};
             transition: 1s;
             // transition-delay: 0.5s;
             height: 1px;

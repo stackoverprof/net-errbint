@@ -22,11 +22,11 @@ const SupertitleFront = () => {
 				/>
 
 				<div className="relative flex-cc transition-all" style={{ zIndex: -1,  top: screen > 500 ? '-12px' : '-48px',  transition: {intro: 'none', ready: 'none'}[gameStatus] || 'opacity 1s',  opacity: {intro: '0', running: '0'}[gameStatus] || '1',  minHeight: '38px' }} >
-					<p className="pt-1 text-center transition-all" style={{fontSize: screen > 500 ? 32 : 24, color: gameStatus == 'running' ? '#BBBBBB' :	gameStatus == 'over' ? 'black' : 'gray'}}>
+					<p className="pt-1 text-center transition-all" style={{fontSize: screen > 500 ? 32 : 24, color: gameStatus === 'running' ? '#BBBBBB' :	gameStatus === 'over' ? 'black' : 'gray'}}>
 						{{ over: 'GAME OVER', recorded: 'SCORE SAVED' }[gameStatus] || 'A CREATIVE DEVELOPER' }
 					</p>
 					
-					<button className="ml-3 pointer-events-auto" ref={newGameBtnRef} style={{display: gameStatus == 'over' || gameStatus == 'recorded' ? 'unset' : 'none', fontSize: screen < 500 ? 16 : ''}}>
+					<button className="ml-3 pointer-events-auto" ref={newGameBtnRef} style={{display: gameStatus === 'over' || gameStatus === 'recorded' ? 'unset' : 'none', fontSize: screen < 500 ? 16 : ''}}>
 						PLAY AGAIN
 					</button>
 				</div>
