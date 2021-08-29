@@ -474,10 +474,6 @@ const Canvas = ({responsive, skipIntro}: CanvasProps) => {
 				this.ctx = this.el.canvas.getContext('2d');
 
 				this.HandleResponsive();
-				
-				this.el.bri.style.opacity = '0';
-				this.el.et.style.opacity = '0';
-				this.el.nr.style.opacity = '0';
 			}
 			
 			HandleResponsive = () => {
@@ -521,15 +517,15 @@ const Canvas = ({responsive, skipIntro}: CanvasProps) => {
 
 				const {et, nr, bri} = ENV.el;
 
-				if (score % 10 === 0 || score === 'special') {
+				if (score % 10 === 0 || score === 'special') { console.log('special');				
 					animateSpecial(et, nr, bri);
 					safeTimeout(() => animateSpecial(et, nr, bri), 700);
 					safeTimeout(() => animateSpecial(et, nr, bri), 1400);
-				} else if (score % 5 === 0 || score === 'regular') {
+				} else if (score % 5 === 0 || score === 'regular') { console.log('regular');				
 					animate(et);
 					safeTimeout(() => animate(nr), 150);
 					safeTimeout(() => animate(bri), 400);
-				} else if (score === 'intro') {
+				} else if (score === 'intro') { console.log('intro');				
 					setGameStatus('sub_intro');
 					animateIntro(et);
 					safeTimeout(() => animateIntro(bri), 500);
