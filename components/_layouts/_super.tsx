@@ -9,7 +9,7 @@ interface Props {
 
 const SuperLayout = ({children}: Props) => {
 	return (
-		<div className="flex-sc col w-full">
+		<div className="flex-sc col w-full bg-black">
 			<Rainbox />
 			<AnimatePresence exitBeforeEnter>
 				{children}

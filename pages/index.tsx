@@ -8,13 +8,18 @@ const Index = (): JSX.Element => {
 
 	return (
 		<MainLayout className="flex-sc col" transition="fade">
-			<div className="flex-sc full col" style={{zIndex: 1}}>
-				<div className="w-full bg-black text-white" style={{height: 2000}}>
+			<div className="w-full bg-black text-white" style={{height: 2000}}>
+				<div className="flex-sc gap-2">
+					<Link href="/">HOME</Link>
+					<Link href="/about">ABOUT</Link>
+					<Link href="/projects">PROJECTS</Link>
+				</div>
+					
+				<div className="flex-cc">						
 					<button onClick={() => setSelectedTheme('orange')}>orange</button>
 					<button onClick={() => setSelectedTheme('purple')}>purple</button>
 					<button onClick={() => setSelectedTheme('green')}>green</button>
 					<button onClick={() => setSelectedTheme('blue')}>blue</button>
-					<Link href="/about">ABOUT</Link>
 				</div>
 			</div>
 		</MainLayout>

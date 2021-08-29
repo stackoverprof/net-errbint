@@ -4,6 +4,7 @@ import { useLayout } from '@core/contexts/index';
 import useClearance from '@core/hooks/useClearance';
 import Transition from '@components/Transition';
 import SEOTags from '@components/_shared/SEOTags';
+import { useRouter } from 'next/router';
 
 interface Props {
 	children: React.ReactNode
@@ -17,10 +18,11 @@ interface Props {
 const MainLayout = ({children, title, className, transition, style, scrollUp}: Props): JSX.Element => {
 	const { alert_value, resetAlert } = useLayout();
 	const [clearance, upperRef, lowerRef] = useClearance();
+	const router = useRouter();
 
 	useEffect(() => {
 		if (scrollUp) window.scrollTo(0, window.innerHeight * 4/5);
-	}, []);
+	}, [router]);
 
 	return (
 		<Transition type={transition}>
@@ -30,7 +32,7 @@ const MainLayout = ({children, title, className, transition, style, scrollUp}: P
 				{/* Navbar things */}
 			</header>
 
-			<main style={{minHeight: clearance, ...style}} className={className}>
+			<main style={{minHeight: clearance, ...style}} className={[className, ''].join(' ')}>
 				{children}
 			</main>
 
