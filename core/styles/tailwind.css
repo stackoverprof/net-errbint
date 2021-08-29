@@ -67,6 +67,8 @@
 	.full { @apply w-full h-full; }
 	.fullscreen { @apply fixed full inset-0; }
 	.stroked { -webkit-text-stroke: 0.4px; }
+
+	.container-14 { @apply container px-14 }
 }
 
 @layer base {
