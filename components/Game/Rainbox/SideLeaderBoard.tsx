@@ -9,7 +9,7 @@ const SideLeaderBoard = () => {
 
 	return (
 		<Wrapper gameStatus={gameStatus} screen={screen}>
-			<div className="side-leaderboard-cont pointer-events-none absolute full inset-0">
+			<div className="side-leaderboard-cont pointer-events-none absolute overflow-hidden full inset-0">
 
 				<div className="side-leaderboard">
 					<div className="upper">
