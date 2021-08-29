@@ -2,9 +2,11 @@ import React from 'react';
 import Fade from './Fade';
 
 interface Props {
-	type?: string
+	type: EnumTransition
 	children: React.ReactNode
 }
+
+export type EnumTransition = 'fade' | ''
 
 const PageTransition = ({type, children}: Props) => {
 

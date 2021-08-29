@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import AlertHandler from '@components/_shared/AlertHandler';
 import { useLayout } from '@core/contexts/index';
 import useClearance from '@core/hooks/useClearance';
-import Transition from '@components/Transition';
+import Transition, { EnumTransition } from '@components/Transition';
 import SEOTags from '@components/_shared/SEOTags';
 import { useRouter } from 'next/router';
 
@@ -11,7 +11,7 @@ interface Props {
 	title?: string
 	className?: string
 	style?: React.CSSProperties
-	transition?: 'fade' | ''
+	transition?: EnumTransition
 	scrollUp?: boolean
 }
 
@@ -29,7 +29,7 @@ const MainLayout = ({children, title, className, transition, style, scrollUp}: P
 			<SEOTags title={title} />
 
 			<header ref={upperRef}>
-				{/* Navbar things */}
+				{/* Upper things */}
 			</header>
 
 			<main style={{minHeight, ...style}} className={className}>
@@ -37,7 +37,7 @@ const MainLayout = ({children, title, className, transition, style, scrollUp}: P
 			</main>
 
 			<footer ref={lowerRef}>
-				{/* Footer things */}
+				{/* Lower things */}
 			</footer>
 
 			{alert_value && <AlertHandler type={alert_value.type} message={alert_value.message} handleClose={resetAlert} key={Math.random()}/>}
