@@ -2,9 +2,9 @@ import React from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/dist/shared/lib/router/router';
 import ProgressBar from 'nextjs-progressbar';
-import { AnimatePresence } from 'framer-motion';
 import ContextProvider from '@core/contexts';
 import Loader from '@components/_shared/Loader';
+import SuperLayout from '@components/_layouts/_super';
 
 import '@core/styles/tailwind.css';
 import '@core/styles/typefaces.css';
@@ -25,9 +25,9 @@ const App = ({ Component, pageProps, router }: AppProps): JSX.Element => {
 			/>
 			<Loader />
 			<ContextProvider>
-				<AnimatePresence exitBeforeEnter>
+				<SuperLayout>
 					<Component {...pageProps} key={router.route} />
-				</AnimatePresence>
+				</SuperLayout>
 			</ContextProvider>
 		</>
 	);
