@@ -2,8 +2,9 @@ import Link from '@components/_shared/Link';
 import React from 'react';
 
 const Navbar = () => {
+
 	return (
-		<div className="w-full bg-blue-300 flex-cc">
+		<div className="w-full bg-blue-300 flex-cc" style={{height: 60}}>
 			<div className="container-14 flex-bc">
 				<div>haha</div>
 
