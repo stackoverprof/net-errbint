@@ -517,15 +517,15 @@ const Canvas = ({responsive, skipIntro}: CanvasProps) => {
 
 				const {et, nr, bri} = ENV.el;
 
-				if (score % 10 === 0 || score === 'special') { console.log('special');				
+				if (score % 10 === 0 || score === 'special') {
 					animateSpecial(et, nr, bri);
 					safeTimeout(() => animateSpecial(et, nr, bri), 700);
 					safeTimeout(() => animateSpecial(et, nr, bri), 1400);
-				} else if (score % 5 === 0 || score === 'regular') { console.log('regular');				
+				} else if (score % 5 === 0 || score === 'regular') {
 					animate(et);
 					safeTimeout(() => animate(nr), 150);
 					safeTimeout(() => animate(bri), 400);
-				} else if (score === 'intro') { console.log('intro');				
+				} else if (score === 'intro') {
 					setGameStatus('sub_intro');
 					animateIntro(et);
 					safeTimeout(() => animateIntro(bri), 500);
