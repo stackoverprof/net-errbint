@@ -7,7 +7,7 @@ const About = (): JSX.Element => {
 	const { Alert, selectedTheme } = useLayout(); 
 	
 	return (
-		<MainLayout title="About" className="flex-sc col">
+		<MainLayout title="About" className="flex-sc col" transition="fade" scrollUp>
 			<p className="z-10 max-w-sm mt-48 mb-2 text-center">The technologies used in this template</p>
 			<div className="flex-cc gap-1 mb-4">
 				<img src="https://img.shields.io/badge/NEXT%20-%23000000.svg?&style=flat&logo=next.js&logoColor=white" alt="tech" />
