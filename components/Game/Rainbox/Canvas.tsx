@@ -16,14 +16,6 @@ const Canvas = ({responsive, skipIntro}: CanvasProps) => {
 	const { selectedTheme } = useLayout();
 	
 	const memoized_rains = useMemo(() => [], []);
-
-	
-	useEffect(() => {
-		console.log('mount');
-		return () => {
-			console.log('unmount');
-		};
-	}, []);
 	
 	const GameScript = () => {
 		let _isMounted = true;

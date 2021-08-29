@@ -24,6 +24,9 @@ const MainLayout = ({children, title, className, transition, style, scrollUp}: P
 		if (scrollUp) window.scrollTo(0, window.innerHeight * 4/5);
 	}, [router]);
 
+	console.log('render layout');
+	
+
 	return (
 		<Transition type={transition}>
 			<SEOTags title={title} />
@@ -40,7 +43,7 @@ const MainLayout = ({children, title, className, transition, style, scrollUp}: P
 				{/* Lower things */}
 			</footer>
 
-			{alert_value && <AlertHandler type={alert_value.type} message={alert_value.message} handleClose={resetAlert} key={Math.random()}/>}
+			{alert_value && <AlertHandler type={alert_value.type} message={alert_value.message} handleClose={resetAlert}/>}
 		</Transition>
 	);
 };

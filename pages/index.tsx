@@ -4,7 +4,7 @@ import { useLayout } from '@core/contexts/index';
 import Link from '@components/_shared/Link';
  
 const Index = (): JSX.Element => {
-	const { setSelectedTheme } = useLayout();
+	const { setSelectedTheme, Alert } = useLayout();
 
 	return (
 		<MainLayout className="flex-sc col" transition="fade">
@@ -21,6 +21,7 @@ const Index = (): JSX.Element => {
 					<button onClick={() => setSelectedTheme('green')}>green</button>
 					<button onClick={() => setSelectedTheme('blue')}>blue</button>
 				</div>
+				<button onClick={() => Alert({message: 'sdhjfbasuj'})}>alert</button>
 			</div>
 		</MainLayout>
 	);
