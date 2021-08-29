@@ -22,6 +22,7 @@ module.exports = {
 			colors: {
 				base: '#F5F5F5',
 				primary: '#000000',
+				white: '#F5F5F5',
 				accent: {
 					DEFAULT: '#FF5B14',
 					orange: '#FF5B14',
@@ -45,7 +46,7 @@ module.exports = {
 		},
 	},
 	variants: {
-		extend: {},
+		extend: { },
 	},
 	plugins: [],
 };
