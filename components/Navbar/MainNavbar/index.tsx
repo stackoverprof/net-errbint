@@ -12,8 +12,12 @@ const MainNavbar = () => {
 
 	const screenHeight = useResize().height;
 	
-	const calcShrink = 60 - (scroll - (screenHeight - 60)); 
-	const shrink = calcShrink < 0 ? 0 : calcShrink > 60 ? 60 : calcShrink;
+	
+	const getShrink = () => {
+		const calc = 60 - (scroll - (screenHeight - 60)); 
+		const shrink = calc < 0 ? 0 : calc > 60 ? 60 : calc;
+		return shrink;
+	};
 
 	useEffect(() => {			
 		if (scroll === 0) setPosition('bottom');
@@ -26,7 +30,7 @@ const MainNavbar = () => {
 			<div style={{height: 60}} className="pointer-events-auto">
 				<Navbar />
 			</div>
-			<div style={{height: shrink}} className="pointer-events-auto overflow-hidden flex-cc">
+			<div style={{height: getShrink()}} className="pointer-events-auto overflow-hidden flex-cc">
 				<NavMenu />
 			</div>
 		</nav>
