@@ -1,5 +1,6 @@
 import Link from '@components/_shared/Link';
 import React from 'react';
+import ContactLinks from './ContactLinks';
 
 const NavMenu = () => {
 	return (
@@ -11,7 +12,7 @@ const NavMenu = () => {
 					<Link scroll={false} href="/projects">PROJECTS</Link>
 				</div>
 				
-				<div>haha</div>
+				<ContactLinks />
 			</div>
 		</div>
 	);

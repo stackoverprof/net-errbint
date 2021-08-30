@@ -23,6 +23,7 @@
 		"react-dom": "^17.0.2",
 		"react-icons": "^4.2.0",
 		"react-use-scroll-position": "^2.0.0",
+		"styled-jsx-plugin-postcss": "^4.0.1",
 		"use-resizing": "^2.1.7"
 	},
 	"devDependencies": {
