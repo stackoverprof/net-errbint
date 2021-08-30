@@ -16,9 +16,9 @@ const Navbar = ({isActive, toggleOpenMenu}: Props) => {
 				</div>
 
 				<div className="flex-cc gap-2">
-					<Link href="/">HOME</Link>
-					<Link href="/about">ABOUT</Link>
-					<Link href="/projects">PROJECTS</Link>
+					<Link scroll={false} href="/">HOME</Link>
+					<Link scroll={false} href="/about">ABOUT</Link>
+					<Link scroll={false} href="/projects">PROJECTS</Link>
 				</div>
 			</div>
 		</div>
