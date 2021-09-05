@@ -3,36 +3,21 @@ import React from 'react';
 
 const ContactLinks = () => {
 	return (
-		<div className="flex-cc gap-2 group">
+		<div className="flex-cc gap-4 group">
 			<Link href="https://github.com/stackoverprof/" target="_blank">
-				<div className="item-group item-group-gh flex-cc gap-3">
-					<img src="/img/icons/gh.svg" className="group-hover:opacity-40"/>
-					<p className="text-white overflow-hidden whitespace-nowrap">stackoverprof</p>
-				</div>
+				<img src="/img/icons/gh.svg" className="h-7 group-hover:opacity-40"/>
 			</Link>
 			<Link href="https://instagram.com/errbint" target="_blank">
-				<div className="item-group item-group-ig flex-cc gap-3">
-					<img src="/img/icons/ig.svg" className="group-hover:opacity-40"/>
-					<p className="text-white overflow-hidden whitespace-nowrap">@errbint</p>
-				</div>
+				<img src="/img/icons/ig.svg" className="h-7 group-hover:opacity-40"/>
 			</Link>
 			<Link href="https://line.me/ti/p/FwXuuM_qrV" target="_blank">
-				<div className="item-group item-group-line flex-cc gap-3">
-					<img src="/img/icons/line.svg" className="group-hover:opacity-40"/>
-					<p className="text-white overflow-hidden whitespace-nowrap">@r.bintang11</p>
-				</div>
+				<img src="/img/icons/line.svg" className="h-7 group-hover:opacity-40"/>
 			</Link>
 			<Link href="https://wa.me/628988355006" target="_blank">
-				<div className="item-group item-group-wa flex-cc gap-3">
-					<img src="/img/icons/wa.svg" className="group-hover:opacity-40"/>
-					<p className="text-white overflow-hidden whitespace-nowrap">+62 8988355006</p>
-				</div>
+				<img src="/img/icons/wa.svg" className="h-7 group-hover:opacity-40"/>
 			</Link>
 			<Link href="https://www.linkedin.com/in/r-bintang-bagus-putra-angkasa-41a6b1188" target="_blank">
-				<div className="item-group item-group-lkdn flex-cc gap-3">
-					<img src="/img/icons/lkdn.svg" className="group-hover:opacity-40"/>
-					<p className="text-white overflow-hidden whitespace-nowrap">R.Bintang Bagus</p>
-				</div>
+				<img src="/img/icons/lkdn.svg" className="h-7 group-hover:opacity-40"/>
 			</Link>
 
 			<style jsx>{`

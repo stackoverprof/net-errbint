@@ -4,8 +4,10 @@ import Navbar from './Navbar';
 import NavMenu from './NavMenu';
 import useResize from 'use-resizing';
 
+type EnumPosition = 'bottom' | 'top' | 'floating'
+
 const MainNavbar = () => {
-	const [position, setPosition] = useState('bottom');
+	const [position, setPosition] = useState<EnumPosition>('bottom');
 	const [openMenu, setOpenMenu] = useState(false);
 	const scroll = useScrollYPosition();
 
@@ -14,8 +16,18 @@ const MainNavbar = () => {
 	const screenHeight = useResize().height;
 
 	const _setOpenMenu = () => {
-		shrinkRef.current.style.transition = 'all 0.15s ease 0s';
-		setOpenMenu(!openMenu);
+		switch (position) {
+			case 'bottom':
+				window.scrollTo(0, 60);
+				break;
+			case 'top':
+				shrinkRef.current.style.transition = 'all 0.15s ease 0s';
+				setOpenMenu(!openMenu);
+				break;
+			case 'floating':
+				if (scroll === 60) window.scrollTo(0, 0);
+				break;
+		}
 	};
 	
 	const getShrink = () => {
@@ -35,7 +47,10 @@ const MainNavbar = () => {
 			setOpenMenu(false);
 		}
 		else if (scroll > window.innerHeight - 60) setPosition('top');
-		else setPosition('floating');
+		else {
+			setOpenMenu(false);
+			setPosition('floating');
+		}
 	}, [scroll]);
 
 	return (
