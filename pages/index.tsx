@@ -9,7 +9,7 @@ const Index = (): JSX.Element => {
 	return (
 		<MainLayout className="flex-sc col" transition="fade">
 			<div className="w-full text-white mt-32" style={{height: 2000}}>
-				<div className="flex-sc gap-2">
+				<div className="flex-sc gap-2 text-xl text-white">
 					<Link href="/">HOME</Link>
 					<Link href="/about">ABOUT</Link>
 					<Link href="/projects">PROJECTS</Link>
