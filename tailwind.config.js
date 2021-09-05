@@ -23,11 +23,30 @@ module.exports = {
 				base: '#F5F5F5',
 				primary: '#000000',
 				accent: {
-					DEFAULT: '#FF5B14',
-					orange: '#FF5B14',
-					purple: '#7810ff',
-					green: '#45cf22',
-					blue: '#0d78db'
+					orange: {
+						DEFAULT: '#FF5B14',
+						dark: '#FF5B14',
+						light: '#FF9914',
+						shadow: '#FFC01E',
+					},
+					purple: {
+						DEFAULT: '#7810FF',
+						dark: '#7810FF',
+						light: '#C42EFF',
+						shadow: '#E374FF',
+					},
+					green: {
+						DEFAULT: '#46BF27',
+						dark: '#46BF27',
+						light: '#A3E20F',
+						shadow: '#70FF00',
+					},
+					blue: {
+						DEFAULT: '#0D78DB',
+						dark: '#0D78DB',
+						light: '#10BBFF',
+						shadow: '#6CCAFF',
+					},
 				},
 				info: '#2DA7FB',
 				warning: '#FFCB11',
@@ -49,7 +68,7 @@ module.exports = {
 		},
 	},
 	variants: {
-		extend: { },
+		extend: {},
 	},
 	plugins: [],
 };

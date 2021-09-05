@@ -36,7 +36,7 @@ const PageLinks = () => {
 	
 	return (
 		<div className="relative flex-cc h-full -mx-3 text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
-			<div className="z-10 h-full flex-cc gap-2">
+			<div className="z-10 h-full flex-cc gap-">
 				<div ref={childRef[0]}>
 					<Link href="/home" onMouseEnter={() => setHovered(0)} className="flex-cc h-full px-3">Home</Link>
 				</div>
@@ -51,7 +51,7 @@ const PageLinks = () => {
 				</div>
 			</div>
 
-			<div className={['absolute h-8 bg-accent-orange transition-all rounded-md', inside ? 'bg-opacity-50' : 'bg-opacity-100'].join(' ')} style={{left: getPrevDistance(inside ? hovered : currentPage) + (8*hovered), transitionDuration: '0.25s', width: childRef[hovered].current?.offsetWidth || 0}}></div>
+			<div className={['absolute h-8 transition-all rounded-md', inside ? 'bg-opacity-50' : 'bg-opacity-100'].join(' ')} style={{left: getPrevDistance(inside ? hovered : currentPage) + (8*hovered), transitionDuration: '0.25s', width: childRef[hovered].current?.offsetWidth || 0}}></div>
 		</div>
 	);
 };
