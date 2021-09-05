@@ -7,15 +7,14 @@ import { EnumPosition } from '.';
 interface Props {
 	isActive: boolean
 	toggleOpenMenu(): void
-	position: EnumPosition
 }
 
-const Navbar = ({isActive, toggleOpenMenu, position}: Props) => {
+const Navbar = ({isActive, toggleOpenMenu}: Props) => {
 
 	return (
 		<div className="flex-cc w-full h-full text-white bg-black bg-opacity-50 backdrop-blur-md" style={{height: 60}}>
-			<div className="flex-bc h-full md:container-14 sm:pr-7 -md:w-full">
-				<HamburgerButton collapse={isActive && position !== 'floating'} onClick={() => toggleOpenMenu()}/>
+			<div className="flex-bc h-full md:container-14 sm:pr-5 -md:w-full">
+				<HamburgerButton collapse={isActive} onClick={() => toggleOpenMenu()}/>
 				<PageLinks />
 			</div>
 		</div>
@@ -63,7 +62,7 @@ const PageLinks = () => {
 	}, [router]);
 	
 	return (
-		<div className="relative flex-cc h-full sm:-mx-3 text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
+		<div className="relative flex-cc h-full text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
 			<div className="z-10 flex-cc h-full -sm:w-full gap-2">
 				{data_links.map((item, i) => (
 					<div ref={childRef[i]} key={i} className="h-full">
