@@ -89,7 +89,7 @@ const HamburgerButton = ({collapse, onClick}: HamburgerButtonProps) => {
 	return (
 		<button className="flex-sc h-full bg-white bg-opacity-20" onClick={onClick}>
 			<HamburgerIcon collapse={collapse} />
-			<p className="text-2.5xl pl-2 pr-6">ERRBINT</p>
+			<p className="text-2.5xl pl-2 pr-6 -md:hidden">ERRBINT</p>
 		</button>
 	);
 };
@@ -107,12 +107,3 @@ const HamburgerIcon = ({collapse}: {collapse: boolean}) => (
 		</div>
 	</div>
 );
-
-// const TextSwitcher = ({switchText}: {switchText: boolean}) => (
-// 	<div className="relative -md:hidden flex-sc -lg:w-40 h-full ml-2 text-white text-3xl -lg:text-2.5xl uppercase overflow-hidden">
-// 		<p className="absolute flex-sc full">ERRBINT</p>
-// 	</div>
-// );
-
-// 	<p className="absolute flex-sc transition-all duration-1000 full" style={{left: switchText ? 320 : 0}}>NAVIGATE</p>
-// 	<p className="absolute flex-sc transition-all duration-1000 full" style={{left: switchText ? 0 : 320}}>ERRBINT</p>
