@@ -66,7 +66,7 @@ const PageLinks = () => {
 		<div className="relative flex-cc h-full -mx-3 text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
 			<div className="z-10 flex-cc h-full gap-2">
 				{data_links.map((item, i) => (
-					<div ref={childRef[i]} key={i}>
+					<div ref={childRef[i]} key={i} className="h-full">
 						<Link href={item.route} scroll={false} onMouseEnter={() => setHovered(i)} className="flex-cc h-full px-3">{item.text}</Link>
 					</div>
 				))}
@@ -97,9 +97,9 @@ const HamburgerButton = ({isActive, onClick, switchText}: HamburgerButtonProps) 
 
 const HamburgerIcon = ({isActive}: {isActive: boolean}) => (
 	<div className="flex-cc col gap-1.5" style={{width: 60, height: 60}}>
-		<div className="w-7 h-1 bg-white rounded-full transition" style={{transform: isActive ? 'rotate(30deg) translateY(4px)' : 'unset'}}></div>
-		<div className="w-7 h-1 bg-white rounded-full transition" style={{transform: isActive ? 'scaleX(0.2) translateX(28px)' : 'unset'}}></div>
-		<div className="w-7 h-1 bg-white rounded-full transition" style={{transform: isActive ? 'rotate(-30deg) translateY(-4px)' : 'unset'}}></div>
+		<div className="w-7 h-1 bg-white rounded-full transition-all" style={{transform: isActive ? 'rotate(30deg) translateY(4px)' : 'unset'}}></div>
+		<div className="w-7 h-1 bg-white rounded-full transition-all" style={{transform: isActive ? 'scaleX(0.2) translateX(28px)' : 'unset'}}></div>
+		<div className="w-7 h-1 bg-white rounded-full transition-all" style={{transform: isActive ? 'rotate(-30deg) translateY(-4px)' : 'unset'}}></div>
 	</div>
 );
 

@@ -47,7 +47,7 @@ const SectionPointer = () => {
 		<div className="relative flex-cc h-full -mx-3 text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => setInside(false)}>
 			<div className="z-10 h-full flex-cc">
 				{data_links.map((item, i) => (
-					<div ref={childRef[i]} key={i}>
+					<div ref={childRef[i]} key={i} className="h-full">
 						<Link href={item.route} onMouseEnter={() => setHovered(i)} className="flex-cc h-full px-3">{item.text}</Link>
 					</div>
 				))}
