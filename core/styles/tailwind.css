@@ -69,6 +69,15 @@
 	.stroked { -webkit-text-stroke: 0.4px; }
 
 	.container-14 { @apply container px-14 }
+
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	
+	.no-scrollbar {
+		-ms-overflow-style: none; 
+		scrollbar-width: none;  
+	}
 }
 
 @layer base {
