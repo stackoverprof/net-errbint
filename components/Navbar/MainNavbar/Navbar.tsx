@@ -97,15 +97,15 @@ const HamburgerButton = ({isActive, onClick, switchText}: HamburgerButtonProps) 
 
 const HamburgerIcon = ({isActive}: {isActive: boolean}) => (
 	<div className="flex-cc col gap-1.5" style={{width: 60, height: 60}}>
-		<div className="w-7 h-1 bg-white rounded-full transition-all" style={{transform: isActive ? 'rotate(30deg) translateY(4px)' : 'unset'}}></div>
-		<div className="w-7 h-1 bg-white rounded-full transition-all" style={{transform: isActive ? 'scaleX(0.2) translateX(28px)' : 'unset'}}></div>
-		<div className="w-7 h-1 bg-white rounded-full transition-all" style={{transform: isActive ? 'rotate(-30deg) translateY(-4px)' : 'unset'}}></div>
+		<div className="h-1 transition-all bg-white rounded-full w-7" style={{transform: isActive ? 'rotate(30deg) translateY(4px)' : 'unset'}}></div>
+		<div className="h-1 transition-all bg-white rounded-full w-7" style={{transform: isActive ? 'scaleX(0.2) translateX(28px)' : 'unset'}}></div>
+		<div className="h-1 transition-all bg-white rounded-full w-7" style={{transform: isActive ? 'rotate(-30deg) translateY(-4px)' : 'unset'}}></div>
 	</div>
 );
 
 const TextSwitcher = ({switchText}: {switchText: boolean}) => (
-	<div className="relative flex-sc w-48 -lg:w-40 h-full ml-2 text-white text-3xl -lg:text-2.5xl uppercase overflow-hidden">
-		<p className="absolute flex-sc full transition-all duration-1000" style={{left: switchText ? 320 : 0}}>NAVIGATION</p>
-		<p className="absolute flex-sc full transition-all duration-1000" style={{left: switchText ? 0 : 320}}>ERRBINT</p>
+	<div className="relative -md:hidden flex-sc w-48 -lg:w-40 h-full ml-2 text-white text-3xl -lg:text-2.5xl uppercase overflow-hidden">
+		<p className="absolute flex-sc transition-all duration-1000 full" style={{left: switchText ? 320 : 0}}>NAVIGATION</p>
+		<p className="absolute flex-sc transition-all duration-1000 full" style={{left: switchText ? 0 : 320}}>ERRBINT</p>
 	</div>
 );
