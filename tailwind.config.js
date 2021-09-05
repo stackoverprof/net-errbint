@@ -58,6 +58,9 @@ module.exports = {
 				bahn: 'Bahnschrift, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
 				popp: 'Poppkorn, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
 			},
+			fontSize: {
+				'2.5xl': '1.65rem'
+			},
 			screens: {
 				'-2xl': { raw: '(max-width: 1535px)' },
 				'-xl': { raw: '(max-width: 1279px)' },

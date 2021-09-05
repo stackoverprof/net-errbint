@@ -104,7 +104,7 @@ const HamburgerIcon = ({isActive}: {isActive: boolean}) => (
 );
 
 const TextSwitcher = ({switchText}: {switchText: boolean}) => (
-	<div className="relative flex-sc h-full ml-2 text-white text-3xl uppercase overflow-hidden" style={{width: 184}}>
+	<div className="relative flex-sc w-48 -lg:w-40 h-full ml-2 text-white text-3xl -lg:text-2.5xl uppercase overflow-hidden">
 		<p className="absolute flex-sc full transition-all duration-1000" style={{left: switchText ? 320 : 0}}>NAVIGATION</p>
 		<p className="absolute flex-sc full transition-all duration-1000" style={{left: switchText ? 0 : 320}}>ERRBINT</p>
 	</div>
