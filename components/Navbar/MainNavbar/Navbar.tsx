@@ -15,7 +15,7 @@ const Navbar = ({isActive, toggleOpenMenu, position}: Props) => {
 	return (
 		<div className="flex-cc w-full h-full text-white bg-black bg-opacity-50 backdrop-blur-md" style={{height: 60}}>
 			<div className="flex-bc h-full container-14">
-				<HamburgerButton isActive={isActive} onClick={() => toggleOpenMenu()} switchText={position === 'sticked'}/>
+				<HamburgerButton collapse={isActive && position !== 'floating'} onClick={() => toggleOpenMenu()}/>
 				<PageLinks />
 			</div>
 		</div>
@@ -63,8 +63,8 @@ const PageLinks = () => {
 	}, [router]);
 	
 	return (
-		<div className="relative flex-cc h-full -mx-3 text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
-			<div className="z-10 flex-cc h-full gap-2">
+		<div className="relative flex-cc h-full -sm:w-full -mx-3 -sm:mx-0 text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
+			<div className="z-10 flex-cc h-full -sm:w-full gap-2">
 				{data_links.map((item, i) => (
 					<div ref={childRef[i]} key={i} className="h-full">
 						<Link href={item.route} scroll={false} onMouseEnter={() => setHovered(i)} className="flex-cc h-full px-3">{item.text}</Link>
@@ -82,30 +82,37 @@ const PageLinks = () => {
 
 
 interface HamburgerButtonProps {
-	isActive: boolean
+	collapse: boolean
 	onClick(): void
-	switchText: boolean
 }
-const HamburgerButton = ({isActive, onClick, switchText}: HamburgerButtonProps) => {
+const HamburgerButton = ({collapse, onClick}: HamburgerButtonProps) => {
 	return (
 		<button className="flex-sc h-full bg-white bg-opacity-20" onClick={onClick}>
-			<HamburgerIcon isActive={isActive} />
-			<TextSwitcher switchText={switchText}/>
+			<HamburgerIcon collapse={collapse} />
+			<p className="text-2.5xl pl-2 pr-6">ERRBINT</p>
 		</button>
 	);
 };
 
-const HamburgerIcon = ({isActive}: {isActive: boolean}) => (
-	<div className="flex-cc col gap-1.5" style={{width: 60, height: 60}}>
-		<div className="h-1 transition-all bg-white rounded-full w-7" style={{transform: isActive ? 'rotate(30deg) translateY(4px)' : 'unset'}}></div>
-		<div className="h-1 transition-all bg-white rounded-full w-7" style={{transform: isActive ? 'scaleX(0.2) translateX(28px)' : 'unset'}}></div>
-		<div className="h-1 transition-all bg-white rounded-full w-7" style={{transform: isActive ? 'rotate(-30deg) translateY(-4px)' : 'unset'}}></div>
+const HamburgerIcon = ({collapse}: {collapse: boolean}) => (
+	<div className="relative flex-cc h-full" style={{width: 60}}>
+		<div className="absolute flex-cc col gap-1.5">
+			<div className={['h-1 transition-all bg-white rounded-full transform w-7', collapse ? '' : 'translate-y-2.5'].join(' ')}></div>
+		</div>
+		<div className="absolute flex-cc col gap-1.5">
+			<div className={['h-1 transition-all bg-white rounded-full transform w-7'].join(' ')}></div>
+		</div>
+		<div className="absolute flex-cc col gap-1.5">
+			<div className={['h-1 transition-all bg-white rounded-full transform w-7', collapse ? '' : '-translate-y-2.5'].join(' ')}></div>
+		</div>
 	</div>
 );
 
-const TextSwitcher = ({switchText}: {switchText: boolean}) => (
-	<div className="relative -md:hidden flex-sc w-48 -lg:w-40 h-full ml-2 text-white text-3xl -lg:text-2.5xl uppercase overflow-hidden">
-		<p className="absolute flex-sc transition-all duration-1000 full" style={{left: switchText ? 320 : 0}}>NAVIGATION</p>
-		<p className="absolute flex-sc transition-all duration-1000 full" style={{left: switchText ? 0 : 320}}>ERRBINT</p>
-	</div>
-);
+// const TextSwitcher = ({switchText}: {switchText: boolean}) => (
+// 	<div className="relative -md:hidden flex-sc -lg:w-40 h-full ml-2 text-white text-3xl -lg:text-2.5xl uppercase overflow-hidden">
+// 		<p className="absolute flex-sc full">ERRBINT</p>
+// 	</div>
+// );
+
+// 	<p className="absolute flex-sc transition-all duration-1000 full" style={{left: switchText ? 320 : 0}}>NAVIGATE</p>
+// 	<p className="absolute flex-sc transition-all duration-1000 full" style={{left: switchText ? 0 : 320}}>ERRBINT</p>
