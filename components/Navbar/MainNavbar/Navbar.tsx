@@ -9,9 +9,9 @@ interface Props {
 const Navbar = ({isActive, toggleOpenMenu}: Props) => {
 
 	return (
-		<div className="w-full bg-blue-300 flex-cc" style={{height: 60}}>
-			<div className="container-14 flex-bc">
-				<div className="h-full w-40">
+		<div className="flex-cc w-full text-white bg-black bg-opacity-50 backdrop-blur-md" style={{height: 60}}>
+			<div className="flex-bc container-14">
+				<div className="w-40 h-full">
 					<button onClick={() => toggleOpenMenu()}>NAVIGATION {isActive ? 'active' : 'close'}</button>
 				</div>
 

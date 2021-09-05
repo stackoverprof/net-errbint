@@ -15,7 +15,7 @@ const Index = (): JSX.Element => {
 					<Link href="/projects">PROJECTS</Link>
 				</div>
 					
-				<div className="flex-cc">						
+				<div className="flex-cc bg-yellow-300">						
 					<button onClick={() => setSelectedTheme('orange')}>orange</button>
 					<button onClick={() => setSelectedTheme('purple')}>purple</button>
 					<button onClick={() => setSelectedTheme('green')}>green</button>
