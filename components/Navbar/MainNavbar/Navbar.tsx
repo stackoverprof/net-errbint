@@ -13,7 +13,7 @@ const Navbar = ({isActive, toggleOpenMenu}: Props) => {
 	return (
 		<div className="flex-cc w-full h-full text-white bg-black bg-opacity-50 backdrop-blur-md" style={{height: 60}}>
 			<div className="flex-bc h-full container-14">
-				<HamburgerButton isActive={isActive} />
+				<HamburgerButton isActive={isActive} onClick={() => toggleOpenMenu()} />
 				<PageLinks />
 			</div>
 		</div>
@@ -21,6 +21,10 @@ const Navbar = ({isActive, toggleOpenMenu}: Props) => {
 };
 
 export default Navbar;
+
+
+
+
 
 const data_links = [
 	{ route: '/', text: 'Home'},
@@ -73,19 +77,24 @@ const PageLinks = () => {
 
 
 
-const HamburgerButton = ({isActive}: {isActive: boolean}) => {
+
+
+interface HamburgerButtonProps {
+	isActive: boolean
+	onClick(): void
+}
+const HamburgerButton = ({isActive, onClick}: HamburgerButtonProps) => {
 	return (
-		<button className="w-60 flex-sc h-full bg-white bg-opacity-20">
+		<button className="w-60 flex-sc h-full bg-white bg-opacity-20" onClick={onClick}>
 			<HamburgerIcon isActive={isActive} />
 		</button>
 	);
 };
 
-
 const HamburgerIcon = ({isActive}: {isActive: boolean}) => (
 	<div className="flex-cc col gap-1.5" style={{width: 60, height: 60}}>
-		<div className="w-7 h-1 bg-white rounded-full"></div>
-		<div className="w-7 h-1 bg-white rounded-full"></div>
-		<div className="w-7 h-1 bg-white rounded-full"></div>
+		<div className="w-7 h-1 bg-white rounded-full transition" style={{transform: isActive ? 'rotate(30deg) translateY(4px)' : 'unset'}}></div>
+		<div className="w-7 h-1 bg-white rounded-full transition" style={{transform: isActive ? 'scaleX(0.2) translateX(28px)' : 'unset'}}></div>
+		<div className="w-7 h-1 bg-white rounded-full transition" style={{transform: isActive ? 'rotate(-30deg) translateY(-4px)' : 'unset'}}></div>
 	</div>
 );
