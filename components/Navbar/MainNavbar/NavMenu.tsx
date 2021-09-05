@@ -13,7 +13,7 @@ const NavMenu = () => {
 
 	return (
 		<div className={['flex-cc w-full h-full', theme_switch[selectedTheme]].join(' ')} style={{height: 60}}>
-			<div className="flex-bc h-full container-14">
+			<div className="flex-bc h-full md:container-14 -md:w-full sm:px-7">
 				<SectionPointer />
 				<ContactLinks />
 			</div>
