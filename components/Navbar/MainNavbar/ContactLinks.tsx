@@ -3,44 +3,22 @@ import React from 'react';
 
 const ContactLinks = () => {
 	return (
-		<div className="flex-cc gap-4 group">
+		<div className="flex-cc gap-4">
 			<Link href="https://github.com/stackoverprof/" target="_blank">
-				<img src="/img/icons/gh.svg" className="h-7 group-hover:opacity-40"/>
+				<img src="/img/icons/contact-icons/github.svg" className="h-7 w-7"/>
 			</Link>
 			<Link href="https://instagram.com/errbint" target="_blank">
-				<img src="/img/icons/ig.svg" className="h-7 group-hover:opacity-40"/>
-			</Link>
-			<Link href="https://line.me/ti/p/FwXuuM_qrV" target="_blank">
-				<img src="/img/icons/line.svg" className="h-7 group-hover:opacity-40"/>
+				<img src="/img/icons/contact-icons/instagram.svg" className="h-7 w-7"/>
 			</Link>
 			<Link href="https://wa.me/628988355006" target="_blank">
-				<img src="/img/icons/wa.svg" className="h-7 group-hover:opacity-40"/>
+				<img src="/img/icons/contact-icons/whatsapp.svg" className="h-7 w-7"/>
 			</Link>
-			<Link href="https://www.linkedin.com/in/r-bintang-bagus-putra-angkasa-41a6b1188" target="_blank">
-				<img src="/img/icons/lkdn.svg" className="h-7 group-hover:opacity-40"/>
+			<Link href="mailto:r.bintangbagus@gmail.com" target="_blank">
+				<img src="/img/icons/contact-icons/email.svg" className="h-7 w-7"/>
 			</Link>
-
-			<style jsx>{`
-				.item-group p {
-					@apply transition-all w-0;
-				}
-
-				.item-group-gh:hover p {
-					width: 132px;
-				}
-				.item-group-ig:hover p {
-					width: 88px;
-				}
-				.item-group-line:hover p {
-					width: 120px;
-				}
-				.item-group-wa:hover p {
-					width: 150px;
-				}
-				.item-group-lkdn:hover p {
-					width: 146px;
-				}
-			`}</style>
+			<Link href="https://www.linkedin.com/in/raden-bintang" target="_blank">
+				<img src="/img/icons/contact-icons/linkedin.svg" className="h-7 w-7"/>
+			</Link>
 		</div>
 	);
 };
