@@ -1,10 +1,20 @@
 import Link from '@components/_shared/Link';
+import { useLayout } from '@core/contexts';
 import React, { useRef, useState } from 'react';
 import ContactLinks from './ContactLinks';
 
 const NavMenu = () => {
+	
+	const { selectedTheme } = useLayout();
+	const theme_switch = {
+		orange: 'bg-gradient-to-r from-accent-orange-light to-accent-orange-dark',
+		purple: 'bg-gradient-to-r from-accent-purple-light to-accent-purple-dark',
+		green: 'bg-gradient-to-r from-accent-green-light to-accent-green-dark',
+		blue: 'bg-gradient-to-r from-accent-blue-light to-accent-blue-dark',
+	};
+
 	return (
-		<div className="flex-cc w-full h-full" style={{height: 60, background: 'linear-gradient(90deg, #FF9914 0%, #FF5B14 100%)'}}>
+		<div className={['flex-cc w-full h-full', theme_switch[selectedTheme]].join(' ')} style={{height: 60}}>
 			<div className="flex-bc h-full container-14">
 				<SectionPointer />
 				<ContactLinks />
