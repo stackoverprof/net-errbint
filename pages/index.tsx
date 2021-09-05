@@ -8,7 +8,7 @@ const Index = (): JSX.Element => {
 
 	return (
 		<MainLayout className="flex-sc col" transition="fade">
-			<div className="w-full text-white" style={{height: 2000}}>
+			<div className="w-full text-white mt-32" style={{height: 2000}}>
 				<div className="flex-sc gap-2">
 					<Link href="/">HOME</Link>
 					<Link href="/about">ABOUT</Link>

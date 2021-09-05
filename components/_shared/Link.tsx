@@ -11,9 +11,10 @@ type Props = {
     onClick?(): void;
     style?: React.CSSProperties;
 	scroll?: boolean;
+	ref?: React.MutableRefObject<any>
 } & React.ComponentPropsWithoutRef<'a'> & LinkProps;
 
-const Link = ({className, href, children, target, rel, style, disabled, onClick, scroll = true}: Props): JSX.Element => {
+const Link = ({className, href, children, target, rel, style, disabled, onClick, scroll = true, ...props}: Props): JSX.Element => {
 	return (
 		<NextLink href={href} scroll={scroll}>
 			<a 
@@ -22,6 +23,7 @@ const Link = ({className, href, children, target, rel, style, disabled, onClick,
 				target={target}
 				style={style}
 				rel={target === '_blank' && !rel ? 'noopener noreferrer' : rel}
+				{...props}
 			>
 				{children}
 			</a>
