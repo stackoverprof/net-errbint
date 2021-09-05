@@ -2,18 +2,20 @@ import Link from '@components/_shared/Link';
 import React, { useEffect, useRef, useState } from 'react';
 import { useLayout } from '@core/contexts';
 import { useRouter } from 'next/router';
+import { EnumPosition } from '.';
 
 interface Props {
 	isActive: boolean
-	toggleOpenMenu(): void;
+	toggleOpenMenu(): void
+	position: EnumPosition
 }
 
-const Navbar = ({isActive, toggleOpenMenu}: Props) => {
+const Navbar = ({isActive, toggleOpenMenu, position}: Props) => {
 
 	return (
 		<div className="flex-cc w-full h-full text-white bg-black bg-opacity-50 backdrop-blur-md" style={{height: 60}}>
 			<div className="flex-bc h-full container-14">
-				<HamburgerButton isActive={isActive} onClick={() => toggleOpenMenu()} />
+				<HamburgerButton isActive={isActive} onClick={() => toggleOpenMenu()} switchText={position === 'sticked'}/>
 				<PageLinks />
 			</div>
 		</div>
@@ -82,11 +84,13 @@ const PageLinks = () => {
 interface HamburgerButtonProps {
 	isActive: boolean
 	onClick(): void
+	switchText: boolean
 }
-const HamburgerButton = ({isActive, onClick}: HamburgerButtonProps) => {
+const HamburgerButton = ({isActive, onClick, switchText}: HamburgerButtonProps) => {
 	return (
-		<button className="w-60 flex-sc h-full bg-white bg-opacity-20" onClick={onClick}>
+		<button className="flex-sc h-full bg-white bg-opacity-20" onClick={onClick}>
 			<HamburgerIcon isActive={isActive} />
+			<TextSwitcher switchText={switchText}/>
 		</button>
 	);
 };
@@ -96,5 +100,12 @@ const HamburgerIcon = ({isActive}: {isActive: boolean}) => (
 		<div className="w-7 h-1 bg-white rounded-full transition" style={{transform: isActive ? 'rotate(30deg) translateY(4px)' : 'unset'}}></div>
 		<div className="w-7 h-1 bg-white rounded-full transition" style={{transform: isActive ? 'scaleX(0.2) translateX(28px)' : 'unset'}}></div>
 		<div className="w-7 h-1 bg-white rounded-full transition" style={{transform: isActive ? 'rotate(-30deg) translateY(-4px)' : 'unset'}}></div>
+	</div>
+);
+
+const TextSwitcher = ({switchText}: {switchText: boolean}) => (
+	<div className="relative flex-sc h-full ml-2 text-white text-3xl uppercase overflow-hidden" style={{width: 184}}>
+		<p className="absolute flex-sc full transition-all duration-1000" style={{left: switchText ? 320 : 0}}>NAVIGATION</p>
+		<p className="absolute flex-sc full transition-all duration-1000" style={{left: switchText ? 0 : 320}}>ERRBINT</p>
 	</div>
 );

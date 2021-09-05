@@ -4,10 +4,10 @@ import Navbar from './Navbar';
 import NavMenu from './NavMenu';
 import useResize from 'use-resizing';
 
-type EnumPosition = 'bottom' | 'top' | 'floating'
+export type EnumPosition = 'default' | 'sticked' | 'floating'
 
 const MainNavbar = () => {
-	const [position, setPosition] = useState<EnumPosition>('bottom');
+	const [position, setPosition] = useState<EnumPosition>('default');
 	const [openMenu, setOpenMenu] = useState(false);
 	const scroll = useScrollYPosition();
 
@@ -17,10 +17,10 @@ const MainNavbar = () => {
 
 	const _setOpenMenu = () => {
 		switch (position) {
-			case 'bottom':
+			case 'default':
 				window.scrollTo(0, 60);
 				break;
-			case 'top':
+			case 'sticked':
 				shrinkRef.current.style.transition = 'all 0.15s ease 0s';
 				setOpenMenu(!openMenu);
 				break;
@@ -43,10 +43,10 @@ const MainNavbar = () => {
 
 	useEffect(() => {			
 		if (scroll === 0) {
-			setPosition('bottom');
+			setPosition('default');
 			setOpenMenu(false);
 		}
-		else if (scroll > window.innerHeight - 60) setPosition('top');
+		else if (scroll > window.innerHeight - 60) setPosition('sticked');
 		else {
 			setOpenMenu(false);
 			setPosition('floating');
@@ -56,7 +56,7 @@ const MainNavbar = () => {
 	return (
 		<nav className="sticky top-0 w-full pointer-events-none" style={{height: 120}}>
 			<div style={{height: 60}} className="pointer-events-auto">
-				<Navbar isActive={position !== 'bottom' && (scroll < screenHeight || openMenu)} toggleOpenMenu={_setOpenMenu} />
+				<Navbar isActive={position !== 'default' && (scroll < screenHeight || openMenu)} toggleOpenMenu={_setOpenMenu} position={position}/>
 			</div>
 			<div ref={shrinkRef} style={{height: openMenu ? 60 : getShrink()}} className="transition-all pointer-events-auto overflow-hidden flex-cc">
 				<NavMenu />
