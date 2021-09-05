@@ -21,6 +21,13 @@ const Navbar = ({isActive, toggleOpenMenu}: Props) => {
 	);
 };
 
+const data_links = [
+	{ route: '/home', text: 'Home'},
+	{ route: '/projects', text: 'Projects'},
+	{ route: '/content', text: 'Content'},
+	{ route: '/gears', text: 'Gears'},
+];
+
 const PageLinks = () => {
 	const [inside, setInside] = useState(false);
 	const [hovered, setHovered] = useState(0);
@@ -47,18 +54,11 @@ const PageLinks = () => {
 	return (
 		<div className="relative flex-cc h-full -mx-3 text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
 			<div className="z-10 h-full flex-cc gap-2">
-				<div ref={childRef[0]}>
-					<Link href="/home" onMouseEnter={() => setHovered(0)} className="flex-cc h-full px-3">Home</Link>
-				</div>
-				<div ref={childRef[1]}>
-					<Link href="/projects" onMouseEnter={() => setHovered(1)} className="flex-cc h-full px-3">Projects</Link>
-				</div>
-				<div ref={childRef[2]}>
-					<Link href="/content" onMouseEnter={() => setHovered(2)} className="flex-cc h-full px-3">Content</Link>
-				</div>
-				<div ref={childRef[3]}>
-					<Link href="/gears" onMouseEnter={() => setHovered(3)} className="flex-cc h-full px-3">Gears</Link>
-				</div>
+				{data_links.map((item, i) => (
+					<div ref={childRef[i]} key={i}>
+						<Link href={item.route} onMouseEnter={() => setHovered(i)} className="flex-cc h-full px-3">{item.text}</Link>
+					</div>
+				))}
 			</div>
 
 			<div className={['absolute h-8 transition-all', theme_switch[selectedTheme]].join(' ')} style={{borderRadius: 6, opacity: inside ? 0.5 : 0.9, left: getPrevDistance(inside ? hovered : currentPage) + (8*hovered), transitionDuration: '0.25s', width: childRef[hovered].current?.offsetWidth || 0}}></div>
