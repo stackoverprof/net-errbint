@@ -13,6 +13,14 @@ const NavMenu = () => {
 	);
 };
 
+
+const data_links = [
+	{ route: '/#profile', text: 'Profile'},
+	{ route: '/#abilities', text: 'Abilities'},
+	{ route: '/#experience', text: 'Experience'},
+	{ route: '/#contact', text: 'Contact'},
+];
+
 const SectionPointer = () => {
 	const [inside, setInside] = useState(false);
 	const [hovered, setHovered] = useState(0);
@@ -28,18 +36,11 @@ const SectionPointer = () => {
 	return (
 		<div className="relative flex-cc h-full -mx-3 text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => setInside(false)}>
 			<div className="z-10 h-full flex-cc">
-				<div ref={childRef[0]}>
-					<Link href="/#profile" onMouseEnter={() => setHovered(0)} className="flex-cc h-full px-3">Profile</Link>
-				</div>
-				<div ref={childRef[1]}>
-					<Link href="/#abilities" onMouseEnter={() => setHovered(1)} className="flex-cc h-full px-3">Abilities</Link>
-				</div>
-				<div ref={childRef[2]}>
-					<Link href="/#experience" onMouseEnter={() => setHovered(2)} className="flex-cc h-full px-3">Experience</Link>
-				</div>
-				<div ref={childRef[3]}>
-					<Link href="/#contact" onMouseEnter={() => setHovered(3)} className="flex-cc h-full px-3">Contact</Link>
-				</div>
+				{data_links.map((item, i) => (
+					<div ref={childRef[i]} key={i}>
+						<Link href={item.route} onMouseEnter={() => setHovered(i)} className="flex-cc h-full px-3">{item.text}</Link>
+					</div>
+				))}
 			</div>
 
 			<div className="absolute h-10 bg-black bg-opacity-10 transition-all rounded-md" style={{left: getPrevDistance(hovered), transitionDuration: '0.25s', opacity: inside ? 1 : 0, width: childRef[hovered].current?.offsetWidth || 0}}></div>
