@@ -1,6 +1,7 @@
 import Link from '@components/_shared/Link';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLayout } from '@core/contexts';
+import { useRouter } from 'next/router';
 
 interface Props {
 	isActive: boolean
@@ -22,7 +23,7 @@ const Navbar = ({isActive, toggleOpenMenu}: Props) => {
 };
 
 const data_links = [
-	{ route: '/home', text: 'Home'},
+	{ route: '/', text: 'Home'},
 	{ route: '/projects', text: 'Projects'},
 	{ route: '/content', text: 'Content'},
 	{ route: '/gears', text: 'Gears'},
@@ -40,23 +41,27 @@ const PageLinks = () => {
 		return distance;
 	};
 
-	const currentPage = 0;
-
+	const router = useRouter();
+	const currentPage = data_links.map(item => item.route).indexOf(router.pathname);
+	
 	const { selectedTheme } = useLayout();
-
 	const theme_switch = {
 		orange: 'bg-gradient-to-r from-accent-orange-light to-accent-orange-dark',
 		purple: 'bg-gradient-to-r from-accent-purple-light to-accent-purple-dark',
 		green: 'bg-gradient-to-r from-accent-green-light to-accent-green-dark',
 		blue: 'bg-gradient-to-r from-accent-blue-light to-accent-blue-dark',
 	};
+
+	useEffect(() => {
+		setHovered(currentPage);
+	}, [router]);
 	
 	return (
 		<div className="relative flex-cc h-full -mx-3 text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
 			<div className="z-10 h-full flex-cc gap-2">
 				{data_links.map((item, i) => (
 					<div ref={childRef[i]} key={i}>
-						<Link href={item.route} onMouseEnter={() => setHovered(i)} className="flex-cc h-full px-3">{item.text}</Link>
+						<Link href={item.route} scroll={false} onMouseEnter={() => setHovered(i)} className="flex-cc h-full px-3">{item.text}</Link>
 					</div>
 				))}
 			</div>
