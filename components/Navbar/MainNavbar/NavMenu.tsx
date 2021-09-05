@@ -42,7 +42,7 @@ const SectionPointer = () => {
 				</div>
 			</div>
 
-			<div className="absolute h-10 bg-black bg-opacity-10 transition-all rounded-md" style={{left: getPrevDistance(hovered), opacity: inside ? 1 : 0, width: childRef[hovered].current?.offsetWidth || 0}}></div>
+			<div className="absolute h-10 bg-black bg-opacity-10 transition-all rounded-md" style={{left: getPrevDistance(hovered), transitionDuration: '0.25s', opacity: inside ? 1 : 0, width: childRef[hovered].current?.offsetWidth || 0}}></div>
 		</div>
 	);
 }; 
