@@ -1,10 +1,8 @@
 import Link from '@components/_shared/Link';
 import { useLayout } from '@core/contexts';
 import React, { useRef, useState } from 'react';
-import ContactLinks from './ContactLinks';
 
 const NavMenu = () => {
-	
 	const { selectedTheme } = useLayout();
 	const theme_switch = {
 		orange: 'bg-gradient-to-r from-accent-orange-light to-accent-orange-dark',
@@ -22,6 +20,8 @@ const NavMenu = () => {
 		</div>
 	);
 };
+
+export default NavMenu;
 
 
 const data_links = [
@@ -58,4 +58,23 @@ const SectionPointer = () => {
 	);
 }; 
 
-export default NavMenu;
+
+const ContactLinks = () => (
+	<div className="flex-cc gap-4">
+		<Link href="https://github.com/stackoverprof/" target="_blank">
+			<img src="/img/icons/contact-icons/github.svg" className="h-7 w-7" />
+		</Link>
+		<Link href="https://instagram.com/errbint" target="_blank">
+			<img src="/img/icons/contact-icons/instagram.svg" className="h-7 w-7" />
+		</Link>
+		<Link href="https://wa.me/628988355006" target="_blank">
+			<img src="/img/icons/contact-icons/whatsapp.svg" className="h-7 w-7" />
+		</Link>
+		<Link href="mailto:r.bintangbagus@gmail.com" target="_blank">
+			<img src="/img/icons/contact-icons/email.svg" className="h-7 w-7" />
+		</Link>
+		<Link href="https://www.linkedin.com/in/raden-bintang" target="_blank">
+			<img src="/img/icons/contact-icons/linkedin.svg" className="h-7 w-7" />
+		</Link>
+	</div>
+);

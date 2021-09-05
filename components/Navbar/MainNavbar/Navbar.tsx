@@ -11,16 +11,16 @@ interface Props {
 const Navbar = ({isActive, toggleOpenMenu}: Props) => {
 
 	return (
-		<div className="flex-cc w-full text-white bg-black bg-opacity-50 backdrop-blur-md" style={{height: 60}}>
-			<div className="flex-bc container-14">
-				<div className="w-40 h-full">
-					<button onClick={() => toggleOpenMenu()}>NAVIGATION {isActive ? 'active' : 'close'}</button>
-				</div>
+		<div className="flex-cc w-full h-full text-white bg-black bg-opacity-50 backdrop-blur-md" style={{height: 60}}>
+			<div className="flex-bc h-full container-14">
+				<HamburgerButton isActive={isActive} />
 				<PageLinks />
 			</div>
 		</div>
 	);
 };
+
+export default Navbar;
 
 const data_links = [
 	{ route: '/', text: 'Home'},
@@ -58,7 +58,7 @@ const PageLinks = () => {
 	
 	return (
 		<div className="relative flex-cc h-full -mx-3 text-xl text-white group" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
-			<div className="z-10 h-full flex-cc gap-2">
+			<div className="z-10 flex-cc h-full gap-2">
 				{data_links.map((item, i) => (
 					<div ref={childRef[i]} key={i}>
 						<Link href={item.route} scroll={false} onMouseEnter={() => setHovered(i)} className="flex-cc h-full px-3">{item.text}</Link>
@@ -71,4 +71,21 @@ const PageLinks = () => {
 	);
 };
 
-export default Navbar;
+
+
+const HamburgerButton = ({isActive}: {isActive: boolean}) => {
+	return (
+		<button className="w-60 flex-sc h-full bg-white bg-opacity-20">
+			<HamburgerIcon isActive={isActive} />
+		</button>
+	);
+};
+
+
+const HamburgerIcon = ({isActive}: {isActive: boolean}) => (
+	<div className="flex-cc col gap-1.5" style={{width: 60, height: 60}}>
+		<div className="w-7 h-1 bg-white rounded-full"></div>
+		<div className="w-7 h-1 bg-white rounded-full"></div>
+		<div className="w-7 h-1 bg-white rounded-full"></div>
+	</div>
+);
