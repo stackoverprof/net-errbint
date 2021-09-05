@@ -21,7 +21,7 @@ const MainLayout = ({children, title, className, transition, style, scrollUp}: P
 	const router = useRouter();
 
 	useEffect(() => {
-		if (scrollUp) window.scrollTo(0, window.innerHeight * 4/5);
+		if (scrollUp) window.scrollTo(0, window.innerHeight * 3/5);
 	}, [router]);
 
 	return (
