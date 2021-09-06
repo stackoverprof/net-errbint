@@ -56,7 +56,7 @@ const MainNavbar = () => {
 	return (
 		<nav className="sticky top-0 w-full pointer-events-none" style={{height: 120}}>
 			<div style={{height: 60}} className="pointer-events-auto">
-				<Navbar isActive={position !== 'default' && (scroll < screenHeight || openMenu)} toggleOpenMenu={_setOpenMenu}/>
+				<Navbar isActive={position !== 'default' && (scroll < screenHeight || openMenu)} toggleOpenMenu={_setOpenMenu} simpleMode={position === 'sticked'}/>
 			</div>
 			<div ref={shrinkRef} style={{height: openMenu ? 60 : getShrink()}} className="transition-all pointer-events-auto overflow-hidden flex-cc">
 				<NavMenu />

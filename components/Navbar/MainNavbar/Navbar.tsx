@@ -6,14 +6,15 @@ import { useRouter } from 'next/router';
 interface Props {
 	isActive: boolean
 	toggleOpenMenu(): void
+	simpleMode: boolean
 }
 
-const Navbar = ({isActive, toggleOpenMenu}: Props) => {
+const Navbar = ({isActive, toggleOpenMenu, simpleMode}: Props) => {
 
 	return (
 		<div className="flex-cc w-full h-full text-white bg-black bg-opacity-50 backdrop-blur-md" style={{height: 60}}>
 			<div className="flex-bc h-full md:container-14 sm:pr-5 -md:w-full">
-				<HamburgerButton collapse={isActive} onClick={() => toggleOpenMenu()}/>
+				<HamburgerButton collapse={isActive} onClick={() => toggleOpenMenu()} simpleMode={simpleMode}/>
 				<PageLinks />
 			</div>
 		</div>
@@ -69,7 +70,7 @@ const PageLinks = () => {
 	
 	return (
 		<>			
-			<div className="relative flex-cc -sm:flex-sc h-full text-xl text-white group -sm:overflow-x-scroll -sm:no-scrollbar" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
+			<div className="relative flex-cc h-full text-xl text-white -sm:flex-sc group -sm:overflow-x-scroll -sm:no-scrollbar" onMouseEnter={() => setInside(true)} onMouseLeave={() => { setInside(false); setHovered(currentPage); }}>
 				<div className="z-10 flex-cc h-full gap-2 -sm:px-6">
 					{data_links.map((item, i) => (
 						<div ref={childRef[i]} key={i} className="h-full">
@@ -80,7 +81,7 @@ const PageLinks = () => {
 
 				<div className={['absolute -sm:hidden h-8 transition-all', theme_switch[selectedTheme]].join(' ')} style={{borderRadius: 6, opacity: inside ? 0.5 : 0.9, left: getPrevDistance(inside ? hovered : currentPage) + (8*hovered), transitionDuration: '0.25s', width: childRef[hovered].current?.offsetWidth || 0}}></div>
 			</div>
-			<div className="absolute w-32 sm:hidden right-0 pointer-events-none z-10" style={{height: 60, background: 'linear-gradient(90deg, #0000 0%, #000F 100%)'}}></div>
+			<div className="absolute right-0 z-10 w-32 pointer-events-none sm:hidden" style={{height: 60, background: 'linear-gradient(90deg, #0000 0%, #000F 100%)'}}></div>
 		</>
 	);
 };
@@ -92,13 +93,19 @@ const PageLinks = () => {
 interface HamburgerButtonProps {
 	collapse: boolean
 	onClick(): void
+	simpleMode: boolean
 }
-const HamburgerButton = ({collapse, onClick}: HamburgerButtonProps) => {
+const HamburgerButton = ({collapse, onClick, simpleMode}: HamburgerButtonProps) => {
 	return (
-		<button className="flex-sc h-full bg-white bg-opacity-20" onClick={onClick}>
-			<HamburgerIcon collapse={collapse} />
-			<p className="text-2.5xl pl-2 pr-6 -md:hidden">ERRBINT</p>
-		</button>
+		<div className="flex-cc h-full gap-5">
+			<button className="flex-sc h-full bg-white bg-opacity-20 group" onClick={onClick}>
+				<HamburgerIcon collapse={collapse} />
+				<p className={['text-2.5xl -md:hidden overflow-hidden transition-all duration-700 text-left', simpleMode ? !collapse ? 'w-0 group-hover:w-24' : 'w-24' : 'w-24'].join(' ')}><span className="ml-1">MENU</span></p>
+			</button>
+			<Link href="/">
+				<img src="/favicon.ico" alt="" className="w-6 h-6 transition-all duration-700" style={{opacity: simpleMode ? 1 : 0}}/>
+			</Link>
+		</div>
 	);
 };
 
