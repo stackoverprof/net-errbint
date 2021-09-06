@@ -14,7 +14,7 @@ const Navbar = ({isActive, toggleOpenMenu, simpleMode}: Props) => {
 	return (
 		<div className="flex-cc w-full h-full text-white bg-black bg-opacity-50 backdrop-blur-md" style={{height: 60}}>
 			<div className="flex-bc h-full md:container-14 sm:pr-5 -md:w-full">
-				<HamburgerButton collapse={isActive} onClick={() => toggleOpenMenu()} simpleMode={simpleMode}/>
+				<HamburgerButton isActive={isActive} onClick={() => toggleOpenMenu()} simpleMode={simpleMode}/>
 				<PageLinks />
 			</div>
 		</div>
@@ -91,16 +91,16 @@ const PageLinks = () => {
 
 
 interface HamburgerButtonProps {
-	collapse: boolean
+	isActive: boolean
 	onClick(): void
 	simpleMode: boolean
 }
-const HamburgerButton = ({collapse, onClick, simpleMode}: HamburgerButtonProps) => {
+const HamburgerButton = ({isActive, onClick, simpleMode}: HamburgerButtonProps) => {
 	return (
 		<div className="flex-cc h-full gap-5">
 			<button className="flex-sc h-full bg-white bg-opacity-20 group" onClick={onClick}>
-				<HamburgerIcon collapse={collapse} />
-				<p className={['text-2.5xl -md:hidden overflow-hidden transition-all duration-700 text-left', simpleMode ? !collapse ? 'w-0 group-hover:w-24' : 'w-24' : 'w-24'].join(' ')}><span className="ml-1">MENU</span></p>
+				<HamburgerIcon isActive={isActive} />
+				<p className={['text-2.5xl -md:hidden overflow-hidden transition-all duration-700 text-left', simpleMode ? !isActive ? 'w-0 group-hover:w-24' : 'w-24' : 'w-24'].join(' ')}><span className="ml-1">MENU</span></p>
 			</button>
 			<Link href="/">
 				<img src="/favicon.ico" alt="" className="w-6 h-6 transition-all duration-700" style={{opacity: simpleMode ? 1 : 0}}/>
@@ -109,16 +109,16 @@ const HamburgerButton = ({collapse, onClick, simpleMode}: HamburgerButtonProps) 
 	);
 };
 
-const HamburgerIcon = ({collapse}: {collapse: boolean}) => (
+const HamburgerIcon = ({isActive}: {isActive: boolean}) => (
 	<div className="relative flex-cc h-full" style={{width: 60}}>
 		<div className="absolute flex-cc col gap-1.5">
-			<div className={['h-1 transition-all bg-white rounded-full transform w-7', collapse ? '' : 'translate-y-2.5'].join(' ')}></div>
+			<div className={['h-1 transition-all bg-white rounded-full transform w-7', isActive ? '' : 'translate-y-2.5'].join(' ')}></div>
 		</div>
 		<div className="absolute flex-cc col gap-1.5">
 			<div className={['h-1 transition-all bg-white rounded-full transform w-7'].join(' ')}></div>
 		</div>
 		<div className="absolute flex-cc col gap-1.5">
-			<div className={['h-1 transition-all bg-white rounded-full transform w-7', collapse ? '' : '-translate-y-2.5'].join(' ')}></div>
+			<div className={['h-1 transition-all bg-white rounded-full transform w-7', isActive ? '' : '-translate-y-2.5'].join(' ')}></div>
 		</div>
 	</div>
 );
