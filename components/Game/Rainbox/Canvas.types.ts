@@ -1,14 +1,14 @@
 export interface CanvasProps {
 	responsive: {
-		width(arg0: Window & typeof globalThis): number,
-		height(arg0: Window & typeof globalThis): number
+		width(arg0: Window & typeof globalThis): number;
+		height(arg0: Window & typeof globalThis): number;
 	};
 	skipIntro: boolean;
 }
 
 export type EnumDirection = 'idle' | 'left' | 'right';
 
-export class EnvironmentType {
+export class SceneInterface {
 	FPS: number;
 	REALTIME: number;
 	el: {
@@ -30,7 +30,7 @@ export class EnvironmentType {
 	isTabInactive: boolean;
 	THEME: any;
 }
-export class ControlType {
+export class ControlInterface {
 	CONTROL_DIRECTION: EnumDirection;
 	isRightPressed: boolean;
 	isLeftPressed: boolean;
@@ -40,7 +40,7 @@ export class ControlType {
 	isRightTouched: boolean;
 	isLeftTouched: boolean;
 }
-export class PlayerType {
+export class PlayerInterface {
 	Height: number;
 	Width: number;
 	Shadow: string;
@@ -50,16 +50,16 @@ export class PlayerType {
 	Velocity: number;
 	IsAlive: boolean;
 	Acceleration: number;
-	Emphasis: { alpha: number, direction: 'up' | 'down' };
+	Emphasis: { alpha: number; direction: 'up' | 'down' };
 	Shine: number;
 	EatCount: number;
 	TimeStart: number | 'initial';
 	TimeEnd: number | 'initial';
 	TimeSpan: number;
-	Position: { X: number; Y: number; };
+	Position: { X: number; Y: number };
 }
 
-export class RainType {
+export class RainInterface {
 	Colortrail0: any;
 	Colortrail1: string;
 	Colorbox: string;
@@ -70,11 +70,11 @@ export class RainType {
 	Width: number;
 	Velocity: number;
 	Index: number;
-	Position: { X: number; Y: number; };
+	Position: { X: number; Y: number };
 	TrailGradient: CanvasGradient;
 }
 
-export class FoodType {
+export class FoodInterface {
 	Width: number;
 	Height: number;
 	Color: string;
